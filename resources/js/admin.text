@@ -1,0 +1,451 @@
+// admin-app.js - Aplicación Admin específica
+import {
+    Collapse, Dropdown, Modal, Offcanvas,
+    Popover, Tab, Toast, Tooltip
+} from 'bootstrap';
+import { ThemeManager } from './scripts/utils/theme-manager.js';
+import { DashboardManager } from './scripts/components/dashboard';
+import { NotificationManager } from './scripts/utils/notifications';
+import { iconManager } from './scripts/utils/icon-manager';
+
+class AdminApp {
+    constructor() {
+        this.components = new Map();
+        this.isInitialized = false;
+    }
+
+    async init() {
+        if (this.isInitialized) return;
+
+        try {
+            this.themeManager = new ThemeManager();
+            this.notificationManager = new NotificationManager();
+            this.iconManager = iconManager;
+
+            this.iconManager.preloadIcons([
+                'dashboard', 'users', 'analytics', 'settings', 'notifications',
+                'search', 'menu', 'check', 'warning', 'info', 'success', 'error'
+            ]);
+
+            //inicia boostrap
+            this.initBootstrapComponents();
+
+            //inciia componentes de página
+            await this.initPageComponents();
+
+            this.setupEventListeners();
+
+            this.initNavigation();
+
+            //inicia boostrap
+            this.initTooltipsAndPopovers();
+
+            // REGISTRAR COMPONENTES DE ALPINE PRIMERO
+            this.registerAlpineComponents();
+
+            this.isInitialized = true;
+
+            this.notificationManager.show('Application loaded successfully!', 'success');
+
+        } catch (error) {
+            console.error('Failed to initialize Admin App:', error);
+        }
+    }
+
+    //Inicializa los componentes de Bootstrap
+    initBootstrapComponents() {
+        document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(element => {
+            try { new Dropdown(element); } catch (e) { console.warn('Dropdown init error:', e); }
+        });
+
+        document.querySelectorAll('.modal').forEach(element => {
+            try { new Modal(element); } catch (e) { console.warn('Modal init error:', e); }
+        });
+
+        document.querySelectorAll('.offcanvas').forEach(element => {
+            try { new Offcanvas(element); } catch (e) { console.warn('Offcanvas init error:', e); }
+        });
+
+        document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(element => {
+            try { new Collapse(element); } catch (e) { console.warn('Collapse init error:', e); }
+        });
+
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(element => {
+            try { new Tab(element); } catch (e) { console.warn('Tab init error:', e); }
+        });
+
+        document.querySelectorAll('.toast').forEach(element => {
+            try { new Toast(element); } catch (e) { console.warn('Toast init error:', e); }
+        });
+    }
+    //Inicializa tooltips y popovers de Bootstrap
+    initTooltipsAndPopovers() {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
+            try { new Tooltip(element); } catch (e) { console.warn('Tooltip init error:', e); }
+        });
+
+        document.querySelectorAll('[data-bs-toggle="popover"]').forEach(element => {
+            try { new Popover(element); } catch (e) { console.warn('Popover init error:', e); }
+        });
+    }
+
+    //Inicializa los componentes específicos de la página
+    async initPageComponents() {
+        const currentPage = document.body.dataset.page || this.detectCurrentPage();
+
+        switch (currentPage) {
+            case 'dashboard':
+                this.components.set('dashboard', new DashboardManager());
+                break;
+            case 'users':
+                await this.loadComponent('./scripts/components/users.js');
+                break;
+            case 'analytics':
+                await this.loadComponent('./scripts/components/analytics.js');
+                break;
+            case 'forms':
+                await this.loadComponent('./scripts/components/forms.js');
+                break;
+            case 'products':
+                await this.loadComponent('./scripts/components/products.js');
+                break;
+            case 'orders':
+                await this.loadComponent('./scripts/components/orders.js');
+                break;
+            case 'reports':
+                await this.loadComponent('./scripts/components/reports.js');
+                break;
+            case 'messages':
+                await this.loadComponent('./scripts/components/messages.js');
+                break;
+            case 'calendar':
+                await this.loadComponent('./scripts/components/calendar.js');
+                break;
+            case 'settings':
+                await this.loadComponent('./scripts/components/settings.js');
+                break;
+            case 'security':
+                await this.loadComponent('./scripts/components/security.js');
+                break;
+            case 'files':
+                await this.loadComponent('./scripts/components/files.js');
+                break;
+            case 'help':
+                await this.loadComponent('./scripts/components/help.js');
+                break;
+            case 'elements':
+                await this.loadComponent('./scripts/components/elements.js');
+                break;
+        }
+    }
+
+    //Detecta la página actual basada en la URL
+    detectCurrentPage() {
+        const path = window.location.pathname;
+
+        if (path.includes('/dashboard') || path === '/' || path.includes('index')) return 'dashboard';
+        if (path.includes('/users')) return 'users';
+        if (path.includes('/analytics')) return 'analytics';
+        if (path.includes('/forms')) return 'forms';
+        if (path.includes('/products')) return 'products';
+        if (path.includes('/orders')) return 'orders';
+        if (path.includes('/reports')) return 'reports';
+        if (path.includes('/messages')) return 'messages';
+        if (path.includes('/calendar')) return 'calendar';
+        if (path.includes('/settings')) return 'settings';
+        if (path.includes('/security')) return 'security';
+        if (path.includes('/files')) return 'files';
+        if (path.includes('/help')) return 'help';
+        if (path.includes('/elements')) return 'elements';
+
+        return 'dashboard';
+    }
+
+    //Carga un componente de forma dinámica
+    async loadComponent(path) {
+        try {
+            await import(path);
+        } catch (error) {
+            console.warn(`Component not available: ${path}`, error);
+        }
+    }
+
+    //Configura los listeners de eventos globales
+    setupEventListeners() {
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[data-theme-toggle]')) {
+                this.themeManager.toggleTheme();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            const fullscreenButton = e.target.closest('[data-fullscreen-toggle]');
+            if (fullscreenButton) {
+                e.preventDefault();
+                this.toggleFullscreen();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            this.handleKeyboardShortcuts(e);
+        });
+    }
+    //Maneja los atajos de teclado globales
+    handleKeyboardShortcuts(event) {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+            event.preventDefault();
+            const searchInput = document.querySelector('[data-search-input]');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }
+    }
+    //Alterna el modo de pantalla completa
+    async toggleFullscreen() {
+        try {
+            if (!document.fullscreenElement) {
+                await document.documentElement.requestFullscreen();
+            } else {
+                await document.exitFullscreen();
+            }
+        } catch (error) {
+            console.error('Fullscreen toggle failed:', error);
+        }
+    }
+
+    //Inicializa la navegación lateral y el estado de los submenús
+    initNavigation() {
+        const currentPage = window.location.pathname;
+        const elementsPages = [
+            '/elements', '/elements-buttons', '/elements-alerts',
+            '/elements-badges', '/elements-cards', '/elements-modals',
+            '/elements-forms', '/elements-tables'
+        ];
+
+        const isElementsPage = elementsPages.some(page => currentPage.includes(page));
+
+        if (isElementsPage) {
+            const elementsSubmenu = document.getElementById('elementsSubmenu');
+            const elementsToggle = document.querySelector('[data-bs-target="#elementsSubmenu"]');
+
+            if (elementsSubmenu && elementsToggle) {
+                elementsSubmenu.classList.add('show');
+                elementsToggle.setAttribute('aria-expanded', 'true');
+
+                const activeSubmenuLink = document.querySelector(`.nav-submenu a[href*="${currentPage}"]`);
+                if (activeSubmenuLink) {
+                    activeSubmenuLink.classList.add('active');
+                }
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const toggleButton = e.target.closest('[data-bs-toggle="collapse"]');
+            if (toggleButton) {
+                const targetId = toggleButton.getAttribute('data-bs-target');
+                const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+                localStorage.setItem(`submenu-${targetId}`, (!isExpanded).toString());
+            }
+        });
+
+        const submenuToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
+        submenuToggles.forEach(toggle => {
+            const targetId = toggle.getAttribute('data-bs-target');
+            const savedState = localStorage.getItem(`submenu-${targetId}`);
+
+            if (savedState === 'true' && !isElementsPage) {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.classList.add('show');
+                    toggle.setAttribute('aria-expanded', 'true');
+                }
+            }
+        });
+    }
+
+    registerAlpineComponents() {
+        // Solo registrar si Alpine está disponible
+        if (typeof Alpine === 'undefined') {
+            return;
+        }
+
+        // Registrar todos los componentes de Alpine
+        Alpine.data('searchComponent', () => ({
+            query: '',
+            results: [],
+            isLoading: false,
+
+            async search() {
+                if (this.query.length < 2) {
+                    this.results = [];
+                    return;
+                }
+
+                this.isLoading = true;
+
+                try {
+                    const response = await fetch(`/api/search?q=${encodeURIComponent(this.query)}`);
+                    if (response.ok) {
+                        this.results = await response.json();
+                    } else {
+                        this.results = this.getFallbackResults();
+                    }
+                } catch (error) {
+                    console.error('Search failed:', error);
+                    this.results = this.getFallbackResults();
+                }
+
+                this.isLoading = false;
+            },
+
+            getFallbackResults() {
+                return [
+                    { title: 'Dashboard', url: '/', type: 'page' },
+                    { title: 'Users', url: '/users', type: 'page' },
+                    { title: 'Settings', url: '/settings', type: 'page' },
+                    { title: 'Analytics', url: '/analytics', type: 'page' }
+                ].filter(item => item.title.toLowerCase().includes(this.query.toLowerCase()));
+            }
+        }));
+
+        Alpine.data('statsCounter', (initialValue = 0, increment = 1) => ({
+            value: initialValue,
+
+            init() {
+                setInterval(() => {
+                    this.value += Math.floor(Math.random() * increment) + 1;
+                }, 5000);
+            }
+        }));
+
+        Alpine.data('themeSwitch', () => ({
+            currentTheme: 'light',
+
+            init() {
+                this.currentTheme = localStorage.getItem('theme') || 'light';
+            },
+
+            toggle() {
+                this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-bs-theme', this.currentTheme);
+                localStorage.setItem('theme', this.currentTheme);
+            }
+        }));
+
+        Alpine.data('iconDemo', () => ({
+            currentProvider: 'bootstrap',
+
+            switchProvider(provider) {
+                this.currentProvider = provider;
+                iconManager.switchProvider(provider);
+                console.log(`🎨 Switched to ${provider} icons`);
+            },
+
+            getIcon(iconName) {
+                return iconManager.get(iconName);
+            }
+        }));
+
+        Alpine.data('quickAddForm', () => ({
+            itemType: 'task',
+            title: '',
+            description: '',
+            priority: 'medium',
+            dateTime: '',
+            assignee: '',
+
+            init() {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                this.dateTime = now.toISOString().slice(0, 16);
+            },
+
+            resetForm() {
+                this.itemType = 'task';
+                this.title = '';
+                this.description = '';
+                this.priority = 'medium';
+                this.assignee = '';
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                this.dateTime = now.toISOString().slice(0, 16);
+            },
+
+            saveItem() {
+                if (!this.title.trim()) {
+                    window.AdminApp.notificationManager.warning('Please enter a title');
+                    return;
+                }
+
+                const item = {
+                    type: this.itemType,
+                    title: this.title,
+                    description: this.description,
+                    priority: this.itemType === 'task' ? this.priority : null,
+                    dateTime: ['event', 'reminder'].includes(this.itemType) ? this.dateTime : null,
+                    assignee: this.itemType === 'task' ? this.assignee : null,
+                    createdAt: new Date().toISOString()
+                };
+
+                const typeLabels = {
+                    task: 'Task',
+                    note: 'Note',
+                    event: 'Event',
+                    reminder: 'Reminder'
+                };
+
+                window.AdminApp.notificationManager.success(
+                    `${typeLabels[this.itemType]} "${this.title}" created successfully!`
+                );
+
+                this.resetForm();
+            }
+        }));
+    }
+
+    getComponent(name) {
+        return this.components.get(name);
+    }
+
+    destroy() {
+        this.components.forEach(component => {
+            if (component.destroy) {
+                component.destroy();
+            }
+        });
+        this.components.clear();
+        this.isInitialized = false;
+    }
+}
+
+// Crear instancia global
+const adminApp = new AdminApp();
+
+window.AdminApp = adminApp;
+export default adminApp;
+
+export function initializeAdminApp() {
+    // Registrar componentes de Alpine PRIMERO
+    if (typeof Alpine !== 'undefined' && adminApp.registerAlpineComponents) {
+        adminApp.registerAlpineComponents();
+    }
+    return adminApp.init();
+}
+
+// REGISTRAR COMPONENTES INMEDIATAMENTE cuando se carga el módulo
+if (typeof Alpine !== 'undefined') {
+    adminApp.registerAlpineComponents();
+} else {
+    window.addEventListener('alpine:init', () => {
+        adminApp.registerAlpineComponents();
+    });
+}
+
+// Auto-inicializar la app
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => adminApp.init(), 10);
+    });
+} else {
+    setTimeout(() => adminApp.init(), 10);
+}
