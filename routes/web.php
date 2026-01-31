@@ -7,13 +7,10 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
-Route::get('/register', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
 require __DIR__ . '/system/lang.php';
 require __DIR__ . '/system/home.php';

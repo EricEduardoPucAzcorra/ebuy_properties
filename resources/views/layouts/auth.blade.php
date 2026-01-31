@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Lalux</title>
+    <title>Ebuy Properties</title>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="icon" href="{{ asset('icons/lalux.png') }}">
+    <link rel="icon" href="{{asset('images/ebuy_1.png')}}">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 </head>
 <body>
     <header class="auth-header">
         <div class="auth-header-inner">
-            <img src="{{ asset('icons/lalux.png') }}" height="40" alt="Lalux">
+            <img src="{{asset('images/ebuy_1.png')}}" height="40" alt="Ebuy Properties">
             <div class="lang-switch">
                 <a href="/lang/es" class="{{ app()->getLocale() === 'es' ? 'active' : '' }}">🇲🇽 ES</a>
                 <a href="/lang/en" class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">🇺🇸 EN</a>

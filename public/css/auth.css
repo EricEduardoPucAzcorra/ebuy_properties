@@ -1,3 +1,4 @@
+/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -5,17 +6,30 @@
     font-family: 'Nunito', system-ui, sans-serif;
 }
 
-body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #020617, #0f172a);
-    color: #fff;
+/* VARIABLES */
+:root {
+    --green-main: #00b98e;
+    --green-dark: #059669;
+    --green-soft: #d1fae5;
+    --text-dark: #0f172a;
+    --text-soft: #64748b;
+    --white: #ffffff;
 }
 
+/* BODY */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc, #eef2f7);
+    color: var(--text-dark);
+}
+
+/* HEADER */
 .auth-header {
     position: fixed;
     top: 0;
     width: 100%;
     padding: 24px 40px;
+    background: transparent;
 }
 
 .auth-header-inner {
@@ -25,20 +39,21 @@ body {
 }
 
 .lang-switch a {
-    color: #cbd5f5;
+    color: var(--text-soft);
     text-decoration: none;
     margin-left: 12px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 600;
     opacity: 0.7;
 }
 
 .lang-switch a.active,
 .lang-switch a:hover {
     opacity: 1;
-    font-weight: 600;
+    color: var(--green-main);
 }
 
-
+/* MAIN */
 .auth-main {
     display: flex;
     align-items: center;
@@ -46,6 +61,7 @@ body {
     min-height: 100vh;
 }
 
+/* CONTAINER */
 .login-container {
     width: 100%;
     display: flex;
@@ -53,31 +69,38 @@ body {
     padding: 20px;
 }
 
+/* CARD */
 .login-card {
     width: 100%;
     max-width: 420px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(18px);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    background: var(--white);
+    border-radius: 22px;
+    padding: 44px;
+    box-shadow: 0 40px 90px rgba(0,0,0,0.12);
 }
 
+/* BRAND */
 .login-brand h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    color: #0b07eb;
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: var(--green-main);
 }
 
 .login-brand span {
-    opacity: 0.75;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: var(--text-soft);
+    text-transform: uppercase;
 }
 
+/* SUBTITLE */
 .login-subtitle {
-    margin: 20px 0 32px;
-    opacity: 0.85;
+    margin: 18px 0 36px;
+    font-size: 0.9rem;
+    color: #475569;
 }
 
+/* FORM */
 .form-group {
     position: relative;
     margin-bottom: 26px;
@@ -85,21 +108,29 @@ body {
 
 .form-group input {
     width: 100%;
-    padding: 14px;
-    background: rgba(255,255,255,0.15);
-    border: none;
-    border-radius: 12px;
-    color: #fff;
+    padding: 15px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    color: var(--text-dark);
     outline: none;
+    transition: border .25s, box-shadow .25s;
 }
 
+.form-group input:focus {
+    border-color: var(--green-main);
+    box-shadow: 0 0 0 4px rgba(0,185,142,0.15);
+}
+
+/* FLOAT LABEL */
 .form-group label {
     position: absolute;
     top: 50%;
-    left: 14px;
+    left: 16px;
     transform: translateY(-50%);
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.7);
+    font-size: 0.75rem;
+    color: var(--text-soft);
     pointer-events: none;
     transition: 0.3s;
 }
@@ -107,52 +138,117 @@ body {
 .form-group input:focus + label,
 .form-group input:not(:placeholder-shown) + label {
     top: -8px;
-    left: 10px;
-    font-size: 0.7rem;
-    background: rgba(2,6,23,0.8);
+    left: 12px;
+    font-size: 0.65rem;
+    background: var(--white);
     padding: 2px 6px;
     border-radius: 6px;
+    color: var(--green-main);
 }
 
+/* OPTIONS */
 .login-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     margin-bottom: 30px;
+    color: var(--text-soft);
 }
 
 .login-options a {
-    color: #93c5fd;
+    color: var(--green-main);
+    font-weight: 600;
     text-decoration: none;
 }
 
+/* BUTTON */
 .login-btn {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
+    border-radius: 16px;
     border: none;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #38bdf8, #2563eb);
-    color: #fff;
-    font-weight: 600;
+    background: var(--green-main);
+    color: var(--white);
+    font-weight: 700;
+    letter-spacing: 1px;
     cursor: pointer;
-    transition: transform .2s, box-shadow .2s;
+    transition: background .2s, transform .2s, box-shadow .2s;
 }
 
 .login-btn:hover {
+    background: var(--green-dark);
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 16px 40px rgba(0,185,142,0.35);
 }
 
-/* ERRORES DE VALIDACION */
+/* VALIDATION ERRORS */
 .invalid-feedback {
-    display: block;       /* Asegura que ocupe su propia línea */
-    margin-top: 4px;      /* Espacio pequeño debajo del input */
-    font-size: 0.65rem;   /* Más pequeño que la etiqueta */
-    color: #f87171;       /* Rojo suave */
+    display: block;
+    margin-top: 6px;
+    font-size: 0.65rem;
+    color: #dc2626;
 }
 
 .form-group input.is-invalid {
-    border: 1px solid #f87171; /* borde rojo suave */
+    border-color: #dc2626;
 }
 
+.login-brand img {
+    max-width: 180px;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.12));
+}
+
+/* GOOGLE BUTTON */
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #020617;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: box-shadow .2s, transform .2s;
+    margin-bottom: 20px;
+}
+
+.google-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.google-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+/* DIVIDER */
+.divider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.divider span {
+    padding: 0 12px;
+    font-size: 0.7rem;
+    color: #64748b;
+    text-transform: uppercase;
+}

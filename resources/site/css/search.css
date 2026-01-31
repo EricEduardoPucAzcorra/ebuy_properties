@@ -1,0 +1,50 @@
+/* ================================
+   SEARCH PROPERTY – SAFE STYLES
+   No plugins / No conflicts
+================================ */
+
+/* Wrapper */
+.search-wrapper {
+    position: relative;
+    margin-top: -60px;
+    z-index: 10;
+}
+
+/* Card */
+.search-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px 30px;
+}
+
+/* Inputs & selects */
+.search-input {
+    height: 52px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    font-size: 15px;
+}
+
+.search-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13,110,253,.15);
+}
+
+/* Button */
+.btn-search {
+    height: 52px;
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+
+/* Mobile fixes */
+@media (max-width: 991px) {
+    .search-wrapper {
+        margin-top: 30px;
+    }
+
+    .search-card {
+        padding: 20px;
+    }
+}

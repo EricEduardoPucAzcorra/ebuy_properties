@@ -13,6 +13,12 @@ class Countrie extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        'countryid',
+        'countryname',
+        'countrycode',
+        'continent',
+        'latitude',
+        'longitude',
         'name',
         'code'
     ];

@@ -5,18 +5,18 @@
 
     <div class="login-card">
 
-        {{-- BRAND --}}
-        <div class="login-brand">
-            <h1>Lalux</h1>
-            <span>Development</span>
+        <div class="login-brand" style="text-align:center; margin-bottom:10px;">
+            <img
+                src="{{ asset('images/ebuy_1.png') }}"
+                alt="eBuy Properties"
+                style="max-width:180px; width:100%;"
+            >
         </div>
 
-        {{-- SUBTITLE --}}
-        <p class="login-subtitle">
+        <p class="login-subtitle" style="text-align:center;">
             {{ __('auth.Reset Password') }}
         </p>
 
-        {{-- STATUS --}}
         @if (session('status'))
             <div class="alert-success">
                 {{ session('status') }}
@@ -26,34 +26,31 @@
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
-            {{-- EMAIL --}}
             <div class="form-group">
-                <input type="email"
-                       name="email"
-                       value="{{ old('email') }}"
-                       class="@error('email') is-invalid @enderror"
-                       required
-                       autofocus>
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    class="@error('email') is-invalid @enderror"
+                    required
+                    autofocus
+                    autocomplete="email"
+                >
                 <label>{{ __('auth.Email Address') }}</label>
 
                 @error('email')
-                    <span class="invalid-feedback">
-                        {{ $message }}
-                    </span>
+                    <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
-
 
             <button type="submit" class="login-btn">
                 {{ __('auth.Send Password Reset Link') }}
             </button>
         </form>
 
-        <br>
-
-        <div class="login-options center">
-            <a href="{{ route('login') }}" class="login-link">
-                 {{ __('auth.login') }}
+        <div class="login-options" style="justify-content:center; margin-top:20px;">
+            <a href="{{ route('login') }}">
+                {{ __('auth.login') }}
             </a>
         </div>
 

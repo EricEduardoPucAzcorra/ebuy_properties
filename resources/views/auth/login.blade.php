@@ -3,49 +3,75 @@
 @section('content')
 <div class="login-container">
 
-    <div class="login-card">
+    <div class="login-card" style="padding-top:25px;">
 
-        <div class="login-brand">
-            <h1>Lalux</h1>
-            <span>Development</span>
+        {{-- BRAND --}}
+        <div class="login-brand" style="text-align:center; margin-bottom:6px;">
+            <img
+                src="{{ asset('images/ebuy_1.png') }}"
+                alt="eBuy Properties"
+                style="max-width:140px; width:100%;"
+            >
         </div>
 
-        <p class="login-subtitle">
+        {{-- SUBTITLE --}}
+        <p class="login-subtitle" style="text-align:center; margin-bottom:12px;">
             {{ __('auth.login') }}
         </p>
 
+        {{-- GOOGLE LOGIN --}}
+        <a href=""
+           class="google-btn"
+           style="padding:10px 14px; font-size:14px; margin-bottom:12px;">
+            <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google"
+                style="width:18px; height:18px;"
+            >
+            {{ __('auth.Login with Google') }}
+        </a>
+
+        {{-- DIVIDER --}}
+        <div class="divider" style="margin:12px 0;">
+            <span>{{ __('auth.or') }}</span>
+        </div>
+
         <form method="POST" action="{{ route('login') }}">
             @csrf
+
+            {{-- EMAIL --}}
             <div class="form-group">
-                <input type="email"
-                       name="email"
-                       value="{{ old('email') }}"
-                       class="@error('email') is-invalid @enderror"
-                       required>
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    class="@error('email') is-invalid @enderror"
+                    required
+                >
                 <label>{{ __('auth.Email Address') }}</label>
 
                 @error('email')
-                    <span class="invalid-feedback" role="alert">
-                        {{ $message }}
-                    </span>
+                    <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
 
+            {{-- PASSWORD --}}
             <div class="form-group">
-                <input type="password"
-                       name="password"
-                       class="@error('password') is-invalid @enderror"
-                       required>
+                <input
+                    type="password"
+                    name="password"
+                    class="@error('password') is-invalid @enderror"
+                    required
+                >
                 <label>{{ __('auth.Password') }}</label>
 
                 @error('password')
-                    <span class="invalid-feedback" role="alert">
-                        {{ $message }}
-                    </span>
+                    <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
 
-            <div class="login-options">
+            {{-- OPTIONS --}}
+            <div class="login-options" style="margin-top:6px;">
                 <label class="remember">
                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                     {{ __('auth.Remember Me') }}
@@ -58,7 +84,8 @@
                 @endif
             </div>
 
-            <button type="submit" class="login-btn">
+            {{-- BUTTON --}}
+            <button type="submit" class="login-btn" style="margin-top:10px;">
                 {{ __('auth.login') }}
             </button>
         </form>

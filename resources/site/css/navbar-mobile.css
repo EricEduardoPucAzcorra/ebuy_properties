@@ -1,0 +1,71 @@
+/* ==========================
+   NAVBAR MOBILE FIX
+   ========================== */
+
+@media (max-width: 991px) {
+
+    /* Navbar base */
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    /* Logo */
+    .navbar-brand img {
+        width: auto !important;
+        height: 48px !important;
+    }
+
+    /* Collapse container */
+    .navbar-collapse {
+        background: #ffffff;
+        margin-top: 10px;
+        padding: 15px;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    /* Menu links */
+    .navbar-nav .nav-link {
+        padding: 12px 0;
+        font-weight: 500;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .navbar-nav .nav-link:last-child {
+        border-bottom: none;
+    }
+
+    /* Dropdowns */
+    .dropdown-menu {
+        border-radius: 10px;
+        box-shadow: none;
+        margin-top: 5px;
+    }
+
+    /* Right section (lang + auth) */
+    .navbar-collapse .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+        margin-top: 15px;
+        gap: 10px;
+    }
+
+    /* Language button */
+    .navbar-collapse .nav-item.dropdown > a {
+        padding: 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    /* Login / Register buttons */
+    .navbar-collapse .btn {
+        width: 100%;
+        padding: 10px;
+        font-weight: 500;
+    }
+
+    .navbar-collapse .btn + .btn {
+        margin-top: 8px;
+    }
+}
