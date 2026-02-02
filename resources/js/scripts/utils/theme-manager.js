@@ -12,12 +12,12 @@ export class ThemeManager {
   init() {
     // Set initial theme
     this.setTheme(this.currentTheme);
-    
+
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', (e) => {
         if (!this.getStoredTheme()) {
-          this.setTheme(e.matches ? 'dark' : 'light');
+          this.setTheme(e.matches ? 'light' : 'light');
         }
       });
   }
@@ -27,7 +27,7 @@ export class ThemeManager {
   }
 
   getPreferredTheme() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'light';
   }
 
   setTheme(theme) {
@@ -38,15 +38,15 @@ export class ThemeManager {
   }
 
   toggleTheme() {
-    const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+    const newTheme = this.currentTheme === 'light' ? 'light' : 'light';
     this.setTheme(newTheme);
   }
 
   updateThemeIcons() {
     const lightIcons = document.querySelectorAll('.theme-icon-light');
     const darkIcons = document.querySelectorAll('.theme-icon-dark');
-    
-    if (this.currentTheme === 'dark') {
+
+    if (this.currentTheme === 'light') {
       lightIcons.forEach(icon => icon.classList.add('d-none'));
       darkIcons.forEach(icon => icon.classList.remove('d-none'));
     } else {
@@ -58,4 +58,4 @@ export class ThemeManager {
   getCurrentTheme() {
     return this.currentTheme;
   }
-} 
+}

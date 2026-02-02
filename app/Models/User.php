@@ -27,6 +27,8 @@ class User extends Authenticatable
         'phone',
         'is_active',
         'profile',
+        'profile_url',
+        'google_id'
     ];
 
     /**
@@ -86,5 +88,13 @@ class User extends Authenticatable
     {
         return $this->permissions()->pluck('name')->toArray();
     }
+
+    public function hasRoleName(string $name): bool
+    {
+        return $this->roles()
+            ->where('name', $name)
+            ->exists();
+    }
+
 
 }

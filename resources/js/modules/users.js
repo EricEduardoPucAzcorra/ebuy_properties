@@ -93,10 +93,20 @@ new Vue({
                     { data: 'name' },
                     { data: 'email' },
                     {
-                        data: 'profile',
-                        render: img =>
-                            `<img src="${img ? '/storage/' + img : '/images/avatar-placeholder.svg'}"
-                                 class="img-thumbnail" style="width:45px">`
+                        data: null,
+                        render: row => {
+                            const img = row.profile
+                                ? `/storage/${row.profile}`
+                                : row.profile_url
+                                    ? row.profile_url
+                                    : '/images/avatar-placeholder.svg';
+
+                            return `
+                                <img src="${img}"
+                                    class="img-thumbnail"
+                                    style="width:45px">
+                            `;
+                        }
                     },
                     {
                         data: 'is_active',
@@ -184,7 +194,10 @@ new Vue({
 
             this.imagePreview = data.profile
                 ? `/storage/${data.profile}`
-                : '/images/avatar-placeholder.svg';
+                : data.profile_url
+                    ? data.profile_url
+                    : '/images/avatar-placeholder.svg';
+
 
             this.isEditing = true;
             new bootstrap.Modal('#userModal').show();

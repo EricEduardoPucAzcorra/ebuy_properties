@@ -13,7 +13,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/auth/user', [UserController::class, 'authenticatedUser'])
     ->middleware('auth');
 
-
     //Buscardores
     Route::get('/search', [SearchController::class, 'search']);
     //Change tenant

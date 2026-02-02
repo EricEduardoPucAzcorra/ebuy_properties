@@ -47,8 +47,10 @@ new Vue({
                     is_active: 1
                 };
 
-                this.imagePreview = user.profile
-                    ? `/storage/${user.profile}`
+              this.imagePreview = user.profile
+                ? `/storage/${user.profile}`
+                : user.profile_url
+                    ? user.profile_url
                     : '/images/avatar-placeholder.svg';
 
             } catch (e) {

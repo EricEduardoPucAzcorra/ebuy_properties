@@ -5,7 +5,6 @@
 
     <div class="login-card" style="padding-top:25px;">
 
-        {{-- BRAND --}}
         <div class="login-brand" style="text-align:center; margin-bottom:6px;">
             <img
                 src="{{ asset('images/ebuy_1.png') }}"
@@ -14,13 +13,11 @@
             >
         </div>
 
-        {{-- SUBTITLE --}}
         <p class="login-subtitle" style="text-align:center; margin-bottom:12px;">
             {{ __('auth.login') }}
         </p>
 
-        {{-- GOOGLE LOGIN --}}
-        <a href=""
+        <a href="{{ route('google.login') }}"
            class="google-btn"
            style="padding:10px 14px; font-size:14px; margin-bottom:12px;">
             <img
@@ -31,15 +28,12 @@
             {{ __('auth.Login with Google') }}
         </a>
 
-        {{-- DIVIDER --}}
         <div class="divider" style="margin:12px 0;">
             <span>{{ __('auth.or') }}</span>
         </div>
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
-
-            {{-- EMAIL --}}
             <div class="form-group">
                 <input
                     type="email"
@@ -55,7 +49,6 @@
                 @enderror
             </div>
 
-            {{-- PASSWORD --}}
             <div class="form-group">
                 <input
                     type="password"
@@ -70,7 +63,6 @@
                 @enderror
             </div>
 
-            {{-- OPTIONS --}}
             <div class="login-options" style="margin-top:6px;">
                 <label class="remember">
                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -84,11 +76,16 @@
                 @endif
             </div>
 
-            {{-- BUTTON --}}
             <button type="submit" class="login-btn" style="margin-top:10px;">
                 {{ __('auth.login') }}
             </button>
         </form>
+
+        <div class="login-options" style="justify-content:center; margin-top:14px;">
+            <a href="{{ route('register') }}">
+                {{ __('auth.register') }}
+            </a>
+        </div>
 
     </div>
 

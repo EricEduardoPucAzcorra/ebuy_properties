@@ -41,6 +41,7 @@ class UserDataTable
                 'phone' => $user->phone,
                 'email' => $user->email,
                 'profile' => $user->profile,
+                'profile_url' => $user->profile_url,
                 'is_active' => $user->is_active,
                 'created_at' => $user->created_at->format('d/m/Y'),
                 'roles' => $user->roles->map(fn ($role) => [

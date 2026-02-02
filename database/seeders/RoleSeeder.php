@@ -19,6 +19,17 @@ class RoleSeeder extends Seeder
             ['description' => 'Administrador del sistema']
         );
 
+        $client = Role::firstOrCreate(
+            ['name' => 'Cliente'],
+            ['description' => 'Usuario que puede realizar solicitudes de servicio']
+        );
+
+
+        $agent = Role::firstOrCreate(
+            ['name' => 'Agente'],
+            ['description' => 'Usuario que gestiona las solicitudes de servicio']
+        );
+
         $permissions = Permission::all();
 
         foreach ($permissions as $permission) {

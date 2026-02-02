@@ -12,7 +12,7 @@ new Vue({
 
         allSections: [
             { id: 'business', name: SettingSectionsTranslations.business, icon: 'bi bi-building' },
-            { id: 'business_units', name: SettingSectionsTranslations.business_units, icon: 'bi bi-building-fill-gear' },
+            // { id: 'business_units', name: SettingSectionsTranslations.business_units, icon: 'bi bi-building-fill-gear' },
             // { id: 'appearance', name: SettingSectionsTranslations.appearance, icon: 'bi bi-palette' }
         ],
 

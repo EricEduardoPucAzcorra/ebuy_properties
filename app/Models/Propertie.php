@@ -21,4 +21,10 @@ class Propertie extends Model
         'currency',
         'is_active',
     ];
+
+    public function address()
+    {
+        return $this->hasOne(AddressPropertie::class, 'property_id', 'id');
+    }
+
 }

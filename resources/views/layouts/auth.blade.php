@@ -13,7 +13,10 @@
 <body>
     <header class="auth-header">
         <div class="auth-header-inner">
-            <img src="{{asset('images/ebuy_1.png')}}" height="40" alt="Ebuy Properties">
+            <a href="/" class="auth-logo">
+                <img src="{{ asset('images/ebuy_1.png') }}" height="55" alt="Ebuy Properties">
+            </a>
+
             <div class="lang-switch">
                 <a href="/lang/es" class="{{ app()->getLocale() === 'es' ? 'active' : '' }}">🇲🇽 ES</a>
                 <a href="/lang/en" class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">🇺🇸 EN</a>

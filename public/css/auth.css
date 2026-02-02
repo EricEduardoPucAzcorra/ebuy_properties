@@ -252,3 +252,13 @@ body {
     color: #64748b;
     text-transform: uppercase;
 }
+
+.auth-logo img {
+    height: 55px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.auth-logo img:hover {
+    transform: scale(1.05);
+}
