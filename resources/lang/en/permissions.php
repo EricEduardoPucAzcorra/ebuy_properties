@@ -8,5 +8,6 @@ return [
     'show'=>'Details',
     'permissions'=>'Assign permissions',
     'set_up_global'=>'Global configuration',
-    'state_update'=>'Change state'
+    'state_update'=>'Change state',
+    'site'=>'Website access',
 ];

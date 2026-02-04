@@ -93,8 +93,8 @@ class AdminApp {
             '/roles': 'roles',
             '/profile': 'profile',
             '/config-session': 'settings',
-            '/reports': 'reports',
-            '/messages': 'messages',
+            '/plans_features': 'plans_features',
+            '/plans': 'plans',
             '/calendar': 'calendar',
             '/security': 'security',
             '/files': 'files'

@@ -51,75 +51,6 @@
                                 @endif
                             </div>
                         @else
-                            <div class="nav-company-selector me-3">
-                                <div class="dropdown">
-
-                                    @if($tenants->count() >= 1)
-                                        <button
-                                            type="button"
-                                            class="btn btn-sm btn-outline-primary rounded-pill px-3 {{ $tenants->count() > 1 ? 'dropdown-toggle' : '' }}"
-                                            @if($tenants->count() > 1)
-                                                data-bs-toggle="dropdown"
-                                            @endif
-                                        >
-                                            <i class="bi bi-building me-1"></i>
-                                            {{ $tenants->firstWhere('id', session('tenant_id'))?->name ?? 'Mi Empresa' }}
-                                        </button>
-                                    @endif
-
-                                    @if($tenants->count() > 1)
-                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                            @foreach ($tenants as $t)
-                                                <li>
-                                                    <a href="{{ route('tenant.set', $t) }}"
-                                                    class="dropdown-item {{ session('tenant_id') === $t->id ? 'active' : '' }}">
-                                                        @if (session('tenant_id') === $t->id)
-                                                            <i class="bi bi-check2 me-2"></i>
-                                                        @endif
-                                                        {{ $t->name }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-
-                                </div>
-                            </div>
-
-                            <div class="search-container flex-grow-1 mx-4" x-data="searchComponent">
-                                <div class="position-relative">
-
-                                    <input type="search"
-                                        class="form-control"
-                                        placeholder="{{ __('general.search') }} (Ctrl+K)"
-                                        x-model="query"
-                                        @input.debounce.300ms="search()">
-
-                                    <i class="bi bi-search position-absolute top-50 end-0 translate-middle-y me-3"></i>
-
-                                    <div class="dropdown-menu show w-100 mt-1"
-                                        x-show="showResults"
-                                        x-transition
-                                        @click.outside="showResults = false">
-
-                                        <template x-for="result in results" :key="result.id">
-                                            <a href="#"
-                                            class="dropdown-item d-flex align-items-center gap-2"
-                                            @click.prevent="selectResult(result)">
-                                                <i :class="result.icon"></i>
-                                                <span x-text="result.title"></span>
-                                            </a>
-                                        </template>
-
-                                        <div x-show="results.length === 0"
-                                            class="dropdown-item text-muted">
-                                            Sin resultados
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
                             <div class="navbar-nav flex-row">
                                 <div x-data="languageSwitch">
                                     <button class="btn btn-outline-secondary me-2" type="button" @click="changeLang()">
@@ -179,17 +110,18 @@
                     <div class="sidebar-content">
                         @if(auth()->user()->hasRoleName('Admin'))
                             @include('auth_user.admin')
-                        @elseif (auth()->user()->hasRoleName('Cliente'))
-                            @include('auth_user.client')
-                        @elseif (auth()->user()->hasRoleName('Agente'))
-                            @include('auth_user.agent')
+                        @elseif (auth()->user()->hasRoleName('Owner'))
+                            @include('auth_user.owner')
+                        @else
+
                         @endif
                     </div>
                 </aside>
-
-                <button class="hamburger-menu" type="button" data-sidebar-toggle aria-label="Toggle sidebar">
-                    <i class="bi bi-list"></i>
-                </button>
+                @if(auth()->user()->hasRoleName('Admin'))
+                    <button class="hamburger-menu" type="button" data-sidebar-toggle aria-label="Toggle sidebar">
+                        <i class="bi bi-list"></i>
+                    </button>
+                @endif
             @endauth
 
             <main class="admin-main">
@@ -254,6 +186,8 @@
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}"></script>
+
+    @stack('scripts')
 
     @include('layouts.traductions')
 </body>

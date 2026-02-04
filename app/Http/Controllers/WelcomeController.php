@@ -7,6 +7,7 @@ use Stevebauman\Location\Facades\Location;
 use App\Models\Countrie;
 use App\Models\State;
 use App\Models\Citie;
+use App\Models\Menu;
 use App\Models\Propertie;
 use App\Models\TypeOperation;
 use App\Models\TypePropetie;
@@ -15,13 +16,7 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        $type_properties = TypePropetie::all();
-        $type_operations = TypeOperation::all();
-
-        return view('site.welcome', compact(
-            'type_properties',
-            'type_operations'
-        ));
+        return view('site.welcome');
     }
 
     public function searchLocation(Request $request)
@@ -49,7 +44,6 @@ class WelcomeController extends Controller
 
         $results = [];
 
-        // 🔹 CIUDADES
         $citiesQuery = Citie::with(['state.country'])
             ->where('cityname', 'LIKE', "%{$q}%");
 
@@ -61,11 +55,10 @@ class WelcomeController extends Controller
             $results[] = [
                 'label' => "{$city->cityname}, {$city->state->statename}, {$city->state->country->countryname}",
                 'type'  => 'city',
-                'id'    => $city->cityid
+                'id'    => $city->id
             ];
         }
 
-        // 🔹 ESTADOS
         $statesQuery = State::with('country')
             ->where('statename', 'LIKE', "%{$q}%");
 
@@ -77,47 +70,16 @@ class WelcomeController extends Controller
             $results[] = [
                 'label' => "{$stateItem->statename}, {$stateItem->country->countryname}",
                 'type'  => 'state',
-                'id'    => $stateItem->stateid
+                'id'    => $stateItem->id
             ];
         }
 
         return response()->json($results);
     }
 
-    public function search(Request $request)
+    public function about()
     {
-        $query = Propertie::query()
-            ->with(['address.city.state.country'])
-            ->where('is_active', true);
-
-        if ($request->operation) {
-            $query->where('type_operation_id', $request->operation);
-        }
-
-        if ($request->type) {
-            $query->where('type_property_id', $request->type);
-        }
-
-        if ($request->location_type && $request->location_id) {
-
-            $query->whereHas('address', function ($q) use ($request) {
-
-                if ($request->location_type === 'city') {
-                    $q->where('city_id', $request->location_id);
-                }
-
-                if ($request->location_type === 'state') {
-                    $q->where('state_id', $request->location_id);
-                }
-            });
-        }
-
-        $properties = $query
-            ->orderBy('created_at', 'desc')
-            ->paginate(12)
-            ->withQueryString();
-
-        return view('site.list_properties', compact('properties'));
+        return view('site.about');
     }
 
 }

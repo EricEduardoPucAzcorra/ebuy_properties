@@ -6,5 +6,8 @@ return [
     'system' => 'System',
     'users' => 'Users',
     'roles' => 'Roles',
-    'config'=> 'System settings'
+    'config'=> 'System settings',
+    'config_plans'=>'Plans Management',
+    'plans'=>'Plans',
+    'plan_features'=>'Plan features'
 ];

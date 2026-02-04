@@ -6,5 +6,9 @@ return [
     'system' => 'Sistema',
     'users' => 'Usuarios',
     'roles' => 'Roles',
-    'config'=>'Ajustes del sistema'
+    'config'=>'Ajustes del sistema',
+    'site'=>'Sitio web',
+    'config_plans'=>'Gestión de planes',
+    'plans'=>'Planes',
+    'plan_features'=>'características de planes'
 ];

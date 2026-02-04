@@ -18,15 +18,18 @@ class PermissionSeeder extends Seeder
         $users = Module::where('name','=','users')->first();
         $roles = Module::where('name','=','roles')->first();
         $config = Module::where('name','=','config')->first();
-
+        $plans = Module::where('name','=','plans')->first();
+        $site = Module::where('name','=','site')->first();
 
         $permissions = [
+            // Dashboard
             [
                 'name' => 'dashboard.dashboard',
                 'description' => 'Ver dashboard',
                 'slug' => 'dashboard.index',
                 'module_id' => $dashboard->id
             ],
+            // Users
             [
                 'name' => 'users.view',
                 'description' => '',
@@ -57,6 +60,7 @@ class PermissionSeeder extends Seeder
                 'slug' => 'users.show',
                 'module_id' => $users->id
             ],
+            // Roles
             [
                 'name' => 'roles.view',
                 'description' => '',
@@ -84,8 +88,7 @@ class PermissionSeeder extends Seeder
                 'slug' => 'roles.permissions',
                 'module_id' => $roles->id
             ],
-
-
+            // Config
             [
                 'name' => 'config.view',
                 'description' => '',
@@ -99,6 +102,40 @@ class PermissionSeeder extends Seeder
                 'slug' => 'config.set_up_global',
                 'module_id' => $config->id
             ],
+            //Plans
+            [
+                'name' => 'plans.view',
+                'description' => '',
+                'slug' => 'plans.view',
+                'module_id' => $plans->id
+            ],
+            [
+                'name' => 'plans.create',
+                'description' => '',
+                'slug' => 'plans.create',
+                'module_id' => $plans->id
+            ],
+            [
+                'name' => 'plans.update',
+                'description' => '',
+                'slug' => 'plans.update',
+                'module_id' => $plans->id
+            ],
+
+            [
+                'name' => 'plan_features.view',
+                'description' => '',
+                'slug' => 'plan_features.plan_features',
+                'module_id' => $plans->id
+            ],
+
+            // Site
+            [
+                'name' => 'view.site',
+                'description' => '',
+                'slug' => 'view.site',
+                'module_id' => $site->id
+            ]
 
         ];
 

@@ -7,47 +7,7 @@
                 : asset('images/ebuy_2.jpg');
         @endphp
 
-        <img src="{{ $logo }}" alt="Logo"
-            class="company-image img-fluid">
-
-        <div class="company-overlay">
-            <div class="dropdown company-selector">
-
-                @if($tenants->count() >= 1)
-                    <button
-                        type="button"
-                        class="company-selector-btn {{ $tenants->count() > 1 ? 'dropdown-toggle' : '' }}"
-                        @if($tenants->count() > 1)
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        @endif
-                    >
-                        {{ $tenants->firstWhere('id', $activeTenantId)?->name ?? 'Seleccionar clínica' }}
-                    </button>
-                @endif
-
-                @if($tenants->count() > 1)
-                    <ul class="dropdown-menu company-dropdown">
-                        @foreach ($tenants as $t)
-                            <li>
-                                <form method="POST" action="{{ route('tenant.set', $t) }}">
-                                    @csrf
-                                    <button type="submit"
-                                            class="dropdown-item {{ $activeTenantId === $t->id ? 'active' : '' }}">
-                                        @if ($activeTenantId === $t->id)
-                                            <i class="bi bi-check2 me-2"></i>
-                                        @endif
-                                        {{ $t->name }}
-                                    </button>
-                                </form>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-
-            </div>
-        </div>
-
+        <img src="{{ $logo }}" alt="Logo" class="company-image img-fluid">
     </div>
 </div>
 

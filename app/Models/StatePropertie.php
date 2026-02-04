@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StatePropertie extends Model
 {
-    public $table = 'state_properties';
+    public $table = 'status_properties';
 
     public $primaryKey = 'id';
 

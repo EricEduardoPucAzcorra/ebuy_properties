@@ -4,14 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $admin = Role::firstOrCreate(
@@ -19,21 +15,18 @@ class RoleSeeder extends Seeder
             ['description' => 'Administrador del sistema']
         );
 
-        $client = Role::firstOrCreate(
-            ['name' => 'Cliente'],
-            ['description' => 'Usuario que puede realizar solicitudes de servicio']
+        $owner = Role::firstOrCreate(
+            ['name' => 'Owner'],
+            ['description' => 'Dueño de condominios']
         );
 
+        $allPermissions = Permission::pluck('id');
+        $admin->permissions()->sync($allPermissions);
 
-        $agent = Role::firstOrCreate(
-            ['name' => 'Agente'],
-            ['description' => 'Usuario que gestiona las solicitudes de servicio']
-        );
+        $configSitePermission = Permission::where('name', 'view.site')->first();
 
-        $permissions = Permission::all();
-
-        foreach ($permissions as $permission) {
-            $admin->permissions()->syncWithoutDetaching($permission->id);
+        if ($configSitePermission) {
+            $owner->permissions()->sync([$configSitePermission->id]);
         }
     }
 }

@@ -3,7 +3,9 @@ return [
     'failed' => 'Estas credenciales no coinciden con nuestros registros.',
     'password' => 'La contraseña proporcionada es incorrecta.',
     'throttle' => 'Demasiados intentos de inicio de sesión. Por favor intente de nuevo en :seconds segundos.',
-    'login' => 'Iniciar sesión',
+    'login_google'=>'Iniciar sesión con Google',
+    'login_google_register'=>'Registrarse con Google',
+    'login' => 'Iniciar',
     'register' => 'Registrarse',
     'Email Address' => 'Correo electrónico',
     'Password' => 'Contraseña',
@@ -14,5 +16,6 @@ return [
     'Reset Password' => 'Restablecer contraseña',
     'Send Password Reset Link' => 'Enviar enlace de restablecimiento de contraseña',
     'unauthorized' => 'No tienes permisos para realizar esta acción.',
-    'user_inactive'=>'Te encuentras inactivo en el sistema'
+    'user_inactive'=>'Te encuentras inactivo en el sistema',
+    'or'=>'o',
 ];

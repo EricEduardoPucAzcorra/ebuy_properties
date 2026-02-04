@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             MenuSeeder::class,
+            MenuSiteSeeder::class,
             PermissionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
@@ -33,7 +34,8 @@ class DatabaseSeeder extends Seeder
             StatesTableSeeder::class,
             CitiesTableSeeder::class,
             TypePropertieSeeder::class,
-            TypeOperationSeeder::class
+            TypeOperationSeeder::class,
+            StatePropertieSeeder::class
         ]);
     }
 }

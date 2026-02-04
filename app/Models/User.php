@@ -96,5 +96,62 @@ class User extends Authenticatable
             ->exists();
     }
 
+    public function canPublishProperty(): bool
+    {
+        if (! $this->hasActiveSubscription()) {
+            return false;
+        }
+
+        return data_get(
+            $this->subscription->plan->features,
+            'logic.publish_properties',
+            false
+        );
+    }
+
+    public function canCreateMoreProperties(): bool
+    {
+        if (! $this->hasActiveSubscription()) {
+            return false;
+        }
+
+        $max = data_get(
+            $this->subscription->plan->features,
+            'logic.max_properties',
+            0
+        );
+
+        return $this->properties()->count() < $max;
+    }
+
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function plan()
+    {
+        return $this->hasOneThrough(
+            Plan::class,
+            Subscription::class,
+            'user_id',
+            'id',
+            'id',
+            'plan_id'
+        );
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        return $this->subscription &&
+            $this->subscription->status === 'active' &&
+            $this->subscription->ends_at->isFuture();
+    }
 
 }

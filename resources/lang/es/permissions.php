@@ -8,5 +8,6 @@ return [
     'show'=>'Detalles',
     'permissions'=>'Asignar permisos',
     'set_up_global'=>'Configuración global',
-    'state_update'=>'Cambiar estado'
+    'state_update'=>'Cambiar estado',
+    'site'=>'Acceso al sitio web',
 ];

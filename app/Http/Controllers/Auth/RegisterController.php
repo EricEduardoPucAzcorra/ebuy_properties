@@ -71,7 +71,7 @@ class RegisterController extends Controller
             'is_active' => true,
         ]);
 
-        $role = Role::where('name', 'Cliente')->first();
+        $role = Role::where('name', 'Owner')->first();
         if ($role) {
             // $user->roles()->attach($role->id);
             $user->roles()->sync($role->id);

@@ -4,7 +4,9 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'login' => 'Login',
+    'login_google'=>'Login with Google',
+    'login_google_register'=>'Register with Google',
+    'login' => 'Get into',
     'register' => 'Register',
     'Email Address' => 'Email Address',
     'Password' => 'Password',
@@ -15,5 +17,6 @@ return [
     'Reset Password' => 'Reset Password',
     'Send Password Reset Link' => 'Send Password Reset Link',
     'unauthorized' => 'You are not authorized to perform this action.',
-    'user_inactive' => 'Your account is inactive'
+    'user_inactive' => 'Your account is inactive',
+    'or' => 'or',
 ];

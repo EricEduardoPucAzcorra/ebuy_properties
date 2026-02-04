@@ -24,7 +24,7 @@
                 alt="Google"
                 style="width:18px; height:18px;"
             >
-            {{ __('auth.Register with Google') }}
+            {{ __('auth.login_google_register') }}
         </a>
 
         <div class="divider" style="margin:12px 0;">

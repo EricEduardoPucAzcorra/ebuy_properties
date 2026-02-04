@@ -69,4 +69,20 @@
         update_profile_session_close:  @json(__('general.profile.message.update_profile_session_close')),
     };
 
+    window.PlanTranslations = {
+        create: @json(__('general.plans.create')),
+        edit: @json(__('general.plans.edit')),
+        plan_created_success: @json(__('general.plans.messages.plan_created_success')),
+        plan_updated_success: @json(__('general.plans.messages.plan_updated_success')),
+    };
+
+    window.PlanFeaturesModuleTranslations = {
+        edit: @json(__('general.plan_feature.edit')),
+        create: @json(__('general.plan_feature.create')),
+        change_status_title: @json(__('general.plan_feature.messages.change_status_title')),
+        change_status_info: @json(__('general.plan_feature.messages.change_status_info')),
+        feature_created_success: @json(__('general.plan_feature.messages.feature_created_success')),
+        feature_updated_success: @json(__('general.plan_feature.messages.feature_updated_success')),
+    };
+
 </script>
