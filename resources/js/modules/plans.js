@@ -6,10 +6,8 @@ new Vue({
         plans: [],
         isEditing: false,
 
-        // FEATURES DISPONIBLES
         availableFeatures: [],
 
-        // FORM PLAN
         form: {
             id: null,
             name: '',
@@ -27,11 +25,6 @@ new Vue({
     },
 
     methods: {
-
-        /* =========================
-         * LOADERS
-         * ========================= */
-
         async loadPlans() {
             try {
                 const res = await axios.get('/plans-index');
@@ -57,10 +50,6 @@ new Vue({
                 console.error(e);
             }
         },
-
-        /* =========================
-         * MODALS
-         * ========================= */
 
         openCreate() {
             this.resetForm();
@@ -125,14 +114,9 @@ new Vue({
             };
         },
 
-        /* =========================
-         * SAVE
-         * ========================= */
-
         async savePlan() {
             this.loading = true;
 
-            // ARMAR FEATURES PARA BACKEND
             this.form.features = this.availableFeatures
                 .filter(f => f.selected)
                 .map(f => ({
@@ -167,10 +151,6 @@ new Vue({
                 this.loading = false;
             }
         },
-
-        /* =========================
-         * DELETE
-         * ========================= */
 
         async deletePlan(id) {
             const confirm = await Swal.fire({
