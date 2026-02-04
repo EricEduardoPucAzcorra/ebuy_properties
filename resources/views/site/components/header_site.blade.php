@@ -3,9 +3,9 @@
 
         <div class="col-md-6 p-5 mt-lg-5">
             <h1 class="display-5 animated fadeIn mb-4">
-                Descubre el lugar ideal para
-                <span class="text-success">construir momentos</span>
-                con tu familia.
+                {{ auto_trans('Descubre el lugar ideal para') }}
+                <span class="text-success">{{ auto_trans('construir momentos') }}</span>
+                {{ auto_trans('con tu familia.') }}
             </h1>
 
             <p class="animated fadeIn mb-4 pb-2 text-muted">

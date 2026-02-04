@@ -1,13 +1,13 @@
 <?php
-//Este esta ligados a los modulos lo que mismo que va aqui iria en el modulos
-return [
-    'dashboard' => 'Dashboard',
-    'products'  => 'Products',
-    'system' => 'System',
-    'users' => 'Users',
-    'roles' => 'Roles',
-    'config'=> 'System settings',
-    'config_plans'=>'Plans Management',
-    'plans'=>'Plans',
-    'plan_features'=>'Plan features'
-];
+
+return array (
+  'dashboard' => 'control Panel',
+  'products' => 'Products',
+  'system' => 'System',
+  'users' => 'Users',
+  'roles' => 'Roles',
+  'config' => 'System settings',
+  'config_plans' => 'Plan management',
+  'plans' => 'Plans',
+  'plan_features' => 'plan features',
+);

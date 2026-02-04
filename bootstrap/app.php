@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
         ]);
         $middleware->append(SetTenant::class);
+            $middleware->web(append: [
+            \App\Http\Middleware\LoadDataMiddleware::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // $exceptions->render(function (AccessDeniedHttpException $e, $request) {

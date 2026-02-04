@@ -1,13 +1,14 @@
 <?php
-return [
-    'dashboard' => 'View Dashboard',
-    'view'    => 'View',
-    'create'     => 'Create',
-    'update'    => 'Update',
-    'destroy' => 'Delete',
-    'show'=>'Details',
-    'permissions'=>'Assign permissions',
-    'set_up_global'=>'Global configuration',
-    'state_update'=>'Change state',
-    'site'=>'Website access',
-];
+
+return array (
+  'dashboard' => 'View dashboard',
+  'view' => 'See',
+  'create' => 'Create',
+  'update' => 'Update',
+  'destroy' => 'Eliminate',
+  'show' => 'Details',
+  'permissions' => 'Assign permissions',
+  'set_up_global' => 'Global Settings',
+  'state_update' => 'Change status',
+  'site' => 'Website access',
+);
