@@ -10,7 +10,7 @@ class PlansController extends Controller
 {
     public function plans_view()
     {
-        return view('plans.index');
+        return view('admin.plans.index');
     }
     public function index()
     {

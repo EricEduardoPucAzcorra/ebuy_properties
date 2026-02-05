@@ -95,7 +95,7 @@ class AdminApp {
             '/config-session': 'settings',
             '/plans_features': 'plans_features',
             '/plans': 'plans',
-            '/calendar': 'calendar',
+            '/mypropiertes': 'mypropiertes',
             '/security': 'security',
             '/files': 'files'
         };

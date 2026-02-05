@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    @include('plans_features.modals')
+    @include('admin.plans_features.modals')
 </div
 
 @endsection

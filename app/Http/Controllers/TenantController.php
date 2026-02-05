@@ -150,7 +150,7 @@ class TenantController extends Controller
         }
 
         return response()->json([
-            'message' => 'Configuración guardada correctamente',
+            'message' => auto_trans('Configuración guardada correctamente'),
             'tenant'  => [
                 'id'           => $tenant->id,
                 'name'         => $tenant->name,

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     public function view(){
-        return view('users.index');
+        return view('admin.users.index');
     }
 
     public function index(Request $request)

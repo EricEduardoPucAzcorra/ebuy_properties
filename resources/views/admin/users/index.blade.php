@@ -56,6 +56,6 @@
             </div>
         </div>
     </div>
-    @include('users.modals')
+    @include('admin.users.modals')
 </div>
 @endsection

@@ -43,7 +43,7 @@ class HomeController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Plan activado correctamente',
+                'message' => auto_trans('Plan activado correctamente'),
                 'subscription' => $subscription
             ]);
         }
@@ -57,9 +57,9 @@ class HomeController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Suscripción creada, pendiente de pago',
+            'message' => auto_trans('Suscripción creada, pendiente de pago'),
             'subscription_id' => $subscription->id,
-            'checkout_url' => route('checkout.show', $plan) // tu ruta de pago
+            'checkout_url' => route('checkout.show', $plan)
         ]);
     }
 

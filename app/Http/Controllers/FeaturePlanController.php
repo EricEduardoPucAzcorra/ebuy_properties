@@ -14,7 +14,7 @@ class FeaturePlanController extends Controller
     }
 
     public function view(){
-        return view('plans_features.index');
+        return view('admin.plans_features.index');
     }
 
     public function index_data(Request $request)

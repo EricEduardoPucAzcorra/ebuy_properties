@@ -29,7 +29,7 @@ class RoleController extends Controller
             return $module;
         });
 
-        return view('roles.index', compact('modules'));
+        return view('admin.roles.index', compact('modules'));
     }
 
     public function index(Request $request){

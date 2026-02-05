@@ -1,1 +1,1 @@
-@include('plans.plans_payments')
+@include('admin.plans.plans_payments')
