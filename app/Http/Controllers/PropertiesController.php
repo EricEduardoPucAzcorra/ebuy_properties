@@ -4,11 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Models\Propertie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PropertiesController extends Controller
 {
     public function ownerPropertiesView(){
         return view('owner.properties');
+    }
+
+    public function ownerMyProperties(Request $request)
+    {
+        $query = Propertie::query()
+            ->where('user_id', Auth::id())
+            ->with(['address.city.state.country']);
+
+        if ($request->type_operation_id) {
+            $query->where('type_operation_id', $request->type_operation_id);
+        }
+
+        if ($request->operation) {
+            $query->where('type_operation_id', $request->operation);
+        }
+
+        if ($request->type) {
+            $query->where('type_property_id', $request->type);
+        }
+
+        if ($request->location_type && $request->location_id) {
+            $query->whereHas('address', function ($q) use ($request) {
+                if ($request->location_type === 'city') {
+                    $q->where('city_id', $request->location_id);
+                }
+
+                if ($request->location_type === 'state') {
+                    $q->where('state_id', $request->location_id);
+                }
+            });
+        }
+
+        return response()->json(
+            $query->orderBy('created_at', 'desc')
+                ->paginate(12)
+        );
     }
 
     public function search(Request $request)

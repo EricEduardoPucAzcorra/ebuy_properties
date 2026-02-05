@@ -63,7 +63,7 @@
                                     <i class="bi bi-arrows-fullscreen"></i>
                                 </button>
 
-                                {{-- <div class="dropdown me-2">
+                                <div class="dropdown me-2">
                                     <button class="btn btn-outline-secondary position-relative" type="button" data-bs-toggle="dropdown">
                                         <i class="bi bi-bell"></i>
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
@@ -74,7 +74,7 @@
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item text-center" href="#">View all</a></li>
                                     </ul>
-                                </div> --}}
+                                </div>
 
                                 <div class="dropdown">
                                     <button class="btn btn-outline-secondary d-flex align-items-center" type="button" data-bs-toggle="dropdown">
@@ -132,7 +132,7 @@
                 <div class="container-fluid text-center text-md-start">
                     <div class="row">
                         <div class="col-md-6"><p class="mb-0 text-muted">© 2026 Desarrollando Ideas</p></div>
-                        <div class="col-md-6 text-md-end"><p class="mb-0 text-muted">Pos Finance</p></div>
+                        <div class="col-md-6 text-md-end"><p class="mb-0 text-muted">Ebuy properties</p></div>
                     </div>
                 </div>
             </footer>

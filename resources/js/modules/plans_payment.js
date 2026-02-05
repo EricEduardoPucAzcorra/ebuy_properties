@@ -202,9 +202,9 @@ new Vue({
     watch: {
         showPaymentView(newVal) {
             if (newVal) {
-                document.title = `Pagar ${this.selectedPlan?.name || 'Plan'} | Pos Finance ok`;
+                document.title = `Pagar ${this.selectedPlan?.name || 'Plan'} | Ebuy properties ok`;
             } else {
-                document.title = 'Planes | Pos Finance';
+                document.title = 'Planes | Ebuy properties';
             }
         }
     }

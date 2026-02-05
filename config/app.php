@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Pos Finance'),
+    'name' => env('APP_NAME', 'Ebuy properties'),
 
     /*
     |--------------------------------------------------------------------------
