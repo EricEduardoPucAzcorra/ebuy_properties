@@ -14,3 +14,4 @@ require __DIR__ . '/website/welcome.php';
 require __DIR__ . '/website/properties.php';
 require __DIR__ . '/google/google.php';
 require __DIR__ . '/website/general.php';
+require __DIR__ . '/bbva/bbva.php';
