@@ -17,4 +17,9 @@ class PropertyAttribute extends Model
         'key',
         'value',
     ];
+
+    public function property()
+    {
+        return $this->belongsTo(Propertie::class, 'property_id');
+    }
 }

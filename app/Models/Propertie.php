@@ -32,4 +32,70 @@ class Propertie extends Model
         return $this->belongsTo(TypePropetie::class, 'type_property_id', 'id');
     }
 
+    public function operation()
+    {
+        return $this->belongsTo(TypeOperation::class, 'type_operation_id', 'id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(StatePropertie::class, 'status_property_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(PropertyImage::class, 'property_id', 'id');
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(PropertyVideo::class, 'property_id', 'id');
+    }
+
+    public function attributes()
+    {
+        return $this->hasMany(PropertyAttribute::class, 'property_id', 'id');
+    }
+
+    public function features()
+    {
+        return $this->belongsToMany(PropertyFeature::class, 'property_feature', 'property_id', 'feature_id')
+            ->withTimestamps();
+    }
+
+    public function views()
+    {
+        return $this->hasMany(PropertieViews::class, 'property_id', 'id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorites::class, 'property_id', 'id');
+    }
+
+    public function leads()
+    {
+        return $this->hasMany(LeadPropertie::class, 'property_id', 'id');
+    }
+
+    public function featured()
+    {
+        return $this->hasMany(FeaturedPropertie::class, 'property_id', 'id');
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointments::class, 'property_id', 'id');
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'property_id', 'id');
+    }
+
 }

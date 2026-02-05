@@ -1,4 +1,5 @@
 <div id="planOwner" class="container py-5">
+    <!-- Encabezado -->
     <div class="text-center mb-5">
         <h2 class="fw-bold">
             Publica, Gestiona y Llena tu Condominio
@@ -8,19 +9,33 @@
         </p>
     </div>
 
+    <!-- Botón volver a planes -->
     <div v-if="showPaymentView" class="mb-4">
         <button @click="backToPlans" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-2"></i> Volver a planes
         </button>
     </div>
 
+    <!-- Loading -->
     <div v-if="loadingView" class="text-center py-5">
         <div class="spinner-border text-success" style="width: 3rem; height: 3rem;"></div>
         <p class="mt-3 mb-0 fs-5">Cargando...</p>
     </div>
 
+    <!-- Lista de planes o mensaje vacío -->
     <div v-else-if="!showPaymentView" class="row g-4 justify-content-center">
-        <div class="col-md-4" v-for="plan in plans" :key="plan.id">
+
+        <!-- Mensaje si no hay planes -->
+        <div v-if="plans.length === 0" class="text-center py-5">
+            <i class="bi bi-inbox display-4 text-muted mb-3"></i>
+            <h5 class="fw-bold">No hay planes disponibles</h5>
+            <p class="text-muted">
+                Por el momento no tenemos planes activos. Por favor, vuelve más tarde.
+            </p>
+        </div>
+
+        <!-- Cards de planes -->
+        <div v-else class="col-md-4" v-for="plan in plans" :key="plan.id">
             <div class="card plan-card h-100 position-relative"
                  :class="{ 'shadow-selected': selectedPlan && selectedPlan.id === plan.id }">
 
@@ -29,7 +44,6 @@
                 </span>
 
                 <div class="card-body text-center p-4 d-flex flex-column">
-
                     <h4 class="fw-bold mb-1">@{{ plan.name }}</h4>
                     <p class="text-muted small mb-3">@{{ plan.description }}</p>
 
@@ -41,14 +55,10 @@
                         </span>
                     </h3>
 
-                     <ul class="features-list list-unstyled mb-4">
+                    <ul class="features-list list-unstyled mb-4">
                         <li v-for="feature in plan.features" :key="feature.id">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
-
-                            <span class="fw-semibold">
-                                @{{ feature.name }}
-                            </span>
-
+                            <span class="fw-semibold">@{{ feature.name }}</span>
                             <span v-if="feature.pivot?.mount" class="text-muted ms-1">
                                 (@{{ feature.pivot.mount }} @{{ feature.pivot.description }})
                             </span>
@@ -59,17 +69,18 @@
                             @click="selectPlan(plan)">
                         Seleccionar plan
                     </button>
-
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Vista de pago -->
     <div v-else class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card border-0 shadow-lg">
                 <div class="card-body p-4 p-lg-5">
 
+                    <!-- Breadcrumb -->
                     <div class="mb-4">
                         <h2 class="fw-bold mb-2">Configura tu plan</h2>
                         <nav aria-label="breadcrumb">
@@ -81,7 +92,7 @@
                     </div>
 
                     <div class="row g-4">
-
+                        <!-- Formulario de pago -->
                         <div class="col-lg-7">
                             <div class="border rounded-3 p-4">
                                 <h4 class="fw-bold mb-4">
@@ -92,19 +103,14 @@
                                 <form @submit.prevent="processPayment">
                                     <div class="mb-3">
                                         <label class="form-label fw-semibold">Nombre en la tarjeta</label>
-                                        <input type="text"
-                                               class="form-control form-control-lg"
-                                               v-model="payment.name"
-                                               required
-                                               placeholder="Juan Pérez">
+                                        <input type="text" class="form-control form-control-lg"
+                                               v-model="payment.name" required placeholder="Juan Pérez">
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label fw-semibold">Número de tarjeta</label>
-                                        <input type="text"
-                                               class="form-control form-control-lg"
-                                               v-model="payment.card"
-                                               required
+                                        <input type="text" class="form-control form-control-lg"
+                                               v-model="payment.card" required
                                                @input="formatCardNumber"
                                                placeholder="1234 5678 9012 3456">
                                     </div>
@@ -112,19 +118,15 @@
                                     <div class="row mb-4">
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Expira</label>
-                                            <input type="text"
-                                                   class="form-control form-control-lg"
-                                                   v-model="payment.exp"
-                                                   required
+                                            <input type="text" class="form-control form-control-lg"
+                                                   v-model="payment.exp" required
                                                    @input="formatExpiration"
                                                    placeholder="MM/AA">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">CVV</label>
-                                            <input type="text"
-                                                   class="form-control form-control-lg"
-                                                   v-model="payment.cvv"
-                                                   required
+                                            <input type="text" class="form-control form-control-lg"
+                                                   v-model="payment.cvv" required
                                                    @input="formatCVV"
                                                    placeholder="123">
                                         </div>
@@ -133,14 +135,14 @@
                                     <button type="submit"
                                             class="btn btn-success btn-lg w-100 fw-bold py-3"
                                             :disabled="processingPayment">
-                                        <span v-if="processingPayment"
-                                              class="spinner-border spinner-border-sm me-2"></span>
+                                        <span v-if="processingPayment" class="spinner-border spinner-border-sm me-2"></span>
                                         Pagar $@{{ selectedPlan.price.toLocaleString() }}
                                     </button>
                                 </form>
                             </div>
                         </div>
 
+                        <!-- Resumen del plan -->
                         <div class="col-lg-5">
                             <div class="border rounded-3 p-4 h-100 bg-light">
                                 <div class="text-center mb-4">
@@ -149,8 +151,7 @@
                                 </div>
 
                                 <ul class="list-unstyled mb-4">
-                                    <li v-for="feature in selectedPlan.features"
-                                        :key="feature.id"
+                                    <li v-for="feature in selectedPlan.features" :key="feature.id"
                                         class="mb-3 p-3 border rounded d-flex align-items-center">
                                         <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
                                         <div>
@@ -178,17 +179,11 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="mt-5 pt-4 border-top text-center">
-                        <small class="text-muted">
-                            © 2026 Desarrollando Ideas •
-                            <span class="fw-semibold">----</span>
-                        </small>
-                    </div> --}}
+
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <style>
@@ -233,6 +228,7 @@
     border-color: #198754;
     box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
 }
+
 .btn-success {
     background: linear-gradient(135deg, #198754, #20c997);
     border: none;
@@ -250,6 +246,7 @@
     transform: none;
     box-shadow: none;
 }
+
 .btn-outline-secondary {
     border-radius: 0.75rem;
     padding: 0.5rem 1.5rem;

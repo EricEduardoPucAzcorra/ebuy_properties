@@ -135,6 +135,26 @@ class User extends Authenticatable
         return $this->hasMany(Payment::class);
     }
 
+    public function properties()
+    {
+        return $this->hasMany(Propertie::class, 'user_id', 'id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorites::class, 'user_id', 'id');
+    }
+
+    public function favoriteProperties()
+    {
+        return $this->belongsToMany(Propertie::class, 'favorites', 'user_id', 'property_id')->withTimestamps();
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointments::class, 'user_id', 'id');
+    }
+
     public function plan()
     {
         return $this->hasOneThrough(
