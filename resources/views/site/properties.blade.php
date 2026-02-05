@@ -6,7 +6,7 @@
     <div class="row g-0">
         <div class="col-12 animated fadeIn">
             <img class="img-fluid w-100 object-fit-cover"
-                 src="img/header.jpg"
+                 src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                  alt="Header"
                  style="height: 650px;"> </div>
     </div>
@@ -15,7 +15,7 @@
 @include('site.components.search_site_general')
 
 <!-- Property List Start -->
-<div class="container-fluid py-5">
+<div class="container-fluid">
     <div class="container">
         <!-- Header y Tabs -->
         <div class="row g-0 gx-5 align-items-end">

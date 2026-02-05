@@ -10,5 +10,5 @@ return array (
   'site' => 'Website',
   'config_plans' => 'Plan management',
   'plans' => 'Plans',
-  'plan_features' => 'plan features',
+  'plan_features' => 'Plan features',
 );

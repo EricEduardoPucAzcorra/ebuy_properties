@@ -135,6 +135,13 @@ class PermissionSeeder extends Seeder
                 'description' => '',
                 'slug' => 'view.site',
                 'module_id' => $site->id
+            ],
+
+            [
+                'name' => 'owner.view',
+                'description' => '',
+                'slug' => 'view.site',
+                'module_id' => $site->id
             ]
 
         ];

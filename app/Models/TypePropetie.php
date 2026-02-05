@@ -19,4 +19,9 @@ class TypePropetie extends Model
         'image_icon',
         'is_active',
     ];
+
+    public function properties()
+    {
+        return $this->hasMany(Propertie::class, 'type_property_id', 'id');
+    }
 }

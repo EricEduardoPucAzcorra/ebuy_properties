@@ -10,5 +10,5 @@ return [
     'site'=>'Sitio web',
     'config_plans'=>'Gestión de planes',
     'plans'=>'Planes',
-    'plan_features'=>'características de planes'
+    'plan_features'=>'Características de planes'
 ];

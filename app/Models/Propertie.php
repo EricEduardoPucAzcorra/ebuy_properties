@@ -27,4 +27,9 @@ class Propertie extends Model
         return $this->hasOne(AddressPropertie::class, 'property_id', 'id');
     }
 
+    public function type()
+    {
+        return $this->belongsTo(TypePropetie::class, 'type_property_id', 'id');
+    }
+
 }

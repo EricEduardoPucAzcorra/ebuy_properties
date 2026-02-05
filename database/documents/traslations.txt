@@ -1,0 +1,12 @@
+# 1. Configurar cache
+php artisan config:cache
+
+# 2. Traducir archivos base (haz backup primero)
+php artisan lang:translate es en --force
+
+# 3. Crear alias para helper en composer.json
+"autoload": {
+    "files": [
+        "app/Helpers/translation.php"
+    ]
+}

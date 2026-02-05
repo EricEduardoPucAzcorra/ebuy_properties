@@ -13,6 +13,7 @@ class RoleController extends Controller
                 $q->orderBy('name');
             }])
             ->where('is_active', 1)
+            ->where('clasification', 'admin')
             ->orderBy('id')
             ->get();
 

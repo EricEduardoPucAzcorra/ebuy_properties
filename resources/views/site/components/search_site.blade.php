@@ -16,7 +16,7 @@
             <div class="col-lg-2 col-md-6">
                 <select class="form-select search-input search-select" name="operation">
                     @foreach ($type_operations as $operation)
-                        <option value="{{ $operation->id }}">{{ $operation->name }}</option>
+                        <option value="{{ $operation->id }}">{{ auto_trans($operation->name) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -24,7 +24,7 @@
             <div class="col-lg-2 col-md-6">
                 <select class="form-select search-input search-select" name="type">
                     @foreach ($type_properties as $type)
-                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        <option value="{{ $type->id }}">{{ auto_trans($type->name) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -35,7 +35,7 @@
                     name="q"
                     id="location-search"
                     class="form-control search-input search-main"
-                    placeholder="Buscar por ciudad, estado o palabra clave…"
+                    placeholder=" {{ auto_trans('Buscar por ciudad, estado o palabra clave…')}}"
                     autocomplete="off">
 
                 <input type="hidden" name="location_type" id="location_type">
@@ -46,7 +46,7 @@
 
             <div class="col-lg-2 col-md-12 d-grid">
                 <button type="submit" class="btn btn-primary btn-search">
-                    Buscar
+                     {{ auto_trans('Buscar')}}
                 </button>
             </div>
 

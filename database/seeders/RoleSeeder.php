@@ -23,10 +23,12 @@ class RoleSeeder extends Seeder
         $allPermissions = Permission::pluck('id');
         $admin->permissions()->sync($allPermissions);
 
-        $configSitePermission = Permission::where('name', 'view.site')->first();
+        $configSitePermissions = Permission::whereHas('module', function ($q) {
+            $q->whereIn('name', ['site', 'owner', 'dashboard']);
+        })->pluck('id');
 
-        if ($configSitePermission) {
-            $owner->permissions()->sync([$configSitePermission->id]);
+        if ($configSitePermissions->isNotEmpty()) {
+            $owner->permissions()->sync($configSitePermissions);
         }
     }
 }

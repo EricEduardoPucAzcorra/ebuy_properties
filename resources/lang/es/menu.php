@@ -9,5 +9,8 @@ return [
     'config'=> 'Ajustes del sistema',
     'config_plans'=>'Gestión de planes',
     'plans'=>'Planes',
-    'plan_features'=>'características de planes'
+    'plan_features'=>'Características de planes',
+    'myproperties'=>'Mis propiedades',
+    'help'=>'Ayuda'
+
 ];

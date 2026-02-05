@@ -9,5 +9,7 @@ return array (
   'config' => 'System settings',
   'config_plans' => 'Plan management',
   'plans' => 'Plans',
-  'plan_features' => 'plan features',
+  'plan_features' => 'Plan features',
+  'myproperties'=>'My properties',
+  'help'=>'Help'
 );

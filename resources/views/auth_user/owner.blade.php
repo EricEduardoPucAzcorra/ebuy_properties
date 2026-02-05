@@ -1,13 +1,6 @@
  <div class="company-card border-bottom">
     <div class="company-banner">
-        @php
-            $tenant = $tenants->firstWhere('id', $activeTenantId);
-            $logo = $tenant && $tenant->logo
-                ? asset('storage/' . $tenant->logo)
-                : asset('images/ebuy_2.jpg');
-        @endphp
-
-        <img src="{{ $logo }}" alt="Logo"
+        <img src="{{ asset('images/ebuy_2.jpg') }}" alt="Logo"
             class="company-image img-fluid">
     </div>
 </div>

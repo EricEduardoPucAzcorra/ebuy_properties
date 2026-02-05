@@ -3,6 +3,7 @@
     $menus = Menu::where('is_active', true)
             ->whereHas('module')
             ->with(['module', 'items'])
+            ->where('clasification','site')
             ->orderBy('order')
             ->get();
 @endphp

@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class PropertiesController extends Controller
 {
-      public function search(Request $request)
+    public function ownerPropertiesView(){
+        return view('owner.properties');
+    }
+
+    public function search(Request $request)
     {
         $query = Propertie::query()
             ->with(['address.city.state.country'])

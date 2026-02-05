@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('route')->nullable();
             $table->integer('order')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->string('clasification')->nullable()->default(''); //admin //owner //site
             $table->foreignId('module_id')
                   ->nullable()
                   ->constrained();

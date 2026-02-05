@@ -34,8 +34,17 @@ class LoadDataMiddleware
                 $menus = Menu::with('module')
                     ->where('is_active', true)
                     ->orderBy('order')
-                    ->with('items')
-                    ->get();
+                    ->with('items');
+
+                if(Auth::user()->hasRoleName('Owner')){
+                    $menus->whereNotIn('clasification', ['admin', 'site']);
+                }else{
+                    $menus->whereNotIn('clasification', ['owner', 'site']);
+                }
+
+                $menus = $menus->get();
+
+                // dd($menus);
 
                 $tenants = Tenant::where('is_active', true)->get();
                 $activeTenantId = session('tenant_id') ?? $tenants->first()?->id;
