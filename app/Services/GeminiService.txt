@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+class GeminiService
+{
+    protected $apiKey;
+    protected $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
+
+    public function __construct()
+    {
+        $this->apiKey = config('services.gemini.key');
+    }
+
+    public function generarRespuesta(string $prompt)
+    {
+        // Si gemini-3-flash-preview sigue saturado, cambia esta línea a:
+        // $model = 'gemini-2.0-flash';
+        $model = 'gemini-3-flash-preview';
+
+        try {
+            $response = Http::retry(3, 2000)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->timeout(60)
+                ->post("{$this->baseUrl}{$model}:generateContent?key={$this->apiKey}", [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'maxOutputTokens' => 2048,
+                    ]
+                ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+                    return $data['candidates'][0]['content']['parts'][0]['text'];
+                }
+
+                return "La IA respondió en un formato inesperado.";
+            }
+
+            $status = $response->status();
+            $errorBody = $response->json();
+            $errorMessage = $errorBody['error']['message'] ?? 'Error desconocido';
+
+            if ($status === 503) {
+                return "Error 503: El servidor de Google está sobrecargado. Intenta de nuevo en un momento.";
+            }
+
+            Log::error("Gemini API Fail: [$status] $errorMessage");
+            return "Error de la IA ($status): $errorMessage";
+
+        } catch (\Exception $e) {
+            Log::error("Excepción en GeminiService: " . $e->getMessage());
+            return "Ocurrió un error inesperado al conectar con la IA.";
+        }
+    }
+}

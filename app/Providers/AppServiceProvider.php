@@ -16,10 +16,15 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // SOLO lo esencial aquí
+
         $this->app->singleton(TranslationService::class, function ($app) {
             return new TranslationService();
         });
+
+        $this->app->singleton(\App\Services\GeminiService::class, function ($app) {
+            return new \App\Services\GeminiService();
+        });
+
     }
 
     public function boot(): void
