@@ -60,11 +60,11 @@
 
                         <div class="img-frame position-relative">
                             <img
-                                :src="property.main_image ?? '/images/default-property.jpg'"
+                                :src="property.images.main ?? '/images/ebuy_1.png'"
                                 class="img-fluid">
 
                             <div class="floating-tag">
-                                @{{ property.type_operation_id == 1 ? 'FOR SALE' : 'FOR RENT' }}
+                                @{{ property.type_operation }}
                             </div>
                         </div>
 
@@ -75,8 +75,8 @@
 
                             <p class="text-muted small">
                                 <i class="fa fa-map-marker-alt me-1"></i>
-                                @{{ property.address?.city?.name }},
-                                @{{ property.address?.city?.state?.name }}
+                                @{{ property.address?.city }},
+                                @{{ property.address?.state }}
                             </p>
                         </div>
 

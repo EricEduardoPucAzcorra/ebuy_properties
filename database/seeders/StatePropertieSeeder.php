@@ -15,34 +15,48 @@ class StatePropertieSeeder extends Seeder
     public function run(): void
     {
        StatePropertie::firstOrCreate(
-            ['name' => 'published'],
+            ['name' => 'Publicado'],
             ['description' => ''],
             ['is_active' => true],
-            ['slug' => 'published']
+            ['slug' => 'publicado']
         );
         StatePropertie::firstOrCreate(
-            ['name' => 'unpublished'],
+            ['name' => 'Pendiente'],
             ['description' => ''],
             ['is_active' => true],
-            ['slug' => 'unpublished']
+            ['slug' => 'pendiente']
         );
         StatePropertie::firstOrCreate(
-            ['name' => 'paused'],
+            ['name' => 'No publicado'],
             ['description' => ''],
             ['is_active' => true],
-            ['slug' => 'paused']
+            ['slug' => 'nopublicado']
         );
         StatePropertie::firstOrCreate(
-            ['name' => 'sold'],
+            ['name' => 'Cancelado'],
             ['description' => ''],
             ['is_active' => true],
-            ['slug' => 'sold']
+            ['slug' => 'cancelado']
         );
         StatePropertie::firstOrCreate(
-            ['name' => 'rented'],
+            ['name' => 'Pausado'],
             ['description' => ''],
             ['is_active' => true],
-            ['slug' => 'rented']
+            ['slug' => 'pausado']
+        );
+
+        StatePropertie::firstOrCreate(
+            ['name' => 'Vendido'],
+            ['description' => ''],
+            ['is_active' => true],
+            ['slug' => 'vendido']
+        );
+
+        StatePropertie::firstOrCreate(
+            ['name' => 'Rentado'],
+            ['description' => ''],
+            ['is_active' => true],
+            ['slug' => 'rentado']
         );
     }
 }

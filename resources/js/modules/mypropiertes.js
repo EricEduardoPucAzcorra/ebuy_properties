@@ -20,7 +20,7 @@ new Vue({
             description: '',
             type_property_id: null,
             type_operation_id: null,
-            status_property_id: null,
+            status_property_id: 2, //pendiente
             price: 0.0,
             currency: 'MNX',
             address:{
@@ -149,23 +149,80 @@ new Vue({
             this.newAttribute.value = '';
         },
         submitForm() {
+            console.log(this.propertyForm)
+
+
             const formData = new FormData();
 
-            // formData.append('title', this.propertyForm.title);
+            formData.append('title', this.propertyForm.title);
+            formData.append('description', this.propertyForm.description);
+            formData.append('type_property_id', this.propertyForm.type_property_id);
+            formData.append('type_operation_id', this.propertyForm.type_operation_id);
+            formData.append('status_property_id', 3);
+            formData.append('price', this.propertyForm.price);
+            formData.append('currency', this.propertyForm.currency);
 
-            // this.propertyForm.media.files.forEach((f, i) => {
-            //     formData.append(`media[${i}]`, f.file);
-            //     formData.append(`media_is_primary[${i}]`, f.isPrimary ? 1 : 0);
-            //     formData.append(`media_type[${i}]`, f.type);
-            // });
+            formData.append('address[street]', this.propertyForm.address.street);
+            formData.append('address[number]', this.propertyForm.address.number);
+            formData.append('address[neighborhood]', this.propertyForm.address.neighborhood);
+            formData.append('address[address]', this.propertyForm.address.address);
+            formData.append('address[postal_code]', this.propertyForm.address.postal_code);
+            formData.append('address[country_id]', this.propertyForm.address.country.id);
+            formData.append('address[state_id]', this.propertyForm.address.state.id);
+            formData.append('address[city_id]', this.propertyForm.address.city.id);
+            formData.append('address[latitude]', this.propertyForm.address.location.lat);
+            formData.append('address[longitude]', this.propertyForm.address.location.lng);
+            formData.append('address[references]', this.propertyForm.address.references);
 
-            // axios.post('/properties', formData, {
-            //     headers: { 'Content-Type': 'multipart/form-data' }
-            // }).then(res => {
-            //     console.log('Guardado!');
-            // });
-            alert('subiendo contenido')
+            this.propertyForm.features.forEach((feature_id, i) => {
+                formData.append(`features[${i}]`, feature_id);
+            });
+
+            this.propertyForm.attributes.forEach((attr, i) => {
+                formData.append(`attributes[${i}][key]`, attr.key);
+                formData.append(`attributes[${i}][value]`, attr.value);
+            });
+
+            this.propertyForm.media.files.forEach((f, i) => {
+                formData.append(`media[${i}][file]`, f.file);
+                formData.append(`media[${i}][is_primary]`, f.isPrimary ? 1 : 0);
+                formData.append(`media[${i}][type]`, f.type);
+            });
+
+            axios.post('/save/mypropertie', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+            .then(res => {
+                alert('¡Propiedad guardada correctamente!');
+                this.showForm = false;
+                this.fetchProperties(); // refresca lista
+            })
+            .catch(err => {
+                let er = err;
+
+                if (er.response && er.response.data.errors) {
+
+                    const errors = err.response.data.errors;
+                    let errorHtml = '<ul style="text-align:left;">';
+
+                    Object.keys(errors).forEach(field => {
+                        errors[field].forEach(msg => {
+                            errorHtml += `<li>${msg}</li>`;
+                        });
+                    });
+
+                    errorHtml += '</ul>';
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: window.erros_validation,
+                        html: errorHtml
+                    });
+
+                }
+            });
         }
+
     }
 })
 
