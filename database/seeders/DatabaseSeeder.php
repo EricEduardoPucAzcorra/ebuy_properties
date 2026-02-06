@@ -35,7 +35,9 @@ class DatabaseSeeder extends Seeder
             CitiesTableSeeder::class,
             TypePropertieSeeder::class,
             TypeOperationSeeder::class,
-            StatePropertieSeeder::class
+            StatePropertieSeeder::class,
+            FeaturePropertieSeeder::class,
+            AtributeDefaultPropertieSeeder::class
         ]);
     }
 }

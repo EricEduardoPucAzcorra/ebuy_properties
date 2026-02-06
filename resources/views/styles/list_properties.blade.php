@@ -103,4 +103,23 @@
         color: var(--primary-color);
         margin-bottom: 5px;
     }
+    .feature-card {
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+    .feature-card:hover {
+        border-color: #198754;
+    }
+
+    .feature-card.active {
+        border-color: #198754;
+        background-color: #e9f7ef;
+    }
+
+    .ia-sticky {
+        position: sticky;
+        top: 100px;
+    }
+
 </style>

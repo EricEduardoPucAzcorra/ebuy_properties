@@ -115,7 +115,7 @@
 
         </div>
 
-        <div v-if="showForm" class="container bg-white py-5">
+        {{-- <div v-if="showForm" class="container bg-white py-5">
 
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold">{{ auto_trans('Nuevo inmueble') }}</h4>
@@ -257,6 +257,40 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <div class="col-md-12">
+                                <map-selector v-model="propertyForm.address.location"></map-selector>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mb-3"> {{ auto_trans('Características del inmueble') }}</h5>
+
+
+                        <div class="mb-4">
+                            <div class="row g-3">
+                                <div
+                                    class="col-md-3 col-sm-6"
+                                    v-for="feature in features"
+                                    :key="feature.id"
+                                >
+                                    <div
+                                        class="border rounded p-3 h-100 d-flex align-items-center gap-2 feature-card"
+                                        :class="{ 'active': propertyForm.features.includes(feature.id) }"
+                                        @click="toggleFeature(feature.id)"
+                                    >
+                                        <i :class="feature.icon" class="fs-5 text-primary"></i>
+
+                                        <div>
+                                            <div class="fw-semibold">@{{ feature.name }}</div>
+                                            <small class="text-muted" v-if="feature.description">
+                                                @{{ feature.description }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <button class="btn btn-success">
                             <i class="bi bi-check-circle me-2"></i>
                             {{ auto_trans('Guardar inmueble') }}
@@ -279,6 +313,266 @@
                             </p>
                         </div>
                     </div>
+                </div>
+
+            </div>
+        </div> --}}
+
+        <div v-if="showForm" class="container-fluid bg-white py-5">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold">{{ auto_trans('Nuevo inmueble') }}</h4>
+
+                <button class="btn btn-outline-secondary"
+                        @click="showForm = false">
+                    <i class="bi bi-arrow-left"></i>
+                    {{ auto_trans('Volver a mis propiedades') }}
+                </button>
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-lg-8">
+
+                    <div class="card-clean p-4 mb-4">
+                        <h5 class="fw-bold mb-3">{{ auto_trans('Información del inmueble') }}</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ auto_trans('Título') }}</label>
+                            <input type="text" class="form-control" v-model="propertyForm.title">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">{{ auto_trans('Tipo de operación') }}</label>
+                                <select class="form-select" v-model="propertyForm.type_operation_id">
+                                    <option value="null">{{ auto_trans('Seleccione') }}</option>
+                                    <option v-for="type in type_operations"
+                                            :key="type.id"
+                                            :value="type.id">
+                                        @{{ type.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">{{ auto_trans('Tipo de propiedad') }}</label>
+                                <select class="form-select" v-model="propertyForm.type_property_id">
+                                    <option value="null">{{ auto_trans('Seleccione') }}</option>
+                                    <option v-for="type_pro in type_properties"
+                                            :key="type_pro.id"
+                                            :value="type_pro.id">
+                                        @{{ type_pro.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">{{ auto_trans('Precio') }}</label>
+                                <input type="number" class="form-control" v-model="propertyForm.price">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ auto_trans('Descripción') }}</label>
+                            <textarea class="form-control" rows="4" v-model="propertyForm.description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="card-clean p-4 mb-4">
+                        <h5 class="fw-bold mb-3">{{ auto_trans('Domicilio') }}</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-2">
+                                <label class="form-label">{{ auto_trans('Calle') }}</label>
+                                <input type="text" class="form-control" v-model="propertyForm.address.street">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">{{ auto_trans('Numero') }}</label>
+                                <input type="number" class="form-control" v-model="propertyForm.address.number">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">{{ auto_trans('Codigo postal') }}</label>
+                                <input type="text" class="form-control" v-model="propertyForm.address.postal_code">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">{{ auto_trans('Vecindario/Colonia') }}</label>
+                                <input type="text" class="form-control" v-model="propertyForm.address.neighborhood">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ auto_trans('Referencias') }}</label>
+                            <textarea class="form-control" rows="2" v-model="propertyForm.address.references"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+                                    <autocomplete
+                                        label="{{ auto_trans('Pais') }}"
+                                        placeholder="{{ auto_trans('Escribe el pais') }}"
+                                        url="/countries/search"
+                                        v-model="propertyForm.address.country"
+                                    ></autocomplete>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <autocomplete
+                                        label="{{ auto_trans('Estado') }}"
+                                        placeholder="{{ auto_trans('Escribe el estado') }}"
+                                        url="/states/search"
+                                        v-model="propertyForm.address.state"
+                                        :extra-params="{ country_id: propertyForm.address.country.id }"
+                                    ></autocomplete>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <autocomplete
+                                        label="{{ auto_trans('Ciudad') }}"
+                                        placeholder="{{ auto_trans('Escribe la ciudad') }}"
+                                        url="/cities/search"
+                                        v-model="propertyForm.address.city"
+                                        :extra-params="{ state_id: propertyForm.address.state.id }"
+                                    ></autocomplete>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-clean p-4 mb-4">
+                        <div class="mb-3">
+                            <div class="col-md-12">
+                                <map-selector v-model="propertyForm.address.location"></map-selector>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-clean p-4 mb-4">
+                        <h5 class="fw-bold mb-3">{{ auto_trans('Características del inmueble') }}</h5>
+
+                        <div class="row g-3">
+                            <div class="col-md-3 col-sm-6"
+                                v-for="feature in features"
+                                :key="feature.id">
+                                <div
+                                    class="border rounded p-3 h-100 d-flex align-items-center gap-2 feature-card"
+                                    :class="{ active: propertyForm.features.includes(feature.id) }"
+                                    @click="toggleFeature(feature.id)"
+                                >
+                                    <i :class="feature.icon" class="fs-5 text-primary"></i>
+                                    <div>
+                                        <div class="fw-semibold">@{{ feature.name }}</div>
+                                        <small class="text-muted">@{{ feature.description }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-clean p-4 mb-4">
+                        <h5 class="fw-bold mb-3"> {{ auto_trans('Atributos del inmueble') }}</h5>
+
+                        <div class="mb-4">
+                            <div class="row g-3">
+                                <div
+                                    class="col-md-4"
+                                    v-for="(attr, index) in propertyForm.attributes"
+                                    :key="index"
+                                >
+                                    <div class="input-group">
+                                        <span class="input-group-text text-capitalize">
+                                            @{{ attr.key }}
+                                        </span>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            v-model="attr.value"
+                                            placeholder="0"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                {{ auto_trans('Agregar atributo personalizado') }}
+                            </label>
+
+                            <div class="row g-2 align-items-end">
+                                <div class="col-md-5">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="newAttribute.key"
+                                        placeholder="Ej: frigobar"
+                                    >
+                                </div>
+
+                                <div class="col-md-4">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="newAttribute.value"
+                                        placeholder="Ej: 1"
+                                    >
+                                </div>
+
+                                <div class="col-md-3">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-success w-100"
+                                        @click="addCustomAttribute"
+                                    >
+                                        + Agregar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-clean p-4 mb-4">
+                        <h5 class="fw-bold mb-3"> {{ auto_trans('Fotografias y videos') }}</h5>
+                        <media-uploader v-model="propertyForm.media" label=""></media-uploader>
+                    </div>
+
+                    <button class="btn btn-success btn-lg" @click="submitForm()">
+                        <i class="bi bi-check-circle me-2"></i>
+                        {{ auto_trans('Guardar inmueble') }}
+                    </button>
+                </div>
+
+                <div class="col-lg-4">
+
+                    <div class="card-clean p-4 ia-sticky">
+                        <h5 class="fw-bold mb-3">
+                            🤖 {{ auto_trans('Asistente IA') }}
+                        </h5>
+
+                        <p class="text-muted small">
+                            {{ auto_trans('La IA analizará la información mientras completas el formulario y te sugerirá mejoras.') }}
+                        </p>
+
+                        <div class="border rounded p-3 text-center text-muted mb-3">
+                            <i class="bi bi-cpu fs-1 mb-2"></i>
+                            <p class="mb-0">
+                                {{ auto_trans('Análisis en tiempo real próximamente') }}
+                            </p>
+                        </div>
+
+                        <ul class="list-unstyled small text-muted">
+                            <li>✔ Mejora del título</li>
+                            <li>✔ Precio recomendado</li>
+                            <li>✔ Descripción optimizada</li>
+                            <li>✔ Detección de faltantes</li>
+                        </ul>
+                    </div>
+
                 </div>
 
             </div>

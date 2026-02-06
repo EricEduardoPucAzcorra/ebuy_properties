@@ -27,6 +27,7 @@
         "datatables.net-bs5": "^2.3.6",
         "dayjs": "^1.11.19",
         "jquery": "^3.7.1",
+        "leaflet": "^1.9.4",
         "sweetalert2": "^11.26.17"
     },
     "optionalDependencies": {

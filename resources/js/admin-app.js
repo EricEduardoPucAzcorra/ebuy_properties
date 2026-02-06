@@ -8,16 +8,30 @@ import { Toast } from './core/toast.js';
 import * as bootstrap from 'bootstrap';
 import $ from 'jquery';
 import Swal from 'sweetalert2';
+//leaflet
+import L from 'leaflet';
 //datatables
 import 'datatables.net';
 import 'datatables.net-bs5';
+import 'leaflet/dist/leaflet.css'
+//Config Leaflet
+import icon from 'leaflet/dist/images/marker-icon.png'
+import icon2x from 'leaflet/dist/images/marker-icon-2x.png'
+import shadow from 'leaflet/dist/images/marker-shadow.png'
+delete L.Icon.Default.prototype._getIconUrl
+
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: icon2x,
+    iconUrl: icon,
+    shadowUrl: shadow,
+})
 //use globally
 window.bootstrap = bootstrap;
 window.$ = window.jQuery = $;
 window.Swal = Swal;
 window.DataTableComponent = DataTableComponent;
 window.Toast = Toast;
-
+window.L = L
 class AdminApp {
     constructor() {
         this.isInitialized = false;

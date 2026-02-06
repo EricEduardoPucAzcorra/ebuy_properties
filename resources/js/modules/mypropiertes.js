@@ -1,4 +1,6 @@
 import './../core/autocomplete';
+import './../core/map-selector';
+import './../core/media-uploader';
 
 new Vue({
     el: '#mypropiertes',
@@ -12,7 +14,7 @@ new Vue({
         activeTab: null,
         showForm: false,
         activeCreateTab: 'form',
-        cities:[],
+        features: [],
         propertyForm:{
             title: '',
             description: '',
@@ -30,16 +32,30 @@ new Vue({
                 country: { id: null, name: '' },
                 state:   { id: null, name: '' },
                 city:    { id: null, name: '' },
-                latitude: '',
-                longitude: '',
+                location:{
+                    lat: 19.4326,
+                    lng: -99.1332
+                },
                 references: ''
+            },
+            features: [],
+            attributes: [
+            ],
+            media: {
+                files: []
             }
+        },
+        newAttribute: {
+            key: '',
+            value: ''
         }
     },
 
     mounted() {
         this.fetchTypeOperations();
         this.fetchTypeOProperties();
+        this.loadFeatures();
+        this.loadDefaultAttributes();
     },
 
     watch: {
@@ -94,39 +110,62 @@ new Vue({
                 self.type_properties = response.data;
             });
         },
-
-        //Automcompletes
-
-        onCountryInput() {
-            this.propertyForm.address.country_id = null;
-
-            if (this.propertyForm.address.country_name.length < 2) {
-                this.cities = [];
-                return;
-            }
-
-            axios.get(`/countries/search?q=${this.propertyForm.address.country_name}`)
-                .then(res => this.cities = res.data);
+        loadFeatures() {
+            axios.get('/property-features')
+                .then(res => {
+                    this.features = res.data;
+                });
         },
+        toggleFeature(id) {
+            const index = this.propertyForm.features.indexOf(id);
 
-        selectCountry(country) {
-            this.propertyForm.address.country_id = country.id;
-            this.propertyForm.address.country_name = country.name;
-            this.cities = [];
-        },
-
-        validateCountry() {
-            if (!this.propertyForm.address.country_id) {
-                this.propertyForm.address.country_name = '';
-                // Toast.show({
-                //     id: 'myToast',
-                //     title: "",
-                //     message: ConfigModuleTranslations.country_select,
-                //     type: 'warning'
-                // });
-                alert('Ingresa texto')
+            if (index === -1) {
+                this.propertyForm.features.push(id);
+            } else {
+                this.propertyForm.features.splice(index, 1);
             }
         },
+        loadDefaultAttributes() {
+            axios.get('/property-attributes/defaults')
+                .then(res => {
+                    this.defaultAttributes = res.data;
+                    res.data.forEach(attr => {
+                        this.propertyForm.attributes.push({
+                            key: attr.key,
+                            value: ''
+                        });
+                    });
+                });
+        },
+        addCustomAttribute() {
+            if (!this.newAttribute.key || !this.newAttribute.value) return;
+
+            this.propertyForm.attributes.push({
+                key: this.newAttribute.key,
+                value: this.newAttribute.value
+            });
+
+            this.newAttribute.key = '';
+            this.newAttribute.value = '';
+        },
+        submitForm() {
+            const formData = new FormData();
+
+            // formData.append('title', this.propertyForm.title);
+
+            // this.propertyForm.media.files.forEach((f, i) => {
+            //     formData.append(`media[${i}]`, f.file);
+            //     formData.append(`media_is_primary[${i}]`, f.isPrimary ? 1 : 0);
+            //     formData.append(`media_type[${i}]`, f.type);
+            // });
+
+            // axios.post('/properties', formData, {
+            //     headers: { 'Content-Type': 'multipart/form-data' }
+            // }).then(res => {
+            //     console.log('Guardado!');
+            // });
+            alert('subiendo contenido')
+        }
     }
 })
 

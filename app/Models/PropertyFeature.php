@@ -20,9 +20,4 @@ class PropertyFeature extends Model
     {
         return $this->belongsToMany(Propertie::class, 'property_feature', 'feature_id', 'property_id')->withTimestamps();
     }
-
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
 }
