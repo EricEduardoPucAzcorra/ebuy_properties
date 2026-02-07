@@ -7,6 +7,7 @@ use App\Models\Citie;
 use App\Models\Countrie;
 use App\Models\Propertie;
 use App\Models\State;
+use App\Models\TypeOperation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,20 @@ class PropertiesController extends Controller
                 'attributes'
             ])
             ->where('is_active', true);
+
+        if (request()->routeIs('properties.new')) {
+            $query->whereDate('created_at', today());
+        }
+
+        if (!$request->operation) {
+            if (request()->routeIs('properties.sale')) {
+                $opetationsale = TypeOperation::where('name','Venta')->first();
+                $request->merge(['operation' => $opetationsale->id]);
+            } elseif (request()->routeIs('properties.rent')) {
+                $opetationrent = TypeOperation::where('name','Renta')->first();
+                $request->merge(['operation' => $opetationrent->id]);
+            }
+        }
 
         if ($request->operation) {
             $query->where('type_operation_id', $request->operation);
@@ -59,6 +74,10 @@ class PropertiesController extends Controller
             ->withQueryString();
 
         return view('site.properties', compact('properties'));
+    }
+
+    public function property(){
+        return view('site.property');
     }
 
     public function ownerPropertiesView(){

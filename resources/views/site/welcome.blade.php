@@ -420,8 +420,6 @@
         </div>
     </div> --}}
 
-
-
     {{-- <div class="container-fluid py-5">
         <div class="container">
             <div class="bg-light rounded p-3">

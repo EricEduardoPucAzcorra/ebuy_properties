@@ -31,7 +31,7 @@
                         <h6>{{auto_trans($type->name) }}</h6>
 
                         <span class="badge">
-                            {{ $type->properties_count }} Properties
+                            {{ $type->properties_count }} {{auto_trans('Propiedades')}}
                         </span>
                     </a>
                 </div>

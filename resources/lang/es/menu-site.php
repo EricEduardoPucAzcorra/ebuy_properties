@@ -5,5 +5,8 @@ return [
    'about_us' => 'Sobre nosotros',
    'about'  => 'Acerca de',
    'explore'  => 'Explorar',
-   'properties'  => 'Propiedades',
+   'properties'  => 'Todas las propiedades',
+   'properties_sale' => 'Propiedades en venta',
+   'properties_rent'=>'Propiedades en renta',
+   'properties_new'=>'Propiedades nuevas'
 ];

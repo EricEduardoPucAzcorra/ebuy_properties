@@ -17,94 +17,106 @@
             </div>
         </div>
 
-        <div class="properties-carousel-wrapper position-relative">
-            <div class="swiper-button-prev custom-nav"></div>
+        @if($properties->count())
+            <div class="properties-carousel-wrapper position-relative">
+                <div class="swiper-button-prev custom-nav"></div>
 
-            <div class="swiper properties-swiper">
-                <div class="swiper-wrapper">
+                <div class="swiper properties-swiper">
+                    <div class="swiper-wrapper">
 
-                    @foreach($properties as $property)
-                        <div class="swiper-slide">
+                        @foreach($properties as $property)
+                            <div class="swiper-slide">
 
-                            <div class="card-clean h-100 d-flex flex-column">
+                                <div class="card-clean h-100 d-flex flex-column">
 
-                                <div class="img-frame position-relative">
-                                    <img
-                                        src="{{ $property->images->count()
-                                            ? asset('storage/'.$property->images->first()->path)
-                                            : asset('images/ebuy_1.png') }}"
-                                        alt="{{ $property->title }}">
+                                    <div class="img-frame position-relative">
+                                        <img
+                                            src="{{ $property->images->count()
+                                                ? asset('storage/'.$property->images->first()->path)
+                                                : asset('images/ebuy_1.png') }}"
+                                            alt="{{ $property->title }}">
 
-                                    <span class="floating-tag">
-                                        {{ $property->operation->name ?? 'Venta' }}
-                                    </span>
-                                </div>
+                                        <span class="floating-tag">
+                                            {{ $property->operation->name ?? 'Venta' }}
+                                        </span>
+                                    </div>
 
-                                <div class="p-4 flex-grow-1">
-                                    <h5 class="fw-bold mb-1">
-                                        {{ $property->title }}
-                                    </h5>
+                                    <div class="p-4 flex-grow-1">
+                                        <h5 class="fw-bold mb-1">
+                                            {{ $property->title }}
+                                        </h5>
 
-                                    <div class="price-tag mb-1">
-                                        ${{ number_format($property->price, 0) }}
-                                        @if(($property->operation->name ?? '') === 'Renta')
-                                            <span class="price-period">/Mes</span>
+                                        <div class="price-tag mb-1">
+                                            ${{ number_format($property->price, 0) }}
+                                            @if(($property->operation->name ?? '') === 'Renta')
+                                                <span class="price-period">/Mes</span>
+                                            @endif
+                                        </div>
+
+                                        <div class="text-muted small mb-2">
+                                            {{ $property->type->name ?? 'Casa' }}
+                                        </div>
+
+                                        <p class="text-muted small mb-0">
+                                            <i class="fa fa-map-marker-alt me-1"></i>
+                                            {{ optional($property->address)->city->cityname ?? '' }},
+                                            {{ optional($property->address)->state->statename ?? '' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="amenity-row d-flex justify-content-between px-4 py-3">
+                                        @if(getAttribute($property->attributes, 'Camas'))
+                                            <span>
+                                                <i class="fa fa-bed"></i>
+                                                {{ getAttribute($property->attributes, 'Camas') }} {{auto_trans('Camas')}}
+                                            </span>
+                                        @endif
+
+                                        @if(getAttribute($property->attributes, 'Baños'))
+                                            <span>
+                                                <i class="fa fa-bath"></i>
+                                                {{ getAttribute($property->attributes, 'Baños') }} {{auto_trans('Baños')}}
+                                            </span>
+                                        @endif
+
+                                        @if(getAttribute($property->attributes, 'M²'))
+                                            <span>
+                                                <i class="fa fa-ruler-combined"></i>
+                                                {{ getAttribute($property->attributes,  'M²') }} m²
+                                            </span>
                                         @endif
                                     </div>
 
-                                    <div class="text-muted small mb-2">
-                                        {{ $property->type->name ?? 'Casa' }}
-                                    </div>
-
-                                    <p class="text-muted small mb-0">
-                                        <i class="fa fa-map-marker-alt me-1"></i>
-                                        {{ optional($property->address)->city->cityname ?? '' }},
-                                        {{ optional($property->address)->state->statename ?? '' }}
-                                    </p>
-                                </div>
-
-                                <div class="amenity-row d-flex justify-content-between px-4 py-3">
-                                    @if(getAttribute($property->attributes, 'Camas'))
-                                        <span>
-                                            <i class="fa fa-bed"></i>
-                                            {{ getAttribute($property->attributes, 'Camas') }} {{auto_trans('Camas')}}
-                                        </span>
-                                    @endif
-
-                                    @if(getAttribute($property->attributes, 'Baños'))
-                                        <span>
-                                            <i class="fa fa-bath"></i>
-                                            {{ getAttribute($property->attributes, 'Baños') }} {{auto_trans('Baños')}}
-                                        </span>
-                                    @endif
-
-                                    @if(getAttribute($property->attributes, 'M²'))
-                                        <span>
-                                            <i class="fa fa-ruler-combined"></i>
-                                            {{ getAttribute($property->attributes,  'M²') }} m²
-                                        </span>
-                                    @endif
                                 </div>
 
                             </div>
+                        @endforeach
 
-                        </div>
-                    @endforeach
+                    </div>
+                </div>
 
+                <div class="swiper-button-next custom-nav"></div>
+
+            </div>
+        @else
+            <div class="row">
+                <div class="col-12 text-center py-5">
+                    <h5 class="text-muted">
+                        {{ auto_trans('No hay propiedades disponibles en este momento.') }}
+                    </h5>
+                    <p class="text-muted">
+                        {{ auto_trans('Por favor, vuelve más tarde o contacta con nosotros para más información.') }}
+                    </p>
                 </div>
             </div>
-
-            <div class="swiper-button-next custom-nav"></div>
-
-        </div>
+        @endif
 
     </div>
 </div>
 
-
 @include('styles.list_properties_site')
 
-
+@if($properties->count())
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     new Swiper('.properties-swiper', {
@@ -129,4 +141,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
+@endif

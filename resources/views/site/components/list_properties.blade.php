@@ -31,21 +31,17 @@
                 <div class="nav nav-pills nav-pills-custom d-inline-flex">
 
                     @php
-                        // Tomamos el operation actual de la URL (null si no hay)
                         $currentOperation = request()->query('operation');
-                        // Tomamos todos los demás parámetros para agregarlos a los links
                         $otherParams = request()->except('operation');
                     @endphp
 
-                    <!-- Botón "Todo" -->
                     <a
                         href="{{ route('properties', $otherParams) }}"
                         class="nav-link {{ is_null($currentOperation) ? 'active' : '' }}"
                     >
-                        Todo
+                        {{auto_trans('Todo')}}
                     </a>
 
-                    <!-- Botones de type_operations -->
                     @foreach ($type_operations as $type_operation)
                         <a
                             href="{{ route('properties', array_merge($otherParams, ['operation' => $type_operation->id])) }}"
