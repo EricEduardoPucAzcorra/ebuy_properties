@@ -53,10 +53,10 @@
             <div v-if="!loading && properties.length > 0" class="row g-4">
 
                 <div class="col-lg-4 col-md-6"
-                     v-for="property in properties"
-                     :key="property.id">
+                    v-for="property in properties"
+                    :key="property.id">
 
-                    <div class="card-clean h-100">
+                    <div class="card-clean h-100 d-flex flex-column">
 
                         <div class="img-frame position-relative">
                             <img
@@ -68,21 +68,72 @@
                             </div>
                         </div>
 
-                        <div class="p-4 pt-2">
+                        <div class="p-4 pt-2 flex-grow-1">
                             <div class="price-tag">$@{{ property.price }}</div>
 
                             <h5 class="fw-bold mb-2">@{{ property.title }}</h5>
 
-                            <p class="text-muted small">
+                            <p class="text-muted small mb-1">
                                 <i class="fa fa-map-marker-alt me-1"></i>
                                 @{{ property.address?.city }},
                                 @{{ property.address?.state }}
                             </p>
+
+                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                <span
+                                    class="badge d-flex align-items-center gap-1"
+                                    :class="getStatusBadge(property.status)">
+                                    <i class="bi bi-circle-fill small"></i>
+                                    @{{ property.status }}
+                                </span>
+
+                                <div class="d-flex gap-2 property-mini-actions">
+                                    <button
+                                        class="icon-btn"
+                                        title="Editar propiedad"
+                                        @click="editProperty(property.id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+
+                                    <button
+                                        class="icon-btn"
+                                        title="Vista previa"
+                                        @click="previewProperty(property.id)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                    <button
+                                        class="icon-btn"
+                                        title="Cambiar estado"
+                                        @click="openStateModal(property)">
+                                        <i class="bi bi-sliders"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+
                         </div>
 
+                        <div class="amenity-row px-4 pb-3">
+                            <div class="amenity-box" v-if="getAttribute(property, 'Camas')">
+                                <i class="bi bi-door-open"></i>
+                                <span>@{{ getAttribute(property, 'Camas') }} Camas</span>
+                            </div>
+
+                            <div class="amenity-box" v-if="getAttribute(property, 'Baños')">
+                                <i class="bi bi-droplet"></i>
+                                <span>@{{ getAttribute(property, 'Baños') }} Baños</span>
+                            </div>
+
+                            <div class="amenity-box" v-if="getAttribute(property, 'M²')">
+                                <i class="bi bi-rulers"></i>
+                                <span>@{{ getAttribute(property, 'M²') }} m²</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="d-flex justify-content-center mt-5"
                  v-if="!loading && properties.length > 0 && pagination.last_page > 1">

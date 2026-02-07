@@ -221,8 +221,39 @@ new Vue({
 
                 }
             });
-        }
+        },
+        editProperty(id) {
+            // window.location.href = `/properties/${id}/edit`;
+        },
 
+        previewProperty(id) {
+            // window.open(`/properties/${id}`, '_blank');
+        },
+
+        toggleStatus(property) {
+            // // aquí llamas a tu API
+            // property.status = property.status === 'Activo'
+            //     ? 'Inactivo'
+            //     : 'Activo';
+        },
+
+        getAttribute(property, key) {
+            return property.attributes?.find(a => a.key === key)?.value ?? null
+        },
+
+        getStatusBadge(name) {
+            const map = {
+                'Publicado': 'bg-success',
+                'Pendiente': 'bg-warning text-dark',
+                'No publicado': 'bg-secondary',
+                'Cancelado': 'bg-danger',
+                'Pausado': 'bg-info text-dark',
+                'Vendido': 'bg-dark',
+                'Rentado': 'bg-primary',
+            };
+
+            return map[name] ?? 'bg-light text-dark';
+        }
     }
 })
 

@@ -7,6 +7,8 @@
 
     @include('site.components.type_properties')
 
+    @include('site.contents.recommendations')
+
     {{-- <div class="container-fluid py-5">
         <div class="container">
             <div class="row g-5 align-items-center">
@@ -418,7 +420,7 @@
         </div>
     </div> --}}
 
-    @include('site.components.list_properties')
+
 
     {{-- <div class="container-fluid py-5">
         <div class="container">

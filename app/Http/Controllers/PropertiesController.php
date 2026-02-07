@@ -14,6 +14,53 @@ use Illuminate\Support\Str;
 
 class PropertiesController extends Controller
 {
+    public function properties_global(Request $request)
+    {
+        $query = Propertie::query()
+            ->with([
+                'images' => function ($q) {
+                    $q->orderByDesc('is_main')
+                    ->orderBy('order');
+                },
+                'address.city',
+                'address.state',
+                'address.country',
+                'type',
+                'operation',
+                'attributes'
+            ])
+            ->where('is_active', true);
+
+        if ($request->operation) {
+            $query->where('type_operation_id', $request->operation);
+        }
+
+        if ($request->type) {
+            $query->where('type_property_id', $request->type);
+        }
+
+        if ($request->location_type && $request->location_id) {
+
+            $query->whereHas('address', function ($q) use ($request) {
+
+                if ($request->location_type === 'city') {
+                    $q->where('city_id', $request->location_id);
+                }
+
+                if ($request->location_type === 'state') {
+                    $q->where('state_id', $request->location_id);
+                }
+            });
+        }
+
+        $properties = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('site.properties', compact('properties'));
+    }
+
     public function ownerPropertiesView(){
         return view('owner.properties');
     }
@@ -25,10 +72,10 @@ class PropertiesController extends Controller
             ->with([
                 'address.city.state.country',
                 'images',
-                'videos', // traemos videos también
+                'videos',
+                'attributes'
             ]);
 
-        // Filtros
         if ($request->type_operation_id) {
             $query->where('type_operation_id', $request->type_operation_id);
         }
@@ -66,6 +113,7 @@ class PropertiesController extends Controller
                 'type_property' => $property->type->name ?? null,
                 'type_operation' => $property->operation->name ?? null,
                 'created_at' => $property->created_at->format('d/m/Y'),
+                'status'=> $property->status->name,
                 'address' => [
                     'street' => $property->address->street ?? null,
                     'number' => $property->address->number ?? null,
@@ -79,6 +127,10 @@ class PropertiesController extends Controller
                     'others' => $otherImages->map(fn($img) => asset('storage/' . $img->path)),
                 ],
                 'videos' => $property->videos->map(fn($video) => asset('storage/' . $video->url)),
+                'attributes' => $property->attributes->map(fn($attr) => [
+                    'key'   => $attr->key,
+                    'value' => $attr->value,
+                ])
             ];
         });
 
@@ -86,43 +138,6 @@ class PropertiesController extends Controller
 
         return response()->json($properties);
     }
-
-    public function search(Request $request)
-    {
-        $query = Propertie::query()
-            ->with(['address.city.state.country'])
-            ->where('is_active', true);
-
-        if ($request->operation) {
-            $query->where('type_operation_id', $request->operation);
-        }
-
-        if ($request->type) {
-            $query->where('type_property_id', $request->type);
-        }
-
-        if ($request->location_type && $request->location_id) {
-
-            $query->whereHas('address', function ($q) use ($request) {
-
-                if ($request->location_type === 'city') {
-                    $q->where('city_id', $request->location_id);
-                }
-
-                if ($request->location_type === 'state') {
-                    $q->where('state_id', $request->location_id);
-                }
-            });
-        }
-
-        $properties = $query
-            ->orderBy('created_at', 'desc')
-            ->paginate(12)
-            ->withQueryString();
-
-        return view('site.properties', compact('properties'));
-    }
-
 
     public function store(Request $request)
     {

@@ -7,96 +7,77 @@
             ->orderBy('order')
             ->get();
 @endphp
-<div class="container-fluid nav-bar bg-transparent">
-    <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
-        <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center">
-            <img src="{{ asset('images/ebuy_1.png') }}"
-                alt="Ebuy Properties"
-                style="width:200px;height:85px;background:transparent;">
+
+<header class="ebuy-header-full">
+    <div class="ebuy-container-limit">
+        <a href="{{ url('/') }}" class="ebuy-brand-main">
+            <img src="{{ asset('images/ebuy_1.png') }}" alt="Ebuy Properties">
         </a>
 
-        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <nav class="ebuy-nav-center">
+            @foreach($menus as $menu)
+                @if($menu->module->name !== 'site') @continue @endif
 
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto">
-                @foreach($menus as $menu)
-                    @if($menu->module->name !== 'site')
-                        @continue
-                    @endif
-                    @if($menu->items->isEmpty())
-                        <a href="{{ route($menu->route) }}"
-                        class="nav-item nav-link {{ request()->routeIs($menu->route) ? 'active' : '' }}">
-                            {{ __('menu-site.' . $menu->title) }}
-                        </a>
-                    @else
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                {{ __('menu-site.' . $menu->title) }}
-                            </a>
+                <div class="ebuy-menu-item">
+                    <a href="{{ $menu->items->isEmpty() ? route($menu->route) : 'javascript:void(0)' }}"
+                       class="ebuy-link-top {{ request()->routeIs($menu->route) ? 'is-active' : '' }}">
+                        {{ __('menu-site.' . $menu->title) }}
+                        @if(!$menu->items->isEmpty()) <i class="fa fa-chevron-down ms-1"></i> @endif
+                    </a>
 
-                            <div class="dropdown-menu rounded-0 m-0">
-                                @foreach($menu->items as $item)
-                                    <a href="{{ route($item->route) }}" class="dropdown-item">
-                                        {{ __('menu-site.' . $item->title) }}
-                                    </a>
-                                @endforeach
-                            </div>
+                    @if(!$menu->items->isEmpty())
+                        <div class="ebuy-dropdown-float">
+                            @foreach($menu->items as $item)
+                                <a href="{{ route($item->route) }}" class="ebuy-sub-link">
+                                    {{ __('menu-site.' . $item->title) }}
+                                </a>
+                            @endforeach
                         </div>
                     @endif
-                @endforeach
+                </div>
+            @endforeach
+        </nav>
+
+        <div class="ebuy-actions-right">
+
+            <div class="ebuy-lang-picker">
+                <div class="lang-pill-row">
+                    <i class="fa fa-globe"></i>
+                    <span>{{ app()->getLocale() == 'es' ? 'MX ES' : 'US EN' }}</span>
+                </div>
+                <div class="lang-drop-box">
+                    <a href="{{ url('lang/es') }}">MX ES</a>
+                    <a href="{{ url('lang/en') }}">US EN</a>
+                </div>
             </div>
 
-            <div class="d-flex align-items-center ms-3">
+            <a href="{{ route('login') }}" class="btn-ebuy-outline">
+                <i class="fa fa-plus-circle me-1"></i> {{ auto_trans('Publicar') }}
+            </a>
 
-                <div class="nav-item dropdown me-3">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="fa fa-language text-black"></i> {{ strtoupper(app()->getLocale()) }}
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <a href="{{ url('lang/es') }}"
-                        class="dropdown-item {{ app()->getLocale() === 'es' ? 'active' : '' }}">
-                            🇲🇽 ES
-                        </a>
-                        <a href="{{ url('lang/en') }}"
-                        class="dropdown-item {{ app()->getLocale() === 'en' ? 'active' : '' }}">
-                            🇺🇸 EN
-                        </a>
-                    </div>
-                </div>
-
-                <a href="{{ route('login') }}" class="btn btn-outline-primary px-3 me-2">
-                        {{ __('Publicar') }}
+            @guest
+                <a href="{{ route('login') }}" class="btn-ebuy-solid">
+                    {{ __('Iniciar') }}
                 </a>
-
-                @guest
-                    <a href="{{ route('login') }}" class="btn btn-primary px-3">
-                        {{ __('auth.login') }}
-                    </a>
-                @else
-                    <div class="nav-item dropdown">
-                        <a href="#" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                            {{ Auth::user()->name }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a href="#" class="dropdown-item">
-                                {{ __('Dashboard') }}
-                            </a>
-
+            @else
+                <div class="ebuy-user-box">
+                    <button class="btn-ebuy-solid dropdown-toggle" data-bs-toggle="dropdown">
+                        {{ Auth::user()->name }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg">
+                        <li><a class="dropdown-item" href="{{route('home')}}">{{ __('Dashboard') }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button class="dropdown-item text-danger">
-                                    {{ __('Logout') }}
-                                </button>
+                                <button type="submit" class="dropdown-item text-danger"> {{ __('Logout') }} </button>
                             </form>
-                        </div>
-                    </div>
-                @endguest
-
-            </div>
+                        </li>
+                    </ul>
+                </div>
+            @endguest
         </div>
+    </div>
+</header>
 
-    </nav>
-</div>
-
+@include('styles.navbar_site')

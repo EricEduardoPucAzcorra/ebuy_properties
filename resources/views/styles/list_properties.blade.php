@@ -117,6 +117,61 @@
         background-color: #e9f7ef;
     }
 
+    .amenity-row {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .amenity-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--body-text);
+    }
+
+    .amenity-box i {
+        font-size: 1.1rem;
+        color: var(--primary-color);
+    }
+
+    .card-clean:hover .amenity-box i {
+        transform: scale(1.15);
+        transition: transform 0.3s ease;
+    }
+    .property-mini-actions .icon-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .2s ease;
+    }
+
+    .property-mini-actions .icon-btn:hover {
+        background: #f3f4f6;
+        color: #111827;
+        transform: translateY(-1px);
+    }
+
+    .property-mini-actions .icon-btn i {
+        font-size: 0.95rem;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 6px 10px;
+        border-radius: 14px;
+        font-weight: 500;
+    }
     .ia-sticky {
         position: sticky;
         top: 100px;

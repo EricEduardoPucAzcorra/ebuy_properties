@@ -2,125 +2,163 @@
 
 @section('content')
 
-<div class="container-fluid header bg-white p-0">
-    <div class="row g-0">
-        <div class="col-12 animated fadeIn">
-            <img class="img-fluid w-100 object-fit-cover"
-                 src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                 alt="Header"
-                 style="height: 650px;"> </div>
-    </div>
+@php
+    function getAttribute($attributes, $key) {
+        return optional(
+            $attributes->firstWhere('key', $key)
+        )->value;
+    }
+@endphp
+
+<div class="container-fluid p-0">
+    <img
+        src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1600"
+        class="w-100 object-fit-cover"
+        style="height: 650px"
+        alt="Hero">
 </div>
 
 @include('site.components.search_site_general')
 
-<!-- Property List Start -->
-<div class="container-fluid">
+<div class="container-fluid bg-white py-5">
     <div class="container">
-        <!-- Header y Tabs -->
-        <div class="row g-0 gx-5 align-items-end">
+
+        <div class="row mb-5">
             <div class="col-lg-6">
-                <div class="text-start mx-auto mb-5 wow slideInLeft" data-wow-delay="0.1s">
-                    <h1 class="mb-3">Property Listing</h1>
-                    <p>Explora nuestra selección de propiedades cuidadosamente seleccionadas para ti.</p>
-                </div>
+                <h2 class="section-title mb-3">
+                    Encuentra tu próximo lugar ideal
+                </h2>
+                <p class="text-muted fs-5">
+                    Propiedades cuidadosamente seleccionadas para quienes buscan confort,
+                    ubicación y estilo.
+                </p>
             </div>
-            <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
-                <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
-                    <li class="nav-item me-2">
-                        <a class="btn btn-outline-primary active" data-bs-toggle="pill" href="#tab-featured">Featured</a>
-                    </li>
-                    <li class="nav-item me-2">
-                        <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#tab-sell">For Sell</a>
-                    </li>
-                    <li class="nav-item me-0">
-                        <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#tab-rent">For Rent</a>
-                    </li>
-                </ul>
+
+            <div class="col-lg-6 text-lg-end">
+                <div class="nav nav-pills nav-pills-custom d-inline-flex">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-featured">
+                        Featured
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-sell">
+                        For Sale
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-rent">
+                        For Rent
+                    </button>
+                </div>
             </div>
         </div>
 
-        @php
-            $defaultImage = asset('img/default-property.jpg');
-        @endphp
+        <div class="row g-4">
 
-        <div class="tab-content">
+            @forelse($properties as $property)
+                <div class="col-lg-4 col-md-6">
 
-            {{-- Featured --}}
-            <div id="tab-featured" class="tab-pane fade show p-0 active">
-                <div class="row g-4">
-                    @forelse($properties as $property)
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="property-item rounded overflow-hidden">
-                                <div class="position-relative overflow-hidden">
-                                    <a href="#">
-                                        <img class="img-fluid" src="https://img10.naventcdn.com/avisos/resize/18/01/48/22/02/08/1200x1200/1580752714.jpg?isFirstImage=true" alt="{{ $property->title }}">
-                                    </a>
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
-                                        {{ $property->typeOperation->name ?? 'Venta' }}
+                    <div class="card-clean h-100 d-flex flex-column">
+
+                        <div class="img-frame">
+
+                            @if($property->images->count())
+                                <div id="carousel{{ $property->id }}"
+                                     class="carousel slide h-100"
+                                     data-bs-ride="carousel">
+
+                                    <div class="carousel-inner h-100">
+                                        @foreach($property->images as $i => $image)
+                                            <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
+                                                <img
+                                                    src="{{ asset('storage/'.$image->path) }}"
+                                                    alt="{{ $property->title }}">
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                                        {{ $property->typeProperty->name ?? 'Propiedad' }}
-                                    </div>
+
+                                    @if($property->images->count() > 1)
+                                        <button class="carousel-control-prev"
+                                                type="button"
+                                                data-bs-target="#carousel{{ $property->id }}"
+                                                data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon"></span>
+                                        </button>
+
+                                        <button class="carousel-control-next"
+                                                type="button"
+                                                data-bs-target="#carousel{{ $property->id }}"
+                                                data-bs-slide="next">
+                                            <span class="carousel-control-next-icon"></span>
+                                        </button>
+                                    @endif
                                 </div>
-                                <div class="p-4 pb-0">
-                                    <h5 class="text-primary mb-3">${{ number_format($property->price, 0) }}</h5>
-                                    <a class="d-block h5 mb-2" href="#">{{ $property->title }}</a>
-                                    <p><i class="fa fa-map-marker-alt text-primary me-2"></i>
-                                        {{ optional($property->address)->street ?? '' }}, {{ optional($property->address)->city ?? '' }}
-                                    </p>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="flex-fill text-center border-end py-2">
-                                        <i class="fa fa-ruler-combined text-primary me-2"></i>
-                                        {{ $property->square_meters ?? 'N/A' }} Sqft
-                                    </small>
-                                    <small class="flex-fill text-center border-end py-2">
-                                        <i class="fa fa-bed text-primary me-2"></i>
-                                        {{ $property->bedrooms ?? 'N/A' }} Bed
-                                    </small>
-                                    <small class="flex-fill text-center py-2">
-                                        <i class="fa fa-bath text-primary me-2"></i>
-                                        {{ $property->bathrooms ?? 'N/A' }} Bath
-                                    </small>
-                                </div>
+                            @else
+                                <img src="{{ asset('images/ebuy_1.png') }}" alt="No image">
+                            @endif
+
+                            <div class="floating-tag">
+                                {{ $property->operation->name ?? '' }}
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-12 text-center py-5">
-                            <i class="fa fa-search fa-3x text-muted mb-3"></i>
-                            <h4>No se encontraron propiedades</h4>
-                            <p class="text-muted">Intenta con otros criterios de búsqueda</p>
-                        </div>
-                    @endforelse
 
-                    <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
-                        <a class="btn btn-primary py-3 px-5" href="#">Browse More Property</a>
+                        </div>
+
+                        <div class="p-4 pb-3 flex-grow-1">
+                            <h5 class="fw-bold mb-2">
+                                {{ $property->title }}
+                            </h5>
+
+                            <div class="price-tag">
+                                ${{ number_format($property->price, 0) }}
+                                @if(($property->operation->name ?? '') === 'Renta')
+                                    <span class="price-period">{{auto_trans('/Mes')}}</span>
+                                @endif
+                            </div>
+
+                            <div class="property-type mb-2">
+                                {{ $property->type->name ?? 'Property' }}
+                            </div>
+
+                            <p class="text-muted small mb-0">
+                                <i class="fa fa-map-marker-alt me-1"></i>
+                                {{ optional($property->address)->city->cityname ?? '' }},
+                                {{ optional($property->address)->state->statename ?? '' }}
+                            </p>
+                        </div>
+
+                        <div class="amenity-row">
+                            @if(getAttribute($property->attributes, 'Camas'))
+                                <div class="amenity-box">
+                                    <i class="fa fa-bed"></i>
+                                    {{ getAttribute($property->attributes, 'Camas') }} Camas
+                                </div>
+                            @endif
+
+                            @if(getAttribute($property->attributes, 'Baños'))
+                                <div class="amenity-box">
+                                    <i class="fa fa-bath"></i>
+                                    {{ getAttribute($property->attributes, 'Baños') }} Baños
+                                </div>
+                            @endif
+
+                            @if(getAttribute($property->attributes, 'M²'))
+                                <div class="amenity-box">
+                                    <i class="fa fa-ruler-combined"></i>
+                                    {{ getAttribute($property->attributes, 'M²') }} m²
+                                </div>
+                            @endif
+                        </div>
+
                     </div>
                 </div>
-            </div>
-
-            {{-- For Sell --}}
-            <div id="tab-sell" class="tab-pane fade show p-0">
-                <div class="row g-4">
-                    @foreach($properties->where('typeOperation.name', 'Venta') as $property)
-                        @include('partials.property-card', ['property' => $property, 'defaultImage' => $defaultImage])
-                    @endforeach
+            @empty
+                <div class="col-12 text-center py-5">
+                    <i class="fa fa-search fa-3x text-muted mb-3"></i>
+                    <h4>{{auto_trans('No se encontraron propiedades')}}</h4>
                 </div>
-            </div>
-
-            {{-- For Rent --}}
-            <div id="tab-rent" class="tab-pane fade show p-0">
-                <div class="row g-4">
-                    @foreach($properties->where('typeOperation.name', 'Renta') as $property)
-                        @include('partials.property-card', ['property' => $property, 'defaultImage' => $defaultImage])
-                    @endforeach
-                </div>
-            </div>
+            @endforelse
 
         </div>
+
     </div>
 </div>
-<!-- Property List End -->
+
+@include('styles.list_properties_site')
 
 @endsection

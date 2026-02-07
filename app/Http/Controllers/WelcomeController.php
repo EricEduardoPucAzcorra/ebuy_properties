@@ -7,16 +7,39 @@ use Stevebauman\Location\Facades\Location;
 use App\Models\Countrie;
 use App\Models\State;
 use App\Models\Citie;
-use App\Models\Menu;
 use App\Models\Propertie;
-use App\Models\TypeOperation;
-use App\Models\TypePropetie;
+use App\Services\PropertyRecommendationService;
 
 class WelcomeController extends Controller
 {
-    public function index()
+    public function index(Request $request, PropertyRecommendationService $aiService)
     {
-        return view('site.welcome');
+        $recommendedIds = $aiService->getRecommendedIds(2);
+
+        $query = Propertie::query()
+            ->with([
+                'images' => function ($q) {
+                    $q->orderByDesc('is_main')->orderBy('order');
+                },
+                'address.city',
+                'address.state',
+                'address.country',
+                'type',
+                'operation',
+                'attributes'
+            ])
+            ->where('is_active', true);
+
+        if (!empty($recommendedIds)) {
+            $idsOrdered = implode(',', $recommendedIds);
+            $properties = $query->whereIn('id', $recommendedIds)
+                ->orderByRaw("FIELD(id, $idsOrdered)")
+                ->get();
+        } else {
+            $properties = $query->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        return view('site.welcome', compact('properties', 'recommendedIds'));
     }
 
     public function searchLocation(Request $request)

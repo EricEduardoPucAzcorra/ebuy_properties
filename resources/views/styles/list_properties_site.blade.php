@@ -1,0 +1,131 @@
+<style>
+:root {
+    --primary-color: #00B98E;
+    --dark-text: #1A202C;
+    --body-text: #64748B;
+}
+
+.section-title {
+    font-weight: 850;
+    letter-spacing: -1.5px;
+    color: var(--dark-text);
+}
+
+.card-clean {
+    border-radius: 30px;
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    transition: all .35s ease;
+}
+
+.card-clean:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0,0,0,.08);
+    border-color: var(--primary-color);
+}
+
+.img-frame {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    border-radius: 26px;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: translateZ(0);
+}
+
+.img-frame .carousel,
+.img-frame .carousel-inner,
+.img-frame .carousel-item {
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 14%;
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.img-frame:hover .carousel-control-prev,
+.img-frame:hover .carousel-control-next {
+    opacity: 1;
+}
+
+.floating-tag {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: rgba(255,255,255,.95);
+    padding: 6px 16px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+    z-index: 5;
+}
+
+.price-tag {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.price-period {
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.amenity-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid #f0f0f0;
+    padding: 14px 12px;
+}
+
+.amenity-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.nav-pills-custom .nav-link {
+    color: var(--body-text);
+    font-weight: 600;
+    padding: 10px 26px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+    background: #ffffff;
+    margin-left: 8px;
+}
+
+.nav-pills-custom .nav-link:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.nav-pills-custom .nav-link.active {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 22px rgba(0, 185, 142, 0.25);
+}
+
+.amenity-box i {
+    font-size: 16px;
+}
+</style>

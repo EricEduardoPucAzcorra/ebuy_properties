@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        //services
 
         $this->app->singleton(TranslationService::class, function ($app) {
             return new TranslationService();
@@ -24,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(\App\Services\GeminiService::class, function ($app) {
             return new \App\Services\GeminiService();
         });
-
     }
 
     public function boot(): void
