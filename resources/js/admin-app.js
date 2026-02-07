@@ -50,7 +50,7 @@ class AdminApp {
             this.notificationManager = new NotificationManager();
             this.iconManager = iconManager;
             // 3. CARGAR ÍCONOS
-            this.iconManager.preloadIcons(['dashboard', 'users', 'settings', 'search', 'menu']);
+            this.iconManager.preloadIcons(['dashboard', 'users', 'settings', 'search', 'menu', 'house-check']);
             // 4. DETECTAR PÁGINA ACTUAL
             this.currentPage = this.detectCurrentPage();
             // 5. CARGAR MÓDULO DE PÁGINA

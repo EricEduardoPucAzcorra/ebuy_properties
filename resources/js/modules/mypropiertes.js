@@ -48,7 +48,8 @@ new Vue({
         newAttribute: {
             key: '',
             value: ''
-        }
+        },
+        errors: {},
     },
 
     mounted() {
@@ -149,8 +150,15 @@ new Vue({
             this.newAttribute.value = '';
         },
         submitForm() {
-            console.log(this.propertyForm)
 
+            if (!this.validateForm()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Datos incompletos',
+                    text: 'Por favor completa los campos marcados'
+                });
+                return;
+            }
 
             const formData = new FormData();
 
@@ -253,7 +261,42 @@ new Vue({
             };
 
             return map[name] ?? 'bg-light text-dark';
-        }
+        },
+
+        validateForm() {
+            this.errors = {};
+
+            if (!this.propertyForm.title.trim()) {
+                this.errors.title = 'El título es obligatorio';
+            }
+
+            if (!this.propertyForm.description.trim()) {
+                this.errors.description = 'La descripción es obligatoria';
+            }
+
+            if (!this.propertyForm.type_property_id) {
+                this.errors.type_property_id = 'Selecciona un tipo de propiedad';
+            }
+
+            if (!this.propertyForm.type_operation_id) {
+                this.errors.type_operation_id = 'Selecciona un tipo de operación';
+            }
+
+            if (!this.propertyForm.price || this.propertyForm.price <= 0) {
+                this.errors.price = 'Ingresa un precio válido';
+            }
+
+            if (!this.propertyForm.address.street.trim()) {
+                this.errors.street = 'La calle es obligatoria';
+            }
+
+            // if (!this.propertyForm.address.city.id) {
+            //     this.errors.city = 'Selecciona una ciudad';
+            // }
+
+            return Object.keys(this.errors).length === 0;
+        },
+
     }
 })
 

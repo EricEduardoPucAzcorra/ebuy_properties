@@ -85,4 +85,8 @@
         feature_updated_success: @json(__('general.plan_feature.messages.feature_updated_success')),
     };
 
+    window.auto_trans = (text)=>{
+        console.log(text)
+    };
+
 </script>

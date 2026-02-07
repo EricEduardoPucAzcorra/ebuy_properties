@@ -20,18 +20,25 @@
 
                 <div class="ebuy-menu-item">
                     <a href="{{ $menu->items->isEmpty() ? route($menu->route) : 'javascript:void(0)' }}"
-                       class="ebuy-link-top {{ request()->routeIs($menu->route) ? 'is-active' : '' }}">
+                    class="ebuy-link-top {{ request()->routeIs($menu->route) ? 'is-active' : '' }}">
                         {{ __('menu-site.' . $menu->title) }}
                         @if(!$menu->items->isEmpty()) <i class="fa fa-chevron-down ms-1"></i> @endif
                     </a>
 
                     @if(!$menu->items->isEmpty())
-                        <div class="ebuy-dropdown-float">
-                            @foreach($menu->items as $item)
-                                <a href="{{ route($item->route) }}" class="ebuy-sub-link">
-                                    {{ __('menu-site.' . $item->title) }}
-                                </a>
-                            @endforeach
+                        <div class="ebuy-dropdown-float ebuy-grid-menu">
+                            <div class="grid-menu-inner">
+                                @foreach($menu->items as $item)
+                                    <a href="{{ route($item->route) }}" class="ebuy-grid-link">
+                                        <div class="icon-box">
+                                            <i class="{{ $item->icon ?? 'fa fa-chevron-right' }}"></i>
+                                        </div>
+                                        <div class="text-box">
+                                            <span class="title">{{ __('menu-site.' . $item->title) }}</span>
+                                            <small class="desc">Explorar opciones</small> </div>
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
                     @endif
                 </div>

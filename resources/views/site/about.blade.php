@@ -1,6 +1,6 @@
 @extends('welcome')
 @section('content')
-<div class="container-fluid about-section overflow-hidden">
+<div class="container-fluid bg-white py-5">
     <div class="container">
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow zoomIn" data-wow-delay="0.1s">
