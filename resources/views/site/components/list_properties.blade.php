@@ -1,78 +1,207 @@
+
+@php
+    use App\Models\TypePropetie;
+    use App\Models\TypeOperation;
+
+    $type_properties = TypePropetie::all();
+    $type_operations = TypeOperation::all();
+
+    function getAttribute($attributes, $key) {
+        return optional(
+            $attributes->firstWhere('key', $key)
+        )->value;
+    }
+@endphp
+
 <div class="container-fluid bg-white py-5">
     <div class="container">
-        <div class="row align-items-center mb-5">
+
+        <div class="row mb-5">
             <div class="col-lg-6">
-                <h1 class="section-title mb-4">Discover Your<br><span style="color: var(--primary-color);">Perfect Living</span></h1>
-                <p class="text-muted fs-5">Premium listings for people who value design and comfort.</p>
+                <h2 class="section-title mb-3">
+                    Encuentra tu próximo lugar ideal
+                </h2>
+                <p class="text-muted fs-5">
+                    Propiedades cuidadosamente seleccionadas para quienes buscan confort,
+                    ubicación y estilo.
+                </p>
             </div>
+
             <div class="col-lg-6 text-lg-end">
                 <div class="nav nav-pills nav-pills-custom d-inline-flex">
-                    <button class="nav-link active" data-bs-toggle="pill" href="#tab-1">Featured</button>
-                    <button class="nav-link" data-bs-toggle="pill" href="#tab-2">For Sale</button>
-                    <button class="nav-link" data-bs-toggle="pill" href="#tab-3">For Rent</button>
+
+                    @php
+                        // Tomamos el operation actual de la URL (null si no hay)
+                        $currentOperation = request()->query('operation');
+                        // Tomamos todos los demás parámetros para agregarlos a los links
+                        $otherParams = request()->except('operation');
+                    @endphp
+
+                    <!-- Botón "Todo" -->
+                    <a
+                        href="{{ route('properties', $otherParams) }}"
+                        class="nav-link {{ is_null($currentOperation) ? 'active' : '' }}"
+                    >
+                        Todo
+                    </a>
+
+                    <!-- Botones de type_operations -->
+                    @foreach ($type_operations as $type_operation)
+                        <a
+                            href="{{ route('properties', array_merge($otherParams, ['operation' => $type_operation->id])) }}"
+                            class="nav-link {{ $currentOperation == $type_operation->id ? 'active' : '' }}"
+                        >
+                            {{ $type_operation->name }}
+                        </a>
+                    @endforeach
+
                 </div>
             </div>
+
         </div>
 
-        <div class="tab-content">
-            <div id="tab-1" class="tab-pane fade show active">
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card-clean h-100">
-                            <div class="img-frame">
-                                <img src="img/property-1.jpg" alt="Luxury Home">
-                                <div class="floating-tag">FOR SALE</div>
-                                <div class="position-absolute bottom-0 start-0 m-4">
-                                    <span class="badge bg-primary px-3 py-2 rounded-pill">Apartment</span>
+        <div class="row g-4">
+
+            @forelse($properties as $property)
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="card-clean h-100 d-flex flex-column">
+
+                        <div class="img-frame">
+
+                            @if($property->images->count())
+                                <div id="carousel{{ $property->id }}"
+                                     class="carousel slide h-100"
+                                     data-bs-ride="carousel">
+
+                                    <div class="carousel-inner h-100">
+                                        @foreach($property->images as $i => $image)
+                                            <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
+                                                <img
+                                                    src="{{ asset('storage/'.$image->path) }}"
+                                                    alt="{{ $property->title }}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    @if($property->images->count() > 1)
+                                        <button class="carousel-control-prev"
+                                                type="button"
+                                                data-bs-target="#carousel{{ $property->id }}"
+                                                data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon"></span>
+                                        </button>
+
+                                        <button class="carousel-control-next"
+                                                type="button"
+                                                data-bs-target="#carousel{{ $property->id }}"
+                                                data-bs-slide="next">
+                                            <span class="carousel-control-next-icon"></span>
+                                        </button>
+                                    @endif
                                 </div>
-                            </div>
-                            <div class="p-4 pt-2">
-                                <div class="price-tag">$1,250,000</div>
-                                <h5 class="fw-bold text-dark mb-2">The Glass Pavilion Loft</h5>
-                                <p class="text-muted small mb-3">
-                                    <i class="fa fa-map-marker-alt me-1"></i> 5th Ave, Manhattan, NY
-                                </p>
-                            </div>
-                            <div class="amenity-row">
-                                <div class="amenity-box"><i class="fa fa-ruler-combined"></i> 1200m²</div>
-                                <div class="amenity-box"><i class="fa fa-bed"></i> 3</div>
-                                <div class="amenity-box"><i class="fa fa-bath"></i> 2</div>
-                            </div>
-                        </div>
-                    </div>
+                            @else
+                                <img src="{{ asset('images/ebuy_1.png') }}" alt="No image">
+                            @endif
 
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card-clean h-100">
-                            <div class="img-frame">
-                                <img src="img/property-2.jpg" alt="Luxury Home">
-                                <div class="floating-tag text-primary">FOR RENT</div>
-                                <div class="position-absolute bottom-0 start-0 m-4">
-                                    <span class="badge bg-primary px-3 py-2 rounded-pill">Villa</span>
+                            <div class="floating-tag">
+                                {{ $property->operation->name ?? '' }}
+                            </div>
+
+                        </div>
+
+                        <div class="p-4 pb-3 flex-grow-1">
+                            <h5 class="fw-bold mb-2">
+                                {{ $property->title }}
+                            </h5>
+
+                            <div class="price-tag">
+                                ${{ number_format($property->price, 0) }}
+                                @if(($property->operation->name ?? '') === 'Renta')
+                                    <span class="price-period">{{auto_trans('/Mes')}}</span>
+                                @endif
+                            </div>
+
+                            <div class="property-type mb-2">
+                                {{ $property->type->name ?? 'Property' }}
+                            </div>
+
+                            <p class="text-muted small mb-0">
+                                <i class="fa fa-map-marker-alt me-1"></i>
+                                {{ optional($property->address)->city->cityname ?? '' }},
+                                {{ optional($property->address)->state->statename ?? '' }}
+                            </p>
+                        </div>
+
+                        <div class="amenity-row">
+                            @if(getAttribute($property->attributes, 'Camas'))
+                                <div class="amenity-box">
+                                    <i class="fa fa-bed"></i>
+                                    {{ getAttribute($property->attributes, 'Camas') }} {{ auto_trans('Camas') }}
                                 </div>
-                            </div>
-                            <div class="p-4 pt-2">
-                                <div class="price-tag">$4,500<span class="fs-6 text-muted fw-normal">/mo</span></div>
-                                <h5 class="fw-bold text-dark mb-2">Sunset Infinity Villa</h5>
-                                <p class="text-muted small mb-3">
-                                    <i class="fa fa-map-marker-alt me-1"></i> Malibu Coast, CA
-                                </p>
-                            </div>
-                            <div class="amenity-row">
-                                <div class="amenity-box"><i class="fa fa-ruler-combined"></i> 2500m²</div>
-                                <div class="amenity-box"><i class="fa fa-bed"></i> 5</div>
-                                <div class="amenity-box"><i class="fa fa-bath"></i> 4</div>
-                            </div>
+                            @endif
+
+                            @if(getAttribute($property->attributes, 'Baños'))
+                                <div class="amenity-box">
+                                    <i class="fa fa-bath"></i>
+                                    {{ getAttribute($property->attributes, 'Baños') }} {{ auto_trans('Baños') }}
+                                </div>
+                            @endif
+
+                            @if(getAttribute($property->attributes, 'M²'))
+                                <div class="amenity-box">
+                                    <i class="fa fa-ruler-combined"></i>
+                                    {{ getAttribute($property->attributes, 'M²') }} {{ auto_trans('m²') }}
+                                </div>
+                            @endif
                         </div>
-                    </div>
 
                     </div>
-
-                <div class="text-center mt-5">
-                    <a href="#" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow">Explore All Properties</a>
                 </div>
-            </div>
+            @empty
+                <div class="col-12 text-center py-5">
+                    <i class="fa fa-search fa-3x text-muted mb-3"></i>
+                    <h4>{{auto_trans('No se encontraron propiedades')}}</h4>
+                </div>
+            @endforelse
         </div>
+
+        @if ($properties->hasPages())
+            <div class="pagination-wrapper text-center mt-5">
+                <ul class="pagination-modern">
+
+                    <li class="{{ $properties->onFirstPage() ? 'disabled' : '' }}">
+                        @if (!$properties->onFirstPage())
+                            <a href="{{ $properties->previousPageUrl() }}">&laquo;</a>
+                        @else
+                            <span>&laquo;</span>
+                        @endif
+                    </li>
+
+                    @foreach ($properties->getUrlRange(1, $properties->lastPage()) as $page => $url)
+                        <li class="{{ $page == $properties->currentPage() ? 'active' : '' }}">
+                            @if ($page == $properties->currentPage())
+                                <span>{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}">{{ $page }}</a>
+                            @endif
+                        </li>
+                    @endforeach
+
+                    <li class="{{ $properties->hasMorePages() ? '' : 'disabled' }}">
+                        @if ($properties->hasMorePages())
+                            <a href="{{ $properties->nextPageUrl() }}">&raquo;</a>
+                        @else
+                            <span>&raquo;</span>
+                        @endif
+                    </li>
+
+                </ul>
+            </div>
+        @endif
+
     </div>
 </div>
 
 @include('styles.list_properties_site')
+

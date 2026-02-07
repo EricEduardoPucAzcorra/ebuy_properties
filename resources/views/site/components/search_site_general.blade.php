@@ -14,38 +14,6 @@
               action="{{ route('properties') }}">
 
             <div class="col-lg-2 col-md-6">
-                <select class="form-select search-input search-select" name="operation">
-                    @foreach ($type_operations as $operation)
-                        <option value="{{ $operation->id }}">{{ $operation->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
-                <select class="form-select search-input search-select" name="operation">
-                    @foreach ($type_operations as $operation)
-                        <option value="{{ $operation->id }}">{{ $operation->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
-                <select class="form-select search-input search-select" name="operation">
-                    @foreach ($type_operations as $operation)
-                        <option value="{{ $operation->id }}">{{ $operation->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
-                <select class="form-select search-input search-select" name="operation">
-                    @foreach ($type_operations as $operation)
-                        <option value="{{ $operation->id }}">{{ $operation->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
                 <select class="form-select search-input search-select" name="type">
                     @foreach ($type_properties as $type)
                         <option value="{{ $type->id }}">{{ $type->name }}</option>

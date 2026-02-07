@@ -176,5 +176,4 @@
         position: sticky;
         top: 100px;
     }
-
 </style>

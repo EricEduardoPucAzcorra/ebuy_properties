@@ -55,7 +55,7 @@ class PropertiesController extends Controller
 
         $properties = $query
             ->orderBy('created_at', 'desc')
-            ->paginate(12)
+            ->paginate(10)
             ->withQueryString();
 
         return view('site.properties', compact('properties'));

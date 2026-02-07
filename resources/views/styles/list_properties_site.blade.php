@@ -128,4 +128,59 @@
 .amenity-box i {
     font-size: 16px;
 }
+
+.pagination-modern {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination-modern li {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 2px solid #00B98E;
+    transition: all 0.3s ease;
+}
+
+.pagination-modern li a,
+.pagination-modern li span {
+    text-decoration: none;
+    color: #00B98E;
+    display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 38px;
+    text-align: center;
+}
+
+.pagination-modern li.active {
+    background-color: #00B98E;
+}
+
+.pagination-modern li.active a,
+.pagination-modern li.active span {
+    color: white;
+}
+
+.pagination-modern li:hover:not(.active):not(.disabled) {
+    background-color: #e0f7f1;
+    transform: scale(1.1);
+}
+
+.pagination-modern li.disabled {
+    border-color: #ccc;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+
 </style>
