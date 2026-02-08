@@ -5,15 +5,12 @@
         --body-text: #64748B;
     }
 
-    /* Títulos limpios */
     .section-title {
         font-weight: 850;
         color: var(--dark-text);
         letter-spacing: -1.5px;
         line-height: 1.1;
     }
-
-    /* Tabs minimalistas (Pills) */
     .nav-pills-custom .nav-link {
         color: var(--body-text);
         font-weight: 600;
@@ -32,13 +29,12 @@
         box-shadow: 0 10px 20px rgba(0, 185, 142, 0.2);
     }
 
-    /* Tarjeta Estilo Premium Blanco */
     .card-clean {
         border: none;
         background: #ffffff;
         border-radius: 30px;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #f1f5f9; /* Un borde casi invisible */
+        border: 1px solid #f1f5f9;
     }
 
     .card-clean:hover {
@@ -47,10 +43,10 @@
         border-color: var(--primary-color);
     }
 
-    /* Contenedor de imagen con bordes orgánicos */
+
     .img-frame {
         position: relative;
-        padding: 12px; /* Espacio que crea el efecto de marco blanco */
+        padding: 12px;
     }
 
     .img-frame img {
@@ -59,8 +55,6 @@
         object-fit: cover;
         height: 240px;
     }
-
-    /* Etiquetas flotantes */
     .floating-tag {
         position: absolute;
         top: 25px;
@@ -75,7 +69,6 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
-    /* Amenidades en diseño horizontal limpio */
     .amenity-row {
         padding: 15px 20px;
         border-top: 1px solid #f8fafc;
@@ -96,7 +89,6 @@
         font-size: 1rem;
     }
 
-    /* Precio destacado */
     .price-tag {
         font-size: 1.5rem;
         font-weight: 800;

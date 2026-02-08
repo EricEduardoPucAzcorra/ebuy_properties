@@ -18,7 +18,9 @@ class AutocompleteController extends Controller
             ->limit(10)
             ->get([
                 'countryid as id',
-                'countryname as name'
+                'countryname as name',
+                'latitude as lat',
+                'longitude as lng'
             ]);
     }
 
@@ -38,8 +40,11 @@ class AutocompleteController extends Controller
             ->limit(10)
             ->get([
                 'stateid as id',
-                'statename as name'
+                'statename as name',
+                'latitude as lat',
+                'longitude as lng'
             ]);
+
     }
 
     public function search_cities(Request $request)
@@ -58,7 +63,9 @@ class AutocompleteController extends Controller
             ->limit(10)
             ->get([
                 'cityid as id',
-                'cityname as name'
+                'cityname as name',
+                'latitude as lat',
+                'longitude as lng'
             ]);
     }
 }

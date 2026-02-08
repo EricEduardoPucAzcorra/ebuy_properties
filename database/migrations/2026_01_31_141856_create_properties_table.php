@@ -17,19 +17,18 @@ return new class extends Migration
             $table->foreignId('type_property_id')->constrained();
             $table->foreignId('type_operation_id')->constrained();
             $table->foreignId('status_property_id')->constrained();
+            $table->string('cadastral_code')->nullable()->unique()->default(null);
             $table->string('title');
             $table->text('description')->nullable();
             $table->decimal('price', 15, 2);
             $table->string('currency', 3)->default('MXN');
-            //Se usara una ubicacion fija pero usaremos otro modelado llamado address
-            // $table->string('address')->nullable();
-            // $table->foreignId('country_id')->constrained('countries')->nullable();
-            // $table->foreignId('state_id')->constrained('states')->nullable();
-            // $table->foreign('city_id')->constrained('cities')->nullable();
-            // $table->string('postal_code')->nullable();
-            // $table->decimal('latitude', 10, 7)->nullable();
-            // $table->decimal('longitude', 10, 7)->nullable();
+            $table->boolean('price_negotiable')->default(false);
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_exclusive')->default(false);
+            $table->enum('presentation', ['Nuevo', 'Usado', 'En contrucción','Intestado'])->nullable()->default(null);
+            $table->enum('condition', ['Excelente', 'Buena','Para remodelar'])->nullable()->default(null);
+            $table->enum('delivery', ['Inmediata', 'Indicaciones'])->nullable()->default(null);
+            $table->string('delivery_obs')->nullable()->default(null);
             $table->timestamps();
         });
     }

@@ -15,11 +15,18 @@ class Propertie extends Model
         'type_property_id',
         'type_operation_id',
         'status_property_id',
+        'cadastral_code',
         'title',
         'description',
         'price',
         'currency',
+        'price_negotiable',
         'is_active',
+        'is_exclusive',
+        'presentation',
+        'condition',
+        'delivery',
+        'delivery_obs'
     ];
 
     public function address()
@@ -98,4 +105,13 @@ class Propertie extends Model
         return $this->hasMany(Report::class, 'property_id', 'id');
     }
 
+    public function costs()
+    {
+        return $this->hasMany(PropertieCost::class, 'property_id', 'id');
+    }
+
+   public function contacts()
+    {
+        return $this->hasMany(PropertyContact::class, 'property_id');
+    }
 }

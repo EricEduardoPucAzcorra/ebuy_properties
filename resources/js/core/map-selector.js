@@ -13,29 +13,50 @@ Vue.component('map-selector', {
         <div id="map-selector" style="height:400px;width:100%;"></div>
     `,
 
+    data() {
+        return {
+            map: null,
+            marker: null
+        }
+    },
+
     mounted() {
         this.initMap()
     },
 
+    watch: {
+        value: {
+            deep: true,
+            handler(newVal) {
+                if (!this.map || !this.marker) return
+
+                this.map.setView([newVal.lat, newVal.lng], 15)
+                this.marker.setLatLng([newVal.lat, newVal.lng])
+            }
+        }
+    },
+
     methods: {
         initMap() {
-            const map = L.map('map-selector')
+            this.map = L.map('map-selector')
                 .setView([this.value.lat, this.value.lng], 13)
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map)
+            }).addTo(this.map)
 
-            const marker = L.marker([this.value.lat, this.value.lng], {
+            this.marker = L.marker([this.value.lat, this.value.lng], {
                 draggable: true
-            }).addTo(map)
+            }).addTo(this.map)
 
-            map.on('click', e => {
-                marker.setLatLng(e.latlng)
+            // Click en el mapa
+            this.map.on('click', e => {
+                this.marker.setLatLng(e.latlng)
                 this.emitLocation(e.latlng)
             })
 
-            marker.on('dragend', e => {
+            // Arrastrar marcador
+            this.marker.on('dragend', e => {
                 this.emitLocation(e.target.getLatLng())
             })
         },
@@ -48,8 +69,3 @@ Vue.component('map-selector', {
         }
     }
 })
-// default
-// location: {
-//     lat: 19.4326,
-//     lng: -99.1332
-// }

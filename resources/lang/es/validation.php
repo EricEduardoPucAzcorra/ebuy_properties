@@ -38,6 +38,18 @@ return [
         'is_principal'      => 'estado principal',
         'business_units'    => 'unidades de negocio',
         'tenant_created_id' => 'ID del arrendatario',
+        //Property
+        'cadastral_code'=>'Codigo catastral',
+        'type_property_id'=>'Tipo de propiedad',
+        'type_operation_id'=>'Tipo de operación',
+        'price'=>'Precio',
+        'street'=>'Calle',
+        'number'=>'Numero',
+        'neighborhood'=>'Vecindario/Colonia',
+        'postal_code'=>'Codigo postal',
+        'country_id'=>'Pais',
+        'state_id'=>'Estado',
+        'city_id'=>'Ciudad',
     ],
 
 ];

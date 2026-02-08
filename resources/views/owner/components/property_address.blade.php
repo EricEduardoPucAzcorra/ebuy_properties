@@ -4,20 +4,29 @@
     <div class="row mb-3">
         <div class="col-md-2">
             <label class="form-label">{{ auto_trans('Calle') }}</label>
-            <input type="text" class="form-control" v-model="propertyForm.address.street">
+            <input type="text" class="form-control" v-model="propertyForm.address.street" :class="{ 'is-invalid': errors.street }">
+             <div class="invalid-feedback">
+                <span>@{{errors.street}}</span>
+            </div>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label class="form-label">{{ auto_trans('Numero') }}</label>
-            <input type="number" class="form-control" v-model="propertyForm.address.number">
+            <input type="number" class="form-control" v-model="propertyForm.address.number" :class="{ 'is-invalid': errors.number }">
+            <div class="invalid-feedback">
+                 <span>@{{errors.number}}</span>
+            </div>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label class="form-label">{{ auto_trans('Codigo postal') }}</label>
-            <input type="text" class="form-control" v-model="propertyForm.address.postal_code">
+            <input type="text" class="form-control" v-model="propertyForm.address.postal_code" :class="{ 'is-invalid': errors.postal_code }">
+            <div class="invalid-feedback">
+                 <span>@{{errors.postal_code}}</span>
+            </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
             <label class="form-label">{{ auto_trans('Vecindario/Colonia') }}</label>
             <input type="text" class="form-control" v-model="propertyForm.address.neighborhood">
         </div>
@@ -37,7 +46,11 @@
                     placeholder="{{ auto_trans('Escribe el pais') }}"
                     url="/countries/search"
                     v-model="propertyForm.address.country"
+                    :class="{ 'is-invalid': errors.country }"
                 ></autocomplete>
+                <div class="invalid-feedback">
+                    <span>@{{errors.country}}</span>
+                </div>
             </div>
 
             <div class="col-md-4">
@@ -47,7 +60,11 @@
                     url="/states/search"
                     v-model="propertyForm.address.state"
                     :extra-params="{ country_id: propertyForm.address.country.id }"
+                    :class="{ 'is-invalid': errors.state }"
                 ></autocomplete>
+                <div class="invalid-feedback">
+                      <span>@{{errors.state}}</span>
+                </div>
             </div>
 
             <div class="col-md-4">
@@ -57,7 +74,11 @@
                     url="/cities/search"
                     v-model="propertyForm.address.city"
                     :extra-params="{ state_id: propertyForm.address.state.id }"
+                    :class="{ 'is-invalid': errors.city }"
                 ></autocomplete>
+                <div class="invalid-feedback">
+                      <span>@{{errors.city}}</span>
+                </div>
             </div>
 
         </div>

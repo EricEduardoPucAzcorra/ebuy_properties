@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             TypePropertieSeeder::class,
             TypeOperationSeeder::class,
             StatePropertieSeeder::class,
+            FeatureCategoryPropertieSeeder::class,
             FeaturePropertieSeeder::class,
             AtributeDefaultPropertieSeeder::class
         ]);

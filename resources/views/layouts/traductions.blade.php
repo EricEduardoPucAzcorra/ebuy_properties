@@ -85,8 +85,24 @@
         feature_updated_success: @json(__('general.plan_feature.messages.feature_updated_success')),
     };
 
-    window.auto_trans = (text)=>{
-        console.log(text)
+    window.cacheTraducciones = {};
+
+    window.auto_trans = async (text) => {
+        if (!text) return '';
+        if (window.cacheTraducciones[text]) return window.cacheTraducciones[text];
+        const response = await axios.post('/auto_trans', { text: text });
+        window.cacheTraducciones[text] = response.data.res;
+        return response.data.res;
+    };
+
+    // Mantenemos tu función batch original
+    window.auto_trans_batch = async (texts) => {
+        const faltantes = [...new Set(texts.filter(t => t && !window.cacheTraducciones[t]))];
+        if (faltantes.length > 0) {
+            const response = await axios.post('/auto_trans_batch', { texts: faltantes });
+            Object.assign(window.cacheTraducciones, response.data.results);
+        }
+        return texts;
     };
 
 </script>

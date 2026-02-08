@@ -6,6 +6,7 @@ use App\Models\AddressPropertie;
 use App\Models\Citie;
 use App\Models\Countrie;
 use App\Models\Propertie;
+use App\Models\PropertyContact;
 use App\Models\State;
 use App\Models\TypeOperation;
 use Illuminate\Http\Request;
@@ -161,6 +162,7 @@ class PropertiesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'cadastral_code'=>'required|string|max:255|unique:properties,cadastral_code',
             'title' => 'required|string|max:255',
             'type_property_id' => 'required|integer',
             'type_operation_id' => 'required|integer',
@@ -173,18 +175,26 @@ class PropertiesController extends Controller
             'address.country_id' => 'required|integer',
             'address.state_id' => 'required|integer',
             'address.city_id' => 'required|integer',
-            'address.latitude' => 'required|numeric',
-            'address.longitude' => 'required|numeric',
+            'address.latitude' => 'nullable|numeric',
+            'address.longitude' => 'nullable|numeric',
             'features' => 'nullable|array',
             'attributes' => 'nullable|array',
             'media.files' => 'nullable|array',
             'media.files.*.file' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
+            'contacts' => 'nullable|array',
+            'contacts.*.name' => 'required|string|max:255',
+            'contacts.*.phone' => 'required|string|max:50',
+            'contacts.*.whatsapp' => 'nullable|string|max:50',
+            'contacts.*.email' => 'nullable|email|max:255',
+            'contacts.*.date_atention' => 'nullable|date',
+            'contacts.*.photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         DB::beginTransaction();
 
         try {
             $property = Propertie::create([
+                'cadastral_code'=>$request->cadastral_code,
                 'user_id' => Auth::id(),
                 'title' => $request->title,
                 'description' => $request->description,
@@ -192,6 +202,7 @@ class PropertiesController extends Controller
                 'type_operation_id' => $request->type_operation_id,
                 'price' => $request->price,
                 'currency' => $request->currency ?? 'MNX',
+                'price_negotiable'=>$request->price_negotiable ?? 0,
                 'status_property_id' => $request->status_property_id ?? 2,
                 'is_active' => true,
             ]);
@@ -255,6 +266,31 @@ class PropertiesController extends Controller
                     ]);
                 }
             }
+
+            if ($request->filled('contacts')) {
+                foreach ($request->contacts as $index => $contact) {
+
+                    $photoPath = null;
+
+                    if ($request->hasFile("contacts.$index.photo")) {
+                        $photo = $request->file("contacts.$index.photo");
+
+                        $filename = Str::random(20) . '.' . $photo->getClientOriginalExtension();
+                        $photoPath = $photo->storeAs('property_contacts', $filename, 'public');
+                    }
+
+                    PropertyContact::create([
+                        'property_id'    => $property->id,
+                        'name'           => $contact['name'],
+                        'phone'          => $contact['phone'],
+                        'whatsapp'       => $contact['whatsapp'] ?? null,
+                        'email'          => $contact['email'] ?? null,
+                        'date_atention'  =>  null,
+                        'photo'          => $photoPath,
+                    ]);
+                }
+            }
+
 
             DB::commit();
 

@@ -1,6 +1,7 @@
-import './../core/autocomplete';
+import './../core/autocomplete_location';
 import './../core/map-selector';
 import './../core/media-uploader';
+import './../directives/auto_trans'
 
 new Vue({
     el: '#mypropiertes',
@@ -14,14 +15,17 @@ new Vue({
         activeTab: null,
         showForm: false,
         activeCreateTab: 'form',
-        features: [],
+        // features: [],
+        featureCategories: [],
         propertyForm:{
+            cadastral_code:'',
             title: '',
             description: '',
             type_property_id: null,
             type_operation_id: null,
             status_property_id: 2, //pendiente
             price: 0.0,
+            price_negotiable:false,
             currency: 'MNX',
             address:{
                 street: '',
@@ -43,13 +47,22 @@ new Vue({
             ],
             media: {
                 files: []
-            }
+            },
+            contacts: [],
         },
         newAttribute: {
             key: '',
             value: ''
         },
         errors: {},
+        newContact: {
+            name: '',
+            phone: '',
+            whatsapp: '',
+            email: '',
+            date_atention: '',
+            photo: null
+        },
     },
 
     mounted() {
@@ -60,13 +73,31 @@ new Vue({
     },
 
     watch: {
-        'propertyForm.address.country.id'() {
-            this.propertyForm.address.state = { id: null, name: '' }
-            this.propertyForm.address.city  = { id: null, name: '' }
+        'propertyForm.address.country'(val) {
+            if (val?.lat && val?.lng) {
+                this.propertyForm.address.location = {
+                    lat: val.lat,
+                    lng: val.lng
+                }
+            }
         },
 
-        'propertyForm.address.state.id'() {
-            this.propertyForm.address.city = { id: null, name: '' }
+        'propertyForm.address.state'(val) {
+            if (val?.lat && val?.lng) {
+                this.propertyForm.address.location = {
+                    lat: val.lat,
+                    lng: val.lng
+                }
+            }
+        },
+
+        'propertyForm.address.city'(val) {
+            if (val?.lat && val?.lng) {
+                this.propertyForm.address.location = {
+                    lat: val.lat,
+                    lng: val.lng
+                }
+            }
         }
     },
 
@@ -111,12 +142,14 @@ new Vue({
                 self.type_properties = response.data;
             });
         },
+
         loadFeatures() {
             axios.get('/property-features')
                 .then(res => {
-                    this.features = res.data;
+                    this.featureCategories = res.data;
                 });
         },
+
         toggleFeature(id) {
             const index = this.propertyForm.features.indexOf(id);
 
@@ -126,6 +159,7 @@ new Vue({
                 this.propertyForm.features.splice(index, 1);
             }
         },
+
         loadDefaultAttributes() {
             axios.get('/property-attributes/defaults')
                 .then(res => {
@@ -138,6 +172,7 @@ new Vue({
                     });
                 });
         },
+
         addCustomAttribute() {
             if (!this.newAttribute.key || !this.newAttribute.value) return;
 
@@ -149,25 +184,78 @@ new Vue({
             this.newAttribute.key = '';
             this.newAttribute.value = '';
         },
-        submitForm() {
 
-            if (!this.validateForm()) {
+        addContact() {
+            if (!this.newContact.name || !this.newContact.phone) return;
+
+            this.propertyForm.contacts.push({
+                name: this.newContact.name,
+                phone: this.newContact.phone,
+                whatsapp: this.newContact.whatsapp,
+                email: this.newContact.email,
+                date_atention: this.newContact.date_atention,
+                photo: this.newContact.photo
+            });
+
+            this.newContact = {
+                name: '',
+                phone: '',
+                whatsapp: '',
+                email: '',
+                date_atention: '',
+                photo: null
+            };
+        },
+
+        removeContact(index) {
+            this.propertyForm.contacts.splice(index, 1);
+        },
+
+        onContactPhotoChange(e, index) {
+            const file = e.target.files[0];
+            if (file) {
+                this.propertyForm.contacts[index].photo = file;
+            }
+        },
+
+        async submitForm() {
+            const isValid = this.validateForm();
+
+            if (!isValid) {
+                const textosParaTraducir = [
+                    'Datos incompletos',
+                    'Por favor completa los campos marcados',
+                    ...Object.values(this.errors)
+                ];
+
+                await window.auto_trans_batch(textosParaTraducir);
+
+                let erroresTraducidos = {};
+                Object.keys(this.errors).forEach(key => {
+                    const texto = this.errors[key];
+                    erroresTraducidos[key] = window.cacheTraducciones[texto] || texto;
+                });
+
+                this.errors = erroresTraducidos;
+
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Datos incompletos',
-                    text: 'Por favor completa los campos marcados'
+                    title: window.cacheTraducciones['Datos incompletos'] || 'Datos incompletos',
+                    text: window.cacheTraducciones['Por favor completa los campos marcados'] || 'Error'
                 });
                 return;
             }
 
             const formData = new FormData();
 
+            formData.append('cadastral_code', this.propertyForm.cadastral_code);
             formData.append('title', this.propertyForm.title);
             formData.append('description', this.propertyForm.description);
             formData.append('type_property_id', this.propertyForm.type_property_id);
             formData.append('type_operation_id', this.propertyForm.type_operation_id);
             formData.append('status_property_id', 3);
             formData.append('price', this.propertyForm.price);
+            formData.append('price_negotiable',this.propertyForm.price_negotiable);
             formData.append('currency', this.propertyForm.currency);
 
             formData.append('address[street]', this.propertyForm.address.street);
@@ -197,19 +285,29 @@ new Vue({
                 formData.append(`media[${i}][type]`, f.type);
             });
 
+            this.propertyForm.contacts.forEach((contact, i) => {
+                formData.append(`contacts[${i}][name]`, contact.name);
+                formData.append(`contacts[${i}][phone]`, contact.phone);
+                formData.append(`contacts[${i}][whatsapp]`, contact.whatsapp ?? '');
+                formData.append(`contacts[${i}][email]`, contact.email ?? '');
+                // formData.append(`contacts[${i}][date_atention]`, contact.date_atention ?? '');
+
+                if (contact.photo) {
+                    formData.append(`contacts[${i}][photo]`, contact.photo);
+                }
+            });
+
             axios.post('/save/mypropertie', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
             .then(res => {
                 alert('¡Propiedad guardada correctamente!');
                 this.showForm = false;
-                this.fetchProperties(); // refresca lista
+                this.fetchProperties();
             })
             .catch(err => {
                 let er = err;
-
                 if (er.response && er.response.data.errors) {
-
                     const errors = err.response.data.errors;
                     let errorHtml = '<ul style="text-align:left;">';
 
@@ -262,41 +360,29 @@ new Vue({
 
             return map[name] ?? 'bg-light text-dark';
         },
-
         validateForm() {
-            this.errors = {};
+            let newErrors = {};
 
-            if (!this.propertyForm.title.trim()) {
-                this.errors.title = 'El título es obligatorio';
-            }
+            if (!this.propertyForm.cadastral_code.trim()) newErrors.cadastral_code = 'Ingresa el numero catastral';
+            if (!this.propertyForm.title.trim()) newErrors.title = 'Ingrese el titulo';
+            // if (!this.propertyForm.description.trim()) newErrors.description = 'Ingrese una descripción';
+            if (!this.propertyForm.type_property_id) newErrors.type_property_id = 'Selecciona un tipo de propiedad';
+            if (!this.propertyForm.type_operation_id) newErrors.type_operation_id = 'Selecciona un tipo de operación';
 
-            if (!this.propertyForm.description.trim()) {
-                this.errors.description = 'La descripción es obligatoria';
-            }
+            if (!this.propertyForm.address.street.trim()) newErrors.street = 'Ingrese la calle';
+            if (!this.propertyForm.address.number.trim()) newErrors.number = 'Ingrese el numero';
+            if (!this.propertyForm.address.postal_code.trim()) newErrors.postal_code = 'Ingrese el codigo postal';
+            if (!this.propertyForm.address.country.id) newErrors.country = 'Seleciona un pais';
+            if (!this.propertyForm.address.state.id) newErrors.state = 'Seleciona un estado';
+            if (!this.propertyForm.address.city.id) newErrors.city = 'Selecciona una ciudad';
 
-            if (!this.propertyForm.type_property_id) {
-                this.errors.type_property_id = 'Selecciona un tipo de propiedad';
-            }
+            if (!this.propertyForm.price || this.propertyForm.price <= 0) newErrors.price = 'Ingresa un precio válido';
+            if (this.propertyForm.features.length === 0) newErrors.features = 'Debes seleccionar al menos una característica';
+            if (this.propertyForm.media.files.length === 0) newErrors.media = 'Debes subir al menos una imagen';
 
-            if (!this.propertyForm.type_operation_id) {
-                this.errors.type_operation_id = 'Selecciona un tipo de operación';
-            }
-
-            if (!this.propertyForm.price || this.propertyForm.price <= 0) {
-                this.errors.price = 'Ingresa un precio válido';
-            }
-
-            if (!this.propertyForm.address.street.trim()) {
-                this.errors.street = 'La calle es obligatoria';
-            }
-
-            // if (!this.propertyForm.address.city.id) {
-            //     this.errors.city = 'Selecciona una ciudad';
-            // }
-
+            this.errors = newErrors;
             return Object.keys(this.errors).length === 0;
         },
-
     }
 })
 

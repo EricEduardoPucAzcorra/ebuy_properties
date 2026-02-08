@@ -14,10 +14,15 @@ class PropertyFeature extends Model
         'name',
         'description',
         'icon',
+        'feature_category_id'
     ];
 
     public function properties()
     {
         return $this->belongsToMany(Propertie::class, 'property_feature', 'feature_id', 'property_id')->withTimestamps();
+    }
+
+    public function category(){
+        return $this->belongsTo(FeatureCategory::class, 'feature_category_id');
     }
 }

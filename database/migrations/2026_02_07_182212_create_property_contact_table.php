@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_features', function (Blueprint $table) {
+        Schema::create('property_contact', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('property_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('icon')->nullable();
-            $table->foreignId('feature_category_id')
-            ->nullable()
-            ->constrained('feature_categories')
-            ->nullOnDelete();
+            $table->string('phone', 10)->nullable();
+            $table->string('whatsapp')->nullable();
+            $table->string('email')->nullable();
+            $table->date('date_atention')->nullable();
+            $table->date('photo')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('property_features');
+        Schema::dropIfExists('property_contact');
     }
 };

@@ -34,7 +34,7 @@
                     type="text"
                     class="form-control"
                     v-model="newAttribute.key"
-                    placeholder="Ej: frigobar"
+                    placeholder="Ej: {{ auto_trans('frigobar') }}"
                 >
             </div>
 
@@ -47,13 +47,13 @@
                 >
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <button
                     type="button"
-                    class="btn btn-outline-success w-100"
+                    class="btn btn-outline-success"
                     @click="addCustomAttribute"
                 >
-                    + Agregar
+                    +
                 </button>
             </div>
         </div>

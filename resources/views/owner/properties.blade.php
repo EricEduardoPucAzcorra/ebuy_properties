@@ -41,6 +41,8 @@
 
                     @include('owner.components.property_address')
 
+                    @include('owner.components.property_contact')
+
                     @include('owner.components.property_features')
 
                     @include('owner.components.property_attributes')

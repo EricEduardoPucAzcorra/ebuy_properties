@@ -5,11 +5,11 @@ return array (
   'email' => 'The :attribute field must be a valid email.',
   'unique' => 'The :attribute is already in use.',
   'confirmed' => 'The :attribute commit does not match.',
-  'min' => 
+  'min' =>
   array (
     'string' => 'The :attribute field must be at least :min characters.',
   ),
-  'max' => 
+  'max' =>
   array (
     'string' => 'The :attribute field must not exceed :max characters.',
   ),
@@ -18,7 +18,7 @@ return array (
   'mimes' => 'The :attribute field must be a file of type: :values.',
   'exists' => 'The selected :attribute is invalid.',
   'numeric' => 'The :attribute field must be a number.',
-  'attributes' => 
+  'attributes' =>
   array (
     'name' => 'name',
     'email' => 'email',
@@ -39,5 +39,21 @@ return array (
     'is_principal' => 'main state',
     'business_units' => 'business units',
     'tenant_created_id' => 'Tenant ID',
+    //property
+    'cadastral_code'=>'Cadastral_code',
+    'type_property_id'=>'Property type',
+    'type_operation_id'=>'Operation type',
+    'price'=>'Price',
+    'street'=>'Street',
+    'number'=>'Number',
+    'neighborhood'=>'Neighborhood',
+    'postal_code'=>'Zip code',
+    'country_id'=>'Country',
+    'state_id'=>'State',
+    'city_id'=>'City',
+
+
+
+
   ),
 );
