@@ -168,4 +168,57 @@
         position: sticky;
         top: 100px;
     }
+
+    /* Botón Flotante IA */
+    .btn-ai-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 8px 20px rgba(0, 185, 142, 0.3);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        width: auto;
+    }
+
+    .btn-ai-float:hover {
+        transform: scale(1.05) translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 185, 142, 0.4);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .btn-ai-float {
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+        }
+    }
+
+    .modal-ai .modal-content {
+        border-radius: 30px;
+        border: none;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+    }
+
+    .modal-ai .modal-header {
+        border-bottom: 1px solid #f1f5f9;
+        padding: 25px;
+    }
+
+    .ai-badge-status {
+        background: #e9f7ef;
+        color: var(--primary-color);
+        padding: 5px 15px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
 </style>

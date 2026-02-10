@@ -36,14 +36,14 @@
                     <input type="text" class="form-control" v-model="contact.whatsapp">
                 </div>
 
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <label class="form-label">{{ auto_trans('Foto') }}</label>
                     <input
                         type="file"
                         class="form-control"
                         @change="onContactPhotoChange($event, index)"
                     >
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
                     type="text"
                     class="form-control"
                     v-model="newContact.name"
-                    placeholder="Nombre"
+                    placeholder="{{auto_trans('Nombre')}}"
                 >
             </div>
 
@@ -64,7 +64,7 @@
                     type="text"
                     class="form-control"
                     v-model="newContact.phone"
-                    placeholder="Teléfono"
+                    placeholder="{{auto_trans('Telefono')}}"
                 >
             </div>
 
@@ -73,7 +73,7 @@
                     type="email"
                     class="form-control"
                     v-model="newContact.email"
-                    placeholder="Email"
+                    placeholder="{{auto_trans('Correo Electronico')}}"
                 >
             </div>
 

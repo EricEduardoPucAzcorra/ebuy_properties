@@ -18,7 +18,8 @@ class State extends Model
         'statename',
         'statecode',
         'latitude',
-        'longitude'
+        'longitude',
+        'population'
     ];
 
     public function country()

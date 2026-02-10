@@ -17,7 +17,6 @@ class CitiesTableSeeder extends Seeder
 
         $records = $csv->getRecords();
 
-        // 🔥 Precargar datos
         $countries = DB::table('countries')
             ->where('continent', 'Americas')
             ->pluck('countryid')
@@ -45,6 +44,12 @@ class CitiesTableSeeder extends Seeder
                     continue;
                 }
 
+                $populationRaw = $record['population'] ?? null;
+
+                $population = is_numeric($populationRaw)
+                    ? (int) $populationRaw
+                    : null;
+
                 $batch[] = [
                     'cityid'     => $record['id'],
                     'stateid'    => $record['state_id'],
@@ -53,6 +58,7 @@ class CitiesTableSeeder extends Seeder
                     'type'       => $this->fixEncoding($record['type']),
                     'latitude'   => $record['latitude'] ?? null,
                     'longitude'  => $record['longitude'] ?? null,
+                    'population' => $population,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

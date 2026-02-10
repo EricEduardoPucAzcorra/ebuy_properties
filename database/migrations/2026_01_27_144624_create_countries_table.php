@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('longitude', 20);
             $table->string('name');
             $table->string('code');
+            $table->unsignedBigInteger('population')->nullable();
             $table->timestamps();
         });
     }

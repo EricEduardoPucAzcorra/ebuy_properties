@@ -37,6 +37,7 @@
 
                     <a
                         href="{{ route('properties', $otherParams) }}"
+                        data-post-link
                         class="nav-link {{ is_null($currentOperation) ? 'active' : '' }}"
                     >
                         {{auto_trans('Todo')}}
@@ -44,6 +45,7 @@
 
                     @foreach ($type_operations as $type_operation)
                         <a
+                            data-post-link
                             href="{{ route('properties', array_merge($otherParams, ['operation' => $type_operation->id])) }}"
                             class="nav-link {{ $currentOperation == $type_operation->id ? 'active' : '' }}"
                         >

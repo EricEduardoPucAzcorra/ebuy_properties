@@ -2,18 +2,10 @@ Vue.component('media-uploader', {
     props: {
         value: {
             type: Object,
-            default: () => ({
-                files: [],      // [{ file, type: 'image'|'video', preview, isPrimary }]
-            })
+            default: () => ({ files: [] })
         },
-        label: {
-            type: String,
-            default: 'Medios'
-        },
-        maxImages: {
-            type: Number,
-            default: 10
-        }
+        label: { type: String, default: 'Medios' },
+        maxImages: { type: Number, default: 10 }
     },
 
     template: `
@@ -26,25 +18,11 @@ Vue.component('media-uploader', {
 
         <div class="d-flex flex-wrap gap-2">
             <div v-for="(f, index) in localFiles" :key="index" class="position-relative preview-item">
-                <!-- Imagen -->
-                <img
-                    v-if="f.type==='image'"
-                    :src="f.preview"
-                    style="width:120px;height:80px;object-fit:cover;border-radius:5px;"
-                >
+                <img v-if="f.type==='image'" :src="f.preview" style="width:120px;height:80px;object-fit:cover;border-radius:5px;">
+                <video v-else :src="f.preview" style="width:120px;height:80px;border-radius:5px; cursor:pointer;" @click="toggleVideo($event)"></video>
 
-                <!-- Video -->
-                <video
-                    v-else
-                    :src="f.preview"
-                    style="width:120px;height:80px;border-radius:5px; cursor:pointer;"
-                    @click="toggleVideo($event)"
-                ></video>
-
-                <!-- Botón eliminar -->
                 <button type="button" class="btn-close remove-btn" @click="removeFile(index)"></button>
 
-                <!-- Botón principal -->
                 <button
                     type="button"
                     class="btn btn-sm btn-outline-primary position-absolute bottom-0 start-0"
@@ -61,13 +39,24 @@ Vue.component('media-uploader', {
 
     data() {
         return {
-            localFiles: [] // copia interna para manipulación
+            localFiles: []
+        }
+    },
+
+    // 1. ESCUCHAR CAMBIOS DEL PADRE (Clave para la edición)
+    watch: {
+        'value.files': {
+            handler(newFiles) {
+                // Actualizamos localFiles solo si hay un cambio externo (como al editar)
+                this.localFiles = [...newFiles];
+            },
+            deep: true
         }
     },
 
     mounted() {
-        if (this.value.files && this.value.files.length) {
-            this.localFiles = this.value.files.map(f => ({ ...f }));
+        if (this.value.files) {
+            this.localFiles = [...this.value.files];
         }
     },
 
@@ -85,24 +74,21 @@ Vue.component('media-uploader', {
                         file,
                         type,
                         preview: e.target.result,
-                        isPrimary: this.localFiles.length === 0
+                        isPrimary: this.localFiles.length === 0,
+                        existing: false // Marcamos que es nuevo
                     });
                     this.emitChange();
                 };
-
                 reader.readAsDataURL(file);
             });
-
             event.target.value = '';
         },
 
         removeFile(index) {
             this.localFiles.splice(index, 1);
-
             if (!this.localFiles.some(f => f.isPrimary) && this.localFiles.length) {
                 this.localFiles[0].isPrimary = true;
             }
-
             this.emitChange();
         },
 
@@ -111,16 +97,16 @@ Vue.component('media-uploader', {
             this.emitChange();
         },
 
+        emitChange() {
+            this.$emit('input', {
+                files: [...this.localFiles] // Enviamos copia limpia
+            });
+        },
+
         toggleVideo(event) {
             const video = event.target;
             if (video.paused) video.play();
             else video.pause();
-        },
-
-        emitChange() {
-            this.$emit('input', {
-                files: this.localFiles
-            });
         },
 
         countImages() {

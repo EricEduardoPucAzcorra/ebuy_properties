@@ -20,7 +20,9 @@ class Countrie extends Model
         'latitude',
         'longitude',
         'name',
-        'code'
+        'code',
+        'population'
+
     ];
 
     public function states()

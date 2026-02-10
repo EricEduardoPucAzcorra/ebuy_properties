@@ -1,4 +1,4 @@
-<div class="container bg-white py-5"  v-if="!showForm">
+<div class="container bg-white py-5">
     <div class="row align-items-center mb-5">
         <div class="col-12 text-end">
             <div class="nav nav-pills nav-pills-custom d-inline-flex justify-content-end">
@@ -53,8 +53,8 @@
 
                     <p class="text-muted small mb-1">
                         <i class="fa fa-map-marker-alt me-1"></i>
-                        @{{ property.address?.city }},
-                        @{{ property.address?.state }}
+                        @{{ property.address?.city_name }},
+                        @{{ property.address?.state_name }}
                     </p>
 
                     <div class="d-flex align-items-center justify-content-between mt-2">
@@ -68,8 +68,8 @@
                         <div class="d-flex gap-2 property-mini-actions">
                             <button
                                 class="icon-btn"
-                                title="Editar propiedad"
-                                @click="editProperty(property.id)">
+                                title="{{auto_trans('Editar propiedad')}}"
+                                @click="editProperty(property)">
                                 <i class="bi bi-pencil"></i>
                             </button>
 
@@ -142,3 +142,52 @@
         </ul>
     </div>
 </div>
+
+<div class="modal fade"
+     id="changeStatusModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{ auto_trans('Cambiar estado') }}
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <select class="form-select" v-model="selectedState">
+                    <option disabled value="">
+                        {{ auto_trans('Select status') }}
+                    </option>
+
+                    <option v-for="state in states"
+                            :key="state.id"
+                            :value="state.id">
+                        @{{ state.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-light"
+                        data-bs-dismiss="modal">
+                    {{ auto_trans('Cancel') }}
+                </button>
+
+                <button class="btn btn-primary"
+                        @click="saveStatus">
+                    {{ auto_trans('Guardar') }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

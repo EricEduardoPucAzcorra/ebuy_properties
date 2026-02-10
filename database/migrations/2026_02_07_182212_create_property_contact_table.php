@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('whatsapp')->nullable();
             $table->string('email')->nullable();
             $table->date('date_atention')->nullable();
-            $table->date('photo')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

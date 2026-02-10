@@ -20,6 +20,7 @@ class Citie extends Model
         'type',
         'latitude',
         'longitude',
+        'population'
     ];
 
     public function state()

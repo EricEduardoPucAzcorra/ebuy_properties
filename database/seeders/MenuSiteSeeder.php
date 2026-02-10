@@ -20,19 +20,15 @@ class MenuSiteSeeder extends Seeder
         $site = Module::create(['name'=>"site", 'description'=>'Sitio web buy properties', 'icon'=>'bi bi-globe','order'=>0, 'clasification'=>"site"]);
 
         //Configurar el menu con los modulos
-        Menu::firstOrCreate(['title' => 'home', 'icon' => '', 'route' => 'welcome.site', 'order' => 0, 'is_active' => true, 'module_id'=>$site->id, 'clasification'=>"site"]);
-        $explore = Menu::firstOrCreate(['title' => 'explore', 'icon' => '', 'route' => '', 'order' => 0, 'is_active' => true, 'module_id'=>$site->id, 'clasification'=>"site"]);
-        MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties', 'icon' => 'bi bi-house', 'route' => 'properties', 'order' => 1, 'module_id'=>$site->id]);
-        MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties_sale', 'icon' => 'bi bi-cash-coin', 'route' => 'properties.sale', 'order' => 1, 'module_id'=>$site->id]);
-        MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties_rent', 'icon' => 'bi bi-calendar-date', 'route' => 'properties.rent', 'order' => 1, 'module_id'=>$site->id]);
-        MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties_new', 'icon' => 'bi bi-house-check', 'route' => 'properties.new', 'order' => 1, 'module_id'=>$site->id]);
-        // MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties_new', 'icon' => '', 'route' => 'properties.new', 'order' => 1, 'module_id'=>$site->id]);
-        // MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties_new', 'icon' => '', 'route' => 'properties.new', 'order' => 1, 'module_id'=>$site->id]);
-        // MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties_new', 'icon' => '', 'route' => 'properties.new', 'order' => 1, 'module_id'=>$site->id]);
-        // MenuItem::create(['menu_id' => $explore->id, 'title' => 'properties_new', 'icon' => '', 'route' => 'properties.new', 'order' => 1, 'module_id'=>$site->id]);
+        // Menu::firstOrCreate(['title' => 'Inicio', 'icon' => '', 'route' => 'welcome.site', 'order' => 0, 'is_active' => true, 'module_id'=>$site->id, 'clasification'=>"site"]);
+        $explore = Menu::firstOrCreate(['title' => 'Explora', 'icon' => '', 'route' => '', 'order' => 0, 'is_active' => true, 'module_id'=>$site->id, 'clasification'=>"site"]);
+        MenuItem::create(['menu_id' => $explore->id, 'title' => 'Propiedades', 'icon' => 'bi bi-house', 'route' => 'properties', 'order' => 1, 'module_id'=>$site->id]);
+        MenuItem::create(['menu_id' => $explore->id, 'title' => 'Propiedades en venta', 'icon' => 'bi bi-cash-coin', 'route' => 'properties.sale', 'order' => 1, 'module_id'=>$site->id]);
+        MenuItem::create(['menu_id' => $explore->id, 'title' => 'Propiedades en renta', 'icon' => 'bi bi-calendar-date', 'route' => 'properties.rent', 'order' => 1, 'module_id'=>$site->id]);
+        MenuItem::create(['menu_id' => $explore->id, 'title' => 'Propiedades nuevos', 'icon' => 'bi bi-house-check', 'route' => 'properties.new', 'order' => 1, 'module_id'=>$site->id]);
 
-        $aboutus = Menu::firstOrCreate(['title' => 'about_us', 'icon' => '', 'route' => '', 'order' => 0, 'is_active' => true, 'module_id'=>$site->id, 'clasification'=>"site"]);
-        MenuItem::create(['menu_id' => $aboutus->id, 'title' => 'about', 'icon' => 'bi bi-info-circle', 'route' => 'about', 'order' => 1, 'module_id'=>$site->id]);
+        $aboutus = Menu::firstOrCreate(['title' => 'Nosotros', 'icon' => '', 'route' => '', 'order' => 0, 'is_active' => true, 'module_id'=>$site->id, 'clasification'=>"site"]);
+        MenuItem::create(['menu_id' => $aboutus->id, 'title' => 'Sobre nosotros', 'icon' => 'bi bi-info-circle', 'route' => 'about', 'order' => 1, 'module_id'=>$site->id]);
 
         //Menu para el owner
 

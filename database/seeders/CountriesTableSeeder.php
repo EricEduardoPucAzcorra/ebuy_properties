@@ -28,6 +28,11 @@ class CountriesTableSeeder extends Seeder
                 continue;
             }
 
+            $populationRaw = $record['population'] ?? null;
+
+            $population = is_numeric($populationRaw)
+                ? (int) $populationRaw
+                : null;
 
             DB::table('countries')->updateOrInsert(
                 ['countryid' => $record['id']],
@@ -39,6 +44,7 @@ class CountriesTableSeeder extends Seeder
                     'longitude'   => $record['longitude'],
                     'name'        => $this->fixEncoding($record['name']),
                     'code'        => $record['iso2'],
+                    'population' => $population,
                     'created_at'  => now(),
                     'updated_at'  => now(),
                 ]

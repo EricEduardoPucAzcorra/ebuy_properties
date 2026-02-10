@@ -33,6 +33,12 @@ class StatesTableSeeder extends Seeder
                     continue;
                 }
 
+                $populationRaw = $record['population'] ?? null;
+
+                $population = is_numeric($populationRaw)
+                    ? (int) $populationRaw
+                    : null;
+
                 $batch[] = [
                     'stateid'    => $record['id'],
                     'countryid'  => $record['country_id'],
@@ -40,6 +46,7 @@ class StatesTableSeeder extends Seeder
                     'statecode'  => $record['iso2'] ?? null,
                     'latitude'   => $record['latitude'] ?? null,
                     'longitude'  => $record['longitude'] ?? null,
+                    'population' => $population,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
