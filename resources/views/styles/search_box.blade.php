@@ -1,0 +1,95 @@
+<style>
+    :root {
+        --primary-color: #2563eb;
+        --input-bg: #f8fafc;
+        --border-color: #e2e8f0;
+        --text-main: #1e293b;
+    }
+
+    .search-wrapper {
+        padding: 30px 0;
+    }
+
+    .search-card {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 24px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .search-group {
+        position: relative;
+    }
+
+    .search-input, .search-select {
+        background-color: var(--input-bg) !important;
+        border: 2px solid transparent !important;
+        border-radius: 16px !important;
+        height: 60px !important;
+        padding: 0 1.2rem !important;
+        font-weight: 500;
+        color: var(--text-main);
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .search-input:focus, .search-select:focus {
+        background-color: #fff !important;
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1) !important;
+        outline: none;
+    }
+    .search-input::placeholder {
+        color: #94a3b8;
+        font-weight: 400;
+    }
+
+    .btn-search {
+        background: #ffffff !important;
+        color: var(--primary-color) !important;
+        border: 2px solid var(--primary-color) !important;
+        border-radius: 16px;
+        height: 60px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background: #00B98E !important;
+        color: white !important;
+        border-color:#00B98E !important;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
+    }
+
+    .autocomplete {
+        position: absolute;
+        top: 65px;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        z-index: 1000;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+    }
+
+    .autocomplete-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        border-bottom: 1px solid #f1f5f9;
+        transition: background 0.2s;
+    }
+
+    .autocomplete-item:hover {
+        background-color: #eff6ff;
+    }
+
+    @media (max-width: 991px) {
+        .search-card { border-radius: 20px; }
+        .btn-search { margin-top: 10px; }
+    }
+</style>

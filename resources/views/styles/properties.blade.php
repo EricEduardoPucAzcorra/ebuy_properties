@@ -1,0 +1,29 @@
+<style>
+    .hero-custom {
+        min-height: 450px;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
+                    url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1500&q=80');
+        background-size: cover;
+        background-position: center;
+        padding: 80px 0;
+    }
+
+    .hero-title {
+        color: #1a202c;
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        color: #4a5568;
+        font-size: 1.2rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .hero-custom .search-wrapper {
+        margin-top: 20px;
+    }
+</style>
