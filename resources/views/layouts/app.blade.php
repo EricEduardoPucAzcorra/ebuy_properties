@@ -11,6 +11,7 @@
     <link rel="icon" href="{{ asset('images/ebuy_1.png') }}">
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
 </head>
 <body>
     <div data-page="dashboard" class="admin-layout">
@@ -26,15 +27,12 @@
             <header class="admin-header">
                 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
                     <div class="container-fluid">
-                       <a class="navbar-brand d-flex align-items-center gap-2 gap-md-3" href="{{ url('/home') }}">
-                            <span class="fw-bold fs-5 fs-md-4 text-success lh-1">
-                                Ebuy
-                                <small class="fw-semibold text-muted ms-1">
-                                    Propierties
-                                </small>
-                            </span>
+                        <a class="navbar-brand d-flex align-items-center gap-2 gap-md-3" href="{{ url('/home') }}">
+                            <img src="{{ asset('images/ebuy_2.jpg') }}"
+                                alt="Ebuy Properties"
+                                style="height: 40px; width: auto;"
+                                class="d-inline-block align-top">
                         </a>
-
                         @guest
                             <div class="navbar-nav flex-row">
                                 <div x-data="languageSwitch">
@@ -117,11 +115,11 @@
                         @endif
                     </div>
                 </aside>
-                @if(auth()->user()->hasRoleName('Admin'))
-                    <button class="hamburger-menu" type="button" data-sidebar-toggle aria-label="Toggle sidebar">
-                        <i class="bi bi-list"></i>
-                    </button>
-                @endif
+
+                <button class="hamburger-menu" type="button" data-sidebar-toggle aria-label="Toggle sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+
             @endauth
 
             <main class="admin-main">

@@ -1,8 +1,8 @@
- <div class="company-card border-bottom">
+ {{-- <div class="company-card border-bottom">
     <div class="company-banner">
         <img src="{{ asset('images/ebuy_2.jpg') }}" alt="Logo" class="company-image img-fluid">
     </div>
-</div>
+</div> --}}
 
 <nav class="sidebar-nav">
     <ul class="nav flex-column">

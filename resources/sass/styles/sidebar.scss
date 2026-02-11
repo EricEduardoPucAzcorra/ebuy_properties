@@ -1,0 +1,50 @@
+:root {
+    --ebuy-green: #00B98E;
+    --ebuy-green-light: rgba(0, 185, 142, 0.1);
+}
+
+.sidebar-nav .nav-link.active {
+    background-color: var(--ebuy-green) !important;
+    color: white !important;
+    border-radius: 8px;
+}
+
+.sidebar-nav .nav-link:hover {
+    background-color: var(--ebuy-green-light) !important;
+    color: var(--ebuy-green) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--ebuy-green-light) !important;
+    color: var(--ebuy-green) !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: var(--ebuy-green) !important;
+    color: white !important;
+}
+
+.dropdown-item:hover i {
+    color: var(--ebuy-green) !important;
+}
+
+// boton hamburguesa
+
+@media (max-width: 991px) {
+    .hamburger-menu {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1050;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
+    .navbar-brand {
+        margin-left: 50px;
+    }
+}
