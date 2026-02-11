@@ -51,8 +51,6 @@
     </div>
 </div>
 
-@include('styles.search_box')
-
 <script>
     const input = document.getElementById('location-search');
     const results = document.getElementById('location-results');

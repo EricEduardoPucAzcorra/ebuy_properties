@@ -88,7 +88,11 @@
 <div class="card-clean p-4 mb-4">
     <div class="mb-3">
         <div class="col-md-12">
-            <map-selector v-model="propertyForm.address.location"></map-selector>
+            <map-selector
+                v-model="propertyForm.address.location"
+                app-icon="{{asset('images/ebuy_icon.png')}}"
+                title="{{auto_trans('Seleciona tu propiedad')}}">
+            </map-selector>
         </div>
     </div>
 </div>

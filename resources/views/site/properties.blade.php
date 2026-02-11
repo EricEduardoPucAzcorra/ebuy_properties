@@ -20,5 +20,4 @@
     </div>
 </section>
 
-@include('styles.properties')
 @endsection

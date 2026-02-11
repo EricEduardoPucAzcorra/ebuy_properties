@@ -10,4 +10,4 @@ Route::get('/properties/new', [PropertiesController::class, 'properties_global']
 
 Route::get('/properties', [PropertiesController::class, 'properties_global'])->name('properties');
 
-Route::get('/property',[PropertiesController::class, 'property'])->name('property');
+Route::get('/property/{id}',[PropertiesController::class, 'property'])->name('property');

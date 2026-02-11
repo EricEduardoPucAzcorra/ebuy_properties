@@ -43,5 +43,3 @@
 
     </div>
 </div>
-
-@include('styles.type_properties')

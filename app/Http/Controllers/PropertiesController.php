@@ -20,61 +20,23 @@ class PropertiesController extends Controller
 {
     public function properties_global(Request $request)
     {
-        $query = Propertie::query()
-            ->with([
-                'images' => function ($q) {
-                    $q->orderByDesc('is_main')
-                    ->orderBy('order');
-                },
-                'address.city',
-                'address.state',
-                'address.country',
-                'type',
-                'operation',
-                'attributes'
-            ])
-            ->where('is_active', true);
+        if (!$request->operation) {
+            if (request()->routeIs('properties.sale')) {
+                $op = TypeOperation::where('name', 'Venta')->first();
+                if ($op) $request->merge(['operation' => $op->id]);
+            } elseif (request()->routeIs('properties.rent')) {
+                $op = TypeOperation::where('name', 'Renta')->first();
+                if ($op) $request->merge(['operation' => $op->id]);
+            }
+        }
+
+        $query = Propertie::filtered($request->all());
 
         if (request()->routeIs('properties.new')) {
             $query->whereDate('created_at', today());
         }
 
-        if (!$request->operation) {
-            if (request()->routeIs('properties.sale')) {
-                $opetationsale = TypeOperation::where('name','Venta')->first();
-                $request->merge(['operation' => $opetationsale->id]);
-            } elseif (request()->routeIs('properties.rent')) {
-                $opetationrent = TypeOperation::where('name','Renta')->first();
-                $request->merge(['operation' => $opetationrent->id]);
-            }
-        }
-
-        if ($request->operation) {
-            $query->where('type_operation_id', $request->operation);
-        }
-
-        if ($request->type) {
-            $query->where('type_property_id', $request->type);
-        }
-
-        if ($request->location_type && $request->location_id) {
-
-            $query->whereHas('address', function ($q) use ($request) {
-
-                if ($request->location_type === 'city') {
-                    $q->where('city_id', $request->location_id);
-                }
-
-                if ($request->location_type === 'state') {
-                    $q->where('state_id', $request->location_id);
-                }
-            });
-        }
-
-        $properties = $query
-            ->orderBy('created_at', 'desc')
-            ->paginate(10)
-            ->withQueryString();
+        $properties = $query->paginate(10)->withQueryString();
 
         return view('site.properties', compact('properties'));
     }
@@ -84,10 +46,6 @@ class PropertiesController extends Controller
         return response()->json(
             StatePropertie::where('is_active', true)->get()
         );
-    }
-
-    public function property(){
-        return view('site.property');
     }
 
     public function ownerPropertiesView(){
@@ -555,5 +513,110 @@ class PropertiesController extends Controller
         $property->save();
 
         return response()->json(['success' => true]);
+    }
+
+    public function property($id)
+    {
+        $property = Propertie::with([
+                'address.city.state.country',
+                'images',
+                'videos',
+                'attributes',
+                'features',
+                'contacts',
+                'type',
+                'operation',
+                'status'
+            ])
+            ->find($id);
+
+        $properties = Propertie::filtered([
+            'location_type' => $property->address->city->type,
+            'location_id'   => $property->address->city_id,
+            'operation'     => $property->type_operation_id,
+            'type'          => $property->type_property_id
+        ])
+        ->where('id', '!=', $property->id)
+        ->paginate(6, ['*'], 'related_page')
+        ->withQueryString();
+
+        if (!$property) {
+            abort(404, "La propiedad no existe en nuestra base de datos.");
+        }
+
+        $mainImage = $property->images->firstWhere('is_main', true);
+        $otherImages = $property->images->where('is_main', false)->values();
+
+        $formattedProperty = [
+            'id' => $property->id,
+            'title' => $property->title,
+            'cadastral_code' => $property->cadastral_code,
+            'description' => $property->description,
+            'price' => number_format($property->price, 2),
+            'type_property_id' => $property->type->id ?? null,
+            'type_property' => $property->type->name ?? null,
+            'type_operation' => $property->operation->name ?? null,
+            'type_operation_id' => $property->operation->id ?? null,
+            'created_at' => $property->created_at->format('d/m/Y'),
+            'currency' => $property->currency ?? null,
+            'price_negotiable' => $property->price_negotiable ?? null,
+            'status_property_id' => $property->status->id ?? null,
+            'status' => $property->status->name ?? null,
+            'address' => [
+                'id' => $property->address->id ?? null,
+                'property_id' => $property->address->property_id ?? null,
+                'street' => $property->address->street ?? null,
+                'number' => $property->address->number ?? null,
+                'neighborhood' => $property->address->neighborhood ?? null,
+                'city' => [
+                    'id' => $property->address->city->cityid ?? null,
+                    'name' => $property->address->city->cityname ?? null,
+                    'lat' => $property->address->city->latitude ?? null,
+                    'lng' => $property->address->city->longitude ?? null
+                ],
+                'state' => [
+                    'id' => $property->address->city->state->stateid ?? null,
+                    'name' => $property->address->city->state->statename ?? null,
+                ],
+                'country' => [
+                    'id' => $property->address->city->state->country->countryid ?? null,
+                    'name' => $property->address->city->state->country->name ?? null,
+                ],
+                'location' => [
+                    'latitude' => $property->address->latitude ?? null,
+                    'longitude' => $property->address->longitude ?? null,
+                ],
+                'postal_code' => $property->address->postal_code ?? null,
+                'references' => $property->address->references ?? null
+            ],
+            'images' => [
+                'main' => $mainImage ? asset('storage/' . $mainImage->path) : null,
+                'others' => $otherImages->map(fn($img) => asset('storage/' . $img->path)),
+            ],
+            'videos' => $property->videos->map(fn($video) => asset('storage/' . $video->url)),
+            'attributes' => $property->attributes->map(fn($attr) => [
+                'key' => $attr->key,
+                'value' => $attr->value,
+            ]),
+            // 'features' => $property->features->pluck('id')->values()->toArray(),
+            'features' => $property->features->groupBy(function($feature) {
+                return $feature->category->name ?? auto_trans('Otros');
+            })->map(function($group) {
+                return $group->map(fn($f) => [
+                    'name' => $f->name,
+                    'icon' => $f->icon
+                ]);
+            }),
+            'contacts' => $property->contacts->map(fn($contact) => [
+                'id' => $contact->id,
+                'name' => $contact->name,
+                'phone' => $contact->phone,
+                'whatsapp' => $contact->whatsapp,
+                'email' => $contact->email,
+                'photo' => $contact->photo ? asset('storage/' . $contact->photo) : null,
+            ])
+        ];
+
+        return view('site.property', ['propertie' => (object)$formattedProperty, 'properties'=>$properties]);
     }
 }

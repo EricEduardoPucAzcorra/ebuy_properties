@@ -79,6 +79,4 @@
     @include('admin.plans.modals')
 </div>
 
-@include('styles.plans')
-
 @endsection

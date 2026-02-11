@@ -77,7 +77,7 @@ class WelcomeController extends Controller
         foreach ($citiesQuery->limit(5)->get() as $city) {
             $results[] = [
                 'label' => "{$city->cityname}, {$city->state->statename}, {$city->state->country->countryname}",
-                'type'  => 'city',
+                'type'  => $city->type,
                 'id'    => $city->id
             ];
         }

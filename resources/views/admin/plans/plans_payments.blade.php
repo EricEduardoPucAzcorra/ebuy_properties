@@ -186,4 +186,3 @@
     </div>
 </div>
 
-@include('styles.plan_payments')

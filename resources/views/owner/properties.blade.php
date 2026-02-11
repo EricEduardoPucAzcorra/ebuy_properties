@@ -169,7 +169,4 @@
 
     </div>
 </div>
-
-@include('styles.list_properties')
-
 @endsection

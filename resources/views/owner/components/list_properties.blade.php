@@ -73,12 +73,12 @@
                                 <i class="bi bi-pencil"></i>
                             </button>
 
-                            <button
+                            <a
                                 class="icon-btn"
                                 title="Vista previa"
-                                @click="previewProperty(property.id)">
+                                :href="`/property/${property.id}`">
                                 <i class="bi bi-eye"></i>
-                            </button>
+                            </a>
 
                             <button
                                 class="icon-btn"

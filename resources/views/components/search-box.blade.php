@@ -1,50 +1,41 @@
-@php
-    use App\Models\TypePropetie;
-    use App\Models\TypeOperation;
+<div>
+    <div class="container search-wrapper">
+        <div class="search-card">
+            <form class="row g-3 align-items-center search-form" method="GET" action="{{ route('properties') }}">
 
-    $type_properties = TypePropetie::all();
-    $type_operations = TypeOperation::all();
-@endphp
+                <div class="col-lg-2 col-md-6 search-group">
+                    <select class="form-select search-select" name="type">
+                        @foreach ($type_properties as $type)
+                            <option value="{{ $type->id }}">{{ auto_trans($type->name) }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
+                <div class="col-lg-6 col-md-12 position-relative search-group">
+                    <input
+                        type="text"
+                        name="q"
+                        id="location-search"
+                        class="form-control search-input"
+                        placeholder="{{ auto_trans('¿Dónde quieres vivir?') }}"
+                        autocomplete="off">
 
-<div class="container search-wrapper">
-    <div class="search-card">
-        <form class="row g-3 align-items-center search-form" method="GET" action="{{ route('properties') }}">
+                    <input type="hidden" name="location_type" id="location_type">
+                    <input type="hidden" name="location_id" id="location_id">
 
-            <div class="col-lg-2 col-md-6 search-group">
-                <select class="form-select search-select" name="type">
-                    @foreach ($type_properties as $type)
-                        <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
-                            {{ auto_trans($type->name) }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                    <div id="location-results" class="autocomplete d-none"></div>
+                </div>
 
-            <div class="col-lg-6 col-md-12 position-relative search-group">
-                <input
-                    type="text"
-                    name="q"
-                    id="location-search"
-                    class="form-control search-input"
-                    placeholder="{{ auto_trans('¿Dónde quieres vivir?') }}"
-                    value="{{ request('q') }}"
-                    autocomplete="off">
+                <div class="col-lg-2 col-md-12 d-grid">
+                    <button type="submit" class="btn btn-primary btn-search">
+                        {{ auto_trans('Buscar') }}
+                    </button>
+                </div>
 
-                <input type="hidden" name="location_type" id="location_type" value="{{ request('location_type') }}">
-                <input type="hidden" name="location_id" id="location_id" value="{{ request('location_id') }}">
-
-                <div id="location-results" class="autocomplete d-none"></div>
-            </div>
-
-            <div class="col-lg-2 col-md-12 d-grid">
-                <button type="submit" class="btn btn-primary btn-search">
-                    {{ auto_trans('Buscar') }}
-                </button>
-            </div>
-
-        </form>
+            </form>
+        </div>
     </div>
+    @include('styles.search_box')
 </div>
 
 <script>

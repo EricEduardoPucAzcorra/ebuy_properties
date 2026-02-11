@@ -32,14 +32,14 @@
                     </div>
                     <i class="fa fa-angle-right arrow"></i>
                 </div>
-                <div class="sidebar-item" data-target="pane-fixed-sell">
+                {{-- <div class="sidebar-item" data-target="pane-fixed-sell">
                     <div class="sidebar-icon"><i class="bi bi-tags"></i></div>
                     <div class="sidebar-text">
                         <span class="title">{{auto_trans('Vender')}}</span>
                         <span class="subtitle">{{ auto_trans('Publica ahora')}}</span>
                     </div>
                     <i class="fa fa-angle-right arrow"></i>
-                </div>
+                </div> --}}
             </div>
 
             <div class="mega-content">

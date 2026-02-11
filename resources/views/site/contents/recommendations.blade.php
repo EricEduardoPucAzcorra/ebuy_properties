@@ -19,15 +19,14 @@
 
         @if($properties->count())
             <div class="properties-carousel-wrapper position-relative">
-                <div class="swiper-button-prev custom-nav"></div>
+                <div class="swiper-button-prev custom-nav" style="z-index: 10;"></div>
 
                 <div class="swiper properties-swiper">
                     <div class="swiper-wrapper">
 
                         @foreach($properties as $property)
                             <div class="swiper-slide">
-
-                                <div class="card-clean h-100 d-flex flex-column">
+                                <div class="card-clean h-100 d-flex flex-column position-relative">
 
                                     <div class="img-frame position-relative">
                                         <img
@@ -43,7 +42,9 @@
 
                                     <div class="p-4 flex-grow-1">
                                         <h5 class="fw-bold mb-1">
-                                            {{ $property->title }}
+                                            <a href="{{ route('property', $property->id) }}" class="stretched-link text-decoration-none text-dark">
+                                                {{ $property->title }}
+                                            </a>
                                         </h5>
 
                                         <div class="price-tag mb-1">
@@ -64,7 +65,7 @@
                                         </p>
                                     </div>
 
-                                    <div class="amenity-row d-flex justify-content-between px-4 py-3">
+                                    <div class="amenity-row d-flex justify-content-between px-4 py-3" style="position: relative; z-index: 2;">
                                         @if(getAttribute($property->attributes, 'Camas'))
                                             <span>
                                                 <i class="fa fa-bed"></i>
@@ -88,14 +89,13 @@
                                     </div>
 
                                 </div>
-
                             </div>
                         @endforeach
 
                     </div>
                 </div>
 
-                <div class="swiper-button-next custom-nav"></div>
+                <div class="swiper-button-next custom-nav" style="z-index: 10;"></div>
 
             </div>
         @else
@@ -113,8 +113,6 @@
 
     </div>
 </div>
-
-@include('styles.list_properties_site')
 
 @if($properties->count())
 <script>

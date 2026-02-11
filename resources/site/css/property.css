@@ -1,0 +1,151 @@
+header { z-index: 1100 !important; }
+
+.hover-zoom {
+    transition: transform 0.4s ease;
+    cursor: pointer;
+}
+.gallery-item:hover .hover-zoom {
+    transform: scale(1.02);
+}
+
+.more-photos-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.last-child-border-0:last-child {
+    border-right: none !important;
+}
+
+.leading-relaxed {
+    line-height: 1.8;
+    color: #444;
+}
+
+
+.form-control:focus {
+    border-color: #00b388;
+    box-shadow: 0 0 0 0.2rem rgba(0, 179, 136, 0.15);
+}
+
+.whatsapp-btn {
+    background-color: #25D366;
+    border-color: #25D366;
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+    background-color: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+}
+
+@media (min-width: 1200px) {
+    .container-fluid.px-md-5 {
+        padding-left: 2.5% !important;
+        padding-right: 2.5% !important;
+    }
+
+    #contact-form-sidebar {
+        margin-right: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 991px) {
+    .container-fluid.px-md-5 {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    #contact-form-sidebar {
+        margin-top: 30px;
+        position: relative !important;
+        top: 0 !important;
+    }
+}
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 9990;
+    width: 60px;
+    height: 60px;
+    background-color: #25D366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background-color: #128C7E;
+    transform: scale(1.1);
+    color: white;
+}
+
+.close-gallery-btn:hover {
+    background-color: #dc3545 !important;
+    color: white !important;
+    transform: rotate(90deg);
+}
+
+#imageCounter {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+ #featuresTab .nav-link {
+        color: #6c757d !important;
+        background-color: transparent !important;
+        border: none;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    #featuresTab .nav-link.active {
+        background-color: #00b388 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(0, 179, 136, 0.25);
+    }
+
+    #featuresTab .nav-link.active .badge {
+        color: #00b388 !important;
+        background-color: white !important;
+    }
+
+    @media (max-width: 768px) {
+        #featuresTab {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .nav-item {
+            white-space: nowrap;
+        }
+        .card-header .p-1 {
+            display: block !important;
+            width: 100%;
+        }
+    }
+
+    .tab-pane.fade {
+        transition: opacity 0.2s linear;
+    }
+
+    .transition-all {
+        transition: all 0.2s ease-in-out;
+    }

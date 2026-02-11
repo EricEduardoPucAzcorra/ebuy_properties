@@ -1,50 +1,19 @@
 @php
-    use App\Models\TypePropetie;
-    use App\Models\TypeOperation;
-
-    $type_properties = TypePropetie::all();
-    $type_operations = TypeOperation::all();
-
     function getAttribute($attributes, $key) {
         return optional(
             $attributes->firstWhere('key', $key)
         )->value;
     }
 @endphp
-
 <div class="container-fluid bg-white py-5">
     <div class="container">
-
-        <div class="row mb-5">
-            <div class="col-lg-6">
-                <p class="text-muted fs-5">
-                    {{auto_trans('Propiedades cuidadosamente seleccionadas para quienes buscan confort, ubicación y estilo.')}}
-                </p>
-            </div>
-
-            <div class="col-lg-6 text-lg-end">
-                <div class="nav nav-pills nav-pills-custom d-inline-flex">
-                    @php
-                        $currentOperation = request()->query('operation');
-                        $otherParams = request()->except('operation');
-                    @endphp
-
-                    <a href="{{ route('properties', $otherParams) }}" data-post-link
-                        class="nav-link {{ is_null($currentOperation) ? 'active' : '' }}">
-                        {{auto_trans('Todo')}}
-                    </a>
-
-                    @foreach ($type_operations as $type_operation)
-                        <a data-post-link
-                            href="{{ route('properties', array_merge($otherParams, ['operation' => $type_operation->id])) }}"
-                            class="nav-link {{ $currentOperation == $type_operation->id ? 'active' : '' }}">
-                            {{ $type_operation->name }}
-                        </a>
-                    @endforeach
-                </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="section-title fw-bold">
+                    {{ auto_trans('Encuentra inmuebles similares') }}
+                </h2>
             </div>
         </div>
-
         <div class="row g-4">
             @forelse($properties as $property)
                 <div class="col-lg-4 col-md-6">

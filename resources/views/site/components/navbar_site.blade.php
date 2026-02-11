@@ -127,8 +127,6 @@
     </div>
 </header>
 
-@include('styles.navbar_site')
-
 <script>
     document.querySelectorAll('.sidebar-item').forEach(el => {
         el.addEventListener('mouseenter', function() {

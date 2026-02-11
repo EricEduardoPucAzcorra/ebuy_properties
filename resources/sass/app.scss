@@ -2,7 +2,10 @@
 @import url('https://fonts.bunny.net/css?family=Nunito');
 //Template
 @import 'styles/scss/main';
-
+@import 'styles/map.scss';
+@import 'styles/list_properties.scss';
+@import 'styles/loader_files.scss';
+@import 'styles/plans.scss';
 
 body {
     visibility: hidden;

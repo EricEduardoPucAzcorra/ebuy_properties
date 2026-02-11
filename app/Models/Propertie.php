@@ -114,4 +114,34 @@ class Propertie extends Model
     {
         return $this->hasMany(PropertyContact::class, 'property_id');
     }
+
+    public function scopeFiltered($query, array $filters)
+    {
+        $query->with([
+            'images' => function ($q) {
+                $q->orderByDesc('is_main')->orderBy('order');
+            },
+            'address.city', 'address.state', 'address.country', 'type', 'operation', 'attributes'
+        ])->where('is_active', true);
+
+        if (!empty($filters['operation'])) {
+            $query->where('type_operation_id', $filters['operation']);
+        }
+
+        if (!empty($filters['type'])) {
+            $query->where('type_property_id', $filters['type']);
+        }
+
+        if (!empty($filters['location_type']) && !empty($filters['location_id'])) {
+            $query->whereHas('address', function ($q) use ($filters) {
+                if ($filters['location_type'] === 'state') {
+                    $q->where('state_id', $filters['location_id']);
+                } else {
+                    $q->where('city_id', $filters['location_id']);
+                }
+            });
+        }
+
+        return $query->orderBy('created_at', 'desc');
+    }
 }
