@@ -14,7 +14,8 @@
     </div>
 
     <div v-if="loading" class="text-center py-5">
-        <div class="spinner-border text-primary"></div>
+        <div class="spinner-border text-success" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 mb-0 fs-5"></p>
     </div>
 
     <div v-if="!loading && properties.length === 0" class="text-center py-5">

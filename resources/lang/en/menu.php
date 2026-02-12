@@ -11,5 +11,6 @@ return array (
   'plans' => 'Plans',
   'plan_features' => 'Plan features',
   'myproperties'=>'My properties',
+  'profile'=>'Mi perfil',
   'help'=>'Help'
 );

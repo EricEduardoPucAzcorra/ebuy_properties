@@ -11,6 +11,7 @@ return [
     'plans'=>'Planes',
     'plan_features'=>'Características de planes',
     'myproperties'=>'Mis propiedades',
+    'profile'=>'Mi perfil',
     'help'=>'Ayuda'
 
 ];

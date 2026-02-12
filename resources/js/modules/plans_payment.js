@@ -5,7 +5,7 @@ new Vue({
             plans: [],
             selectedPlan: null,
             loadingView: true,
-            showPaymentView: false,
+            currentStep: 1, // 1: Elegir plan, 2: Detalles, 3: Pago
             processingPayment: false,
             payment: {
                 name: '',
@@ -34,33 +34,42 @@ new Vue({
             }
         },
 
-        selectPlan(plan) {
-            this.loadingView = true;
-            this.selectedPlan = plan;
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            setTimeout(() => {
-                this.loadingView = false;
-                this.showPaymentView = true;
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        const firstInput = document.querySelector('input[type="text"]');
-                        if (firstInput) firstInput.focus();
-                    }, 100);
-                });
-            }, 500);
+        getPlanIcon(planName) {
+            const name = planName.toLowerCase();
+            if (name.includes('básico') || name.includes('basico')) return 'bi bi-star';
+            if (name.includes('profesional')) return 'bi bi-briefcase';
+            if (name.includes('premium') || name.includes('empresarial')) return 'bi bi-gem';
+            if (name.includes('agencia')) return 'bi bi-building';
+            return 'bi bi-box';
         },
 
-        backToPlans() {
-            this.loadingView = true;
-            setTimeout(() => {
-                this.showPaymentView = false;
-                this.selectedPlan = null;
-                this.resetPaymentForm();
-                this.loadingView = false;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 300);
+        selectPlan(plan) {
+            this.selectedPlan = plan;
+            this.currentStep = 2;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        goToStep1() {
+            this.currentStep = 1;
+            this.selectedPlan = null;
+            this.resetPaymentForm();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        goToStep2() {
+            this.currentStep = 2;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        goToPayment() {
+            this.currentStep = 3;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    const firstInput = document.querySelector('input[type="text"]');
+                    if (firstInput) firstInput.focus();
+                }, 100);
+            });
         },
 
         resetPaymentForm() {
@@ -76,14 +85,12 @@ new Vue({
         formatCardNumber(event) {
             let value = event.target.value.replace(/\D/g, '');
             let formatted = '';
-
             for (let i = 0; i < value.length; i++) {
                 if (i > 0 && i % 4 === 0) {
                     formatted += ' ';
                 }
                 formatted += value[i];
             }
-
             this.payment.card = formatted.substring(0, 19);
         },
 
@@ -115,16 +122,21 @@ new Vue({
                     html: `
                         <div class="text-center">
                             <i class="bi bi-check-circle-fill text-success display-4 mb-3"></i>
-                            <h5 class="fw-bold">Has adquirido el plan</h5>
-                            <p class="fs-5 text-success fw-bold">${this.selectedPlan.name}</p>
+                            <h5 class="fw-bold">¡Felicidades!</h5>
+                            <p class="fs-5">Has adquirido el plan</p>
+                            <p class="fs-3 fw-bold text-success">${this.selectedPlan.name}</p>
                             <p class="text-muted">$${this.selectedPlan.price.toLocaleString()}/mes</p>
                         </div>
                     `,
-                    confirmButtonText: 'Continuar',
+                    confirmButtonText: 'Ir a mi cuenta',
                     confirmButtonColor: '#198754'
                 });
 
-                this.backToPlans();
+                // Reiniciar todo después del pago exitoso
+                this.currentStep = 1;
+                this.selectedPlan = null;
+                this.resetPaymentForm();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (error) {
                 console.error('Error en el pago:', error);
@@ -200,11 +212,17 @@ new Vue({
     },
 
     watch: {
-        showPaymentView(newVal) {
-            if (newVal) {
-                document.title = `Pagar ${this.selectedPlan?.name || 'Plan'} | Ebuy properties ok`;
-            } else {
-                document.title = 'Planes | Ebuy properties';
+        currentStep(newVal) {
+            switch(newVal) {
+                case 1:
+                    document.title = 'Elige tu plan | Ebuy Properties';
+                    break;
+                case 2:
+                    document.title = `${this.selectedPlan?.name || 'Detalles del plan'} | Ebuy Properties`;
+                    break;
+                case 3:
+                    document.title = 'Realizar pago | Ebuy Properties';
+                    break;
             }
         }
     }

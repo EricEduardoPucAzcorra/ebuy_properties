@@ -108,27 +108,27 @@
     background-color: #e9f7ef;
 }
 
-.amenity-row {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid #f1f5f9;
-    display: flex;
-    justify-content: space-between;
-}
+// .amenity-row {
+//     margin-top: 16px;
+//     padding-top: 14px;
+//     border-top: 1px solid #f1f5f9;
+//     display: flex;
+//     justify-content: space-between;
+// }
 
-.amenity-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--body-text);
-}
+// .amenity-box {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     font-size: 0.85rem;
+//     font-weight: 600;
+//     color: var(--body-text);
+// }
 
-.amenity-box i {
-    font-size: 1.1rem;
-    color: var(--primary-color);
-}
+// .amenity-box i {
+//     font-size: 1.1rem;
+//     color: var(--primary-color);
+// }
 
 .card-clean:hover .amenity-box i {
     transform: scale(1.15);

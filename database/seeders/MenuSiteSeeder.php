@@ -35,6 +35,7 @@ class MenuSiteSeeder extends Seeder
         $owner = Module::create(['name'=>"owner", 'description'=>'Modulos del owner', 'icon'=>'','order'=>0, 'clasification'=>"owner"]);
         Menu::firstOrCreate(['title' => 'myproperties', 'icon' => 'bi bi-houses', 'route' => 'mypropiertes', 'order' => 1, 'is_active' => true, 'module_id'=>$owner->id, 'clasification'=>"owner"]);
         Menu::firstOrCreate(['title' => 'help', 'icon' => 'bi bi-info-square', 'route' => 'help', 'order' => 2, 'is_active' => true, 'module_id'=>$owner->id, 'clasification'=>"owner"]);
+        Menu::firstOrCreate(['title' => 'profile', 'icon' => 'bi bi-person', 'route' => 'profile', 'order' => 3, 'is_active' => true, 'module_id'=>$owner->id, 'clasification'=>"owner"]);
 
     }
 }

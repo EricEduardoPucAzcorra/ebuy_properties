@@ -30,7 +30,7 @@
                 <div class="plan-bg"></div>
 
                 <div v-if="plan.is_featured"
-                     class="badge bg-gradient-success position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill">
+                     class="badge badge-featured position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill">
                     <i class="bi bi-star-fill me-1"></i>
                     {{ __('general.plans.recommended') }}
                 </div>

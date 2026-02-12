@@ -125,9 +125,9 @@ class User extends Authenticatable
     }
 
 
-    public function subscription()
+   public function subscriptions()
     {
-        return $this->hasOne(Subscription::class);
+        return $this->hasMany(Subscription::class);
     }
 
     public function payments()
@@ -169,9 +169,25 @@ class User extends Authenticatable
 
     public function hasActiveSubscription(): bool
     {
-        return $this->subscription &&
-            $this->subscription->status === 'active' &&
-            $this->subscription->ends_at->isFuture();
+        return $this->subscriptions()
+            ->where('status', 'Activa')
+            ->where('starts_at', '<=', now())
+            ->where('ends_at', '>=', now())
+            ->exists();
+    }
+
+    public function getRemainingCredit(): float
+    {
+        if (!$this->hasActiveSubscription()) return 0;
+
+        $sub = $this->subscription;
+        $totalDays = $sub->starts_at->diffInDays($sub->ends_at);
+        $remainingDays = now()->diffInDays($sub->ends_at, false);
+
+        if ($remainingDays <= 0) return 0;
+
+        $pricePerDay = $sub->plan->price / $totalDays;
+        return round($remainingDays * $pricePerDay, 2);
     }
 
 }

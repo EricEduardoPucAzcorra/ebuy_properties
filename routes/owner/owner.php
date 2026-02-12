@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function () {
     Route::get('/mypropiertes', [PropertiesController::class, 'ownerPropertiesView'])->name('mypropiertes');
     Route::get('/owner/my-properties', [PropertiesController::class, 'ownerMyProperties'])->middleware('auth');
-    Route::post('/save/mypropertie',[PropertiesController::class, 'store']);
-    Route::post('/update/mypropertie/{id}', [PropertiesController::class, 'update']);
+    Route::post('/save/mypropertie',[PropertiesController::class, 'store'])->middleware('subscription');
+    Route::post('/update/mypropertie/{id}', [PropertiesController::class, 'update'])->middleware('subscription');
 
     Route::get('/help', [HelpController::class, 'help'])->name('help');
 

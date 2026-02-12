@@ -27,7 +27,7 @@
             <header class="admin-header">
                 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
                     <div class="container-fluid">
-                        <a class="navbar-brand d-flex align-items-center gap-2 gap-md-3" href="{{ url('/home') }}">
+                        <a class="navbar-brand d-flex align-items-center gap-2 gap-md-3" href="{{ url('/') }}">
                             <img src="{{ asset('images/ebuy_2.jpg') }}"
                                 alt="Ebuy Properties"
                                 style="height: 40px; width: auto;"

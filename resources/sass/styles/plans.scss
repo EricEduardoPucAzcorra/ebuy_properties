@@ -1,43 +1,94 @@
-.plan-card {
-    background: #fff;
-    transition: all .3s ease;
-}
-.plan-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 1.5rem 3rem rgba(0,0,0,.15);
-}
-.plan-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(25,135,84,.08), transparent 60%);
-}
-.price {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #198754;
-}
-.features-list {
-    list-style: none;
-    padding: 0;
-}
-.features-list li {
+.stepper-wrapper {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    font-size: .95rem;
-    margin-bottom: .5rem;
-}
-.bg-gradient-success {
-    background: linear-gradient(135deg, #198754, #20c997);
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
 }
 
-//otros estilos
+.stepper-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e9ecef;
+    z-index: 1;
+}
+
+.stepper-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.step-counter {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+}
+
+.step-name {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.stepper-item.active .step-counter {
+    background: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+.stepper-item.completed .step-counter {
+    background: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+.stepper-item.active .step-name {
+    color: #198754;
+    font-weight: 600;
+}
+
+.stepper-item.completed .step-name {
+    color: #198754;
+}
+
+.step-content {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 .plan-card {
     cursor: pointer;
     border-radius: 1.5rem;
     transition: all 0.3s;
     border: 2px solid #e9ecef;
-    background: #f9fefb;
+    background: white;
 }
 
 .plan-card:hover {
@@ -46,32 +97,108 @@
     border-color: #20c997;
 }
 
-.shadow-selected {
+.selected-card {
     box-shadow: 0 0 1.5rem rgba(25, 135, 84, 0.25);
     border: 2px solid #198754 !important;
+    background: linear-gradient(145deg, white, #f8fdfa);
+}
+
+.plan-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(32, 201, 151, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.plan-icon-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.15), rgba(32, 201, 151, 0.15));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plan-icon-small {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(32, 201, 151, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.features-preview {
+    text-align: left;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 1rem;
 }
 
 .badge-featured {
     position: absolute;
     top: 15px;
     right: 15px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.2rem;
     font-size: 0.8rem;
     font-weight: 600;
     background: linear-gradient(90deg, #28a745, #20c997);
     color: white;
     border-radius: 2rem;
+    z-index: 3;
+}
+
+.features-grid {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.features-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.features-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.features-grid::-webkit-scrollbar-thumb {
+    background: #198754;
+    border-radius: 10px;
+}
+
+.feature-item {
+    transition: all 0.2s;
+    background: white;
+}
+
+.feature-item:hover {
+    background: #f8fdfa;
+    border-color: #198754 !important;
+}
+
+.price-box {
+    background: linear-gradient(145deg, #f8fdfa, white);
+    border: 1px solid rgba(25, 135, 84, 0.2);
 }
 
 .form-control-lg {
     padding: 1rem 1.25rem;
     border-radius: 0.75rem;
     border: 2px solid #dee2e6;
+    transition: all 0.2s;
 }
 
 .form-control-lg:focus {
     border-color: #198754;
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15);
 }
 
 .btn-success {
@@ -86,24 +213,39 @@
     box-shadow: 0 8px 20px rgba(25, 135, 84, 0.3);
 }
 
-.btn-success:disabled {
-    opacity: 0.7;
-    transform: none;
-    box-shadow: none;
-}
-
 .btn-outline-secondary {
     border-radius: 0.75rem;
-    padding: 0.5rem 1.5rem;
+    padding: 0.75rem 1.5rem;
     font-weight: 600;
+    border-width: 2px;
 }
 
-.spinner-border {
-    width: 3rem;
-    height: 3rem;
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.position-sticky {
+    position: sticky;
+    top: 20px;
 }
 
 @media (max-width: 768px) {
+    .stepper-wrapper::before {
+        top: 20px;
+    }
+
+    .step-counter {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .step-name {
+        font-size: 0.8rem;
+    }
+
     .card-body {
         padding: 1.5rem !important;
     }
@@ -111,4 +253,245 @@
     .form-control-lg {
         padding: 0.75rem 1rem;
     }
+
+    .position-sticky {
+        position: relative;
+        top: 0;
+    }
 }
+
+
+//Otros estilos planes cards
+
+/* Tarjetas de administración de planes */
+.plan-card {
+    background: white;
+    border-radius: 1.5rem !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+}
+
+.plan-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px rgba(0,0,0,0.05);
+    border-color: rgba(13, 110, 253, 0.2);
+}
+
+.plan-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.02), transparent 70%);
+    pointer-events: none;
+}
+
+/* Badge destacado */
+.badge.bg-gradient-success {
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7) !important;
+    color: white;
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+    z-index: 10;
+}
+
+.badge.bg-gradient-success i {
+    font-size: 0.7rem;
+}
+
+/* Caja de precio */
+.price-box {
+    background: linear-gradient(145deg, #f8faff, #f0f4ff);
+    padding: 1.25rem;
+    border-radius: 1rem;
+    margin: 0.5rem 0 1rem;
+    border: 1px solid rgba(13, 110, 253, 0.1);
+}
+
+.price {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #0a58ca;
+    line-height: 1;
+}
+
+.period {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-left: 0.25rem;
+}
+
+/* Lista de características */
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features-list li {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.05);
+    font-size: 0.9rem;
+}
+
+.features-list li:last-child {
+    border-bottom: none;
+}
+
+.features-list li i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    color: #0d6efd;
+}
+
+.features-list li .fw-semibold {
+    color: #212529;
+    font-weight: 600;
+}
+
+.features-list li .text-muted {
+    font-size: 0.8rem;
+    display: inline-block;
+    background: #f8f9fa;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
+    margin-left: 0.5rem;
+}
+
+/* Botón de edición */
+.plan-card .btn-outline-primary {
+    border-radius: 0.75rem;
+    padding: 0.7rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-width: 1.5px;
+    color: #0d6efd;
+    border-color: #0d6efd;
+    background: white;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+.plan-card .btn-outline-primary:hover {
+    background: #0d6efd;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.plan-card .btn-outline-primary i {
+    margin-right: 0.5rem;
+}
+
+/* Estado vacío */
+.text-center.py-5 {
+    background: #f8f9fa;
+    border-radius: 2rem;
+    padding: 4rem 2rem !important;
+    margin-top: 2rem;
+}
+
+.text-center.py-5 i {
+    color: #adb5bd;
+    font-size: 4rem;
+}
+
+.text-center.py-5 h5 {
+    color: #495057;
+    margin-top: 1rem;
+}
+
+.text-center.py-5 p {
+    color: #6c757d;
+    max-width: 400px;
+    margin: 0.5rem auto 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .plan-card {
+        border-radius: 1.25rem !important;
+    }
+
+    .price {
+        font-size: 1.8rem;
+    }
+
+    .price-box {
+        padding: 1rem;
+    }
+
+    .features-list li {
+        font-size: 0.85rem;
+    }
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.col-lg-4, .col-md-6 {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Variante para planes gratuitos */
+.plan-card:has(.price:contains("0")) .price-box {
+    background: linear-gradient(145deg, #f0fff4, #e6f3ea);
+    border-color: rgba(25, 135, 84, 0.1);
+}
+
+.plan-card:has(.price:contains("0")) .price {
+    color: #198754;
+}
+
+/* Hover effect en las características */
+.features-list li:hover {
+    background: rgba(13, 110, 253, 0.02);
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
+    transition: all 0.2s;
+}
+
+/* Scroll personalizado para características largas */
+.features-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.features-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.features-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.features-list::-webkit-scrollbar-thumb {
+    background: #0d6efd;
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+.features-list::-webkit-scrollbar-thumb:hover {
+    background: #0a58ca;
+}
+
+
+
+//mOdal plans
+

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckSubscription;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetTenant;
 use Illuminate\Foundation\Application;
@@ -21,7 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             $middleware->web(append: [
             \App\Http\Middleware\LoadDataMiddleware::class,
         ]);
-
+        $middleware->alias([
+            'subscription' => CheckSubscription::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // $exceptions->render(function (AccessDeniedHttpException $e, $request) {

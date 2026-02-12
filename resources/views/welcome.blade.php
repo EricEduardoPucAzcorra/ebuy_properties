@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>Ebuy Properties</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="description" content="Ebuy Properties - Bienes Raíces">
 
     <link rel="icon" href="{{ asset('img/favicon.ico') }}">
@@ -19,7 +20,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-
 
     @vite(['resources/site/site.css', 'resources/site/site.js'])
 </head>

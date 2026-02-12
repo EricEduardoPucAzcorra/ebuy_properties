@@ -33,8 +33,8 @@ class MenuSeeder extends Seeder
         MenuItem::create(['menu_id' => $sistema->id, 'title' => 'config', 'icon' => 'bi bi-gear-fill', 'route' => 'config', 'order' => 2, 'module_id'=>$config->id]);
 
         $plans_m = Menu::firstOrCreate(['title' => 'config_plans', 'icon' => 'bi bi-bag', 'route' => '', 'order' => 1, 'is_active' => true, 'module_id'=>$plans->id, 'clasification'=>"admin"]);
-        MenuItem::create(['menu_id' => $plans_m->id, 'title' => 'plans', 'icon' => 'bi bi-shop', 'route' => 'plans', 'order' => 1, 'module_id'=>$plans->id]);
         MenuItem::create(['menu_id' => $plans_m->id, 'title' => 'plan_features', 'icon' => 'bi bi-gear', 'route' => 'plans_feature', 'order' => 1, 'module_id'=>$plan_features->id]);
+        MenuItem::create(['menu_id' => $plans_m->id, 'title' => 'plans', 'icon' => 'bi bi-shop', 'route' => 'plans', 'order' => 1, 'module_id'=>$plans->id]);
 
     }
 }

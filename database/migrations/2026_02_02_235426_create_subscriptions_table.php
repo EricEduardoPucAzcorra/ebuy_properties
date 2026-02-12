@@ -17,7 +17,14 @@ return new class extends Migration
             $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
             $table->dateTime('starts_at');
             $table->dateTime('ends_at');
-            $table->string('status');
+            $table->enum('status', [
+                'Pendiente',
+                'Activa',
+                'Suspendida',
+                'Cancelada',
+                'Expirada',
+                'En prueba'
+            ])->default('Pendiente');
             $table->timestamps();
         });
     }
