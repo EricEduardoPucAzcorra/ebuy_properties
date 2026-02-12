@@ -1,7 +1,7 @@
 import Alpine from 'alpinejs';
 import './admin-app';
 import './bootstrap';
-import './scripts/utils/vue.min.js';
+import './scripts/utils/vue-global';
 
 window.Alpine = Alpine;
 
