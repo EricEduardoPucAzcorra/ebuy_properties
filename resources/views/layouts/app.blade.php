@@ -10,7 +10,7 @@
 
     <link rel="icon" href="{{ asset('images/ebuy_1.png') }}">
 
-    <script src="{{ asset('min/vue-resource.js') }}"></script>
+    <script src="{{ asset('min/vue.min.js') }}"></script>
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
