@@ -1,3 +1,5 @@
 import '../utils/vue.min.js'
 
-window.Vue = window.Vue || globalThis.Vue;
+if (window.Vue && window.Vue.default) {
+    window.Vue = window.Vue.default;
+}
