@@ -146,14 +146,14 @@
     <div class="ebuy-mobile-header" style="position: fixed; top: 0; left: 0; height: 70px; background: #fff; display: block !important; visibility: visible !important; width: 100%; z-index: 99998;">
         <!-- Logo a la izquierda -->
         <a href="{{ url('/') }}" class="ebuy-brand-main" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); z-index: 10; display: block !important;">
-            <img src="{{ asset('images/ebuy_1.png') }}" alt="Ebuy Properties" style="height: 45px; width: auto;">
+            <img src="{{ asset('images/ebuy_1.png') }}" alt="Ebuy Properties" style="height: 35px; width: auto;">
         </a>
 
         <!-- Botón hamburguesa NUEVO Y FORZADO -->
-        <div id="mobileMenuToggle" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: #00B98E; border: 2px solid #00B98E; border-radius: 8px; cursor: pointer; z-index: 99999; display: flex !important; flex-direction: column; justify-content: center; align-items: center; padding: 8px; transition: all 0.3s ease;">
-            <div style="width: 20px; height: 2px; background: #ffffff; margin: 2px 0; border-radius: 2px;"></div>
-            <div style="width: 20px; height: 2px; background: #ffffff; margin: 2px 0; border-radius: 2px;"></div>
-            <div style="width: 20px; height: 2px; background: #ffffff; margin: 2px 0; border-radius: 2px;"></div>
+        <div id="mobileMenuToggle" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; background: #00B98E; border: 2px solid #00B98E; border-radius: 6px; cursor: pointer; z-index: 99999; display: flex !important; flex-direction: column; justify-content: center; align-items: center; padding: 6px; transition: all 0.3s ease;">
+            <div style="width: 16px; height: 2px; background: #ffffff; margin: 1.5px 0; border-radius: 2px;"></div>
+            <div style="width: 16px; height: 2px; background: #ffffff; margin: 1.5px 0; border-radius: 2px;"></div>
+            <div style="width: 16px; height: 2px; background: #ffffff; margin: 1.5px 0; border-radius: 2px;"></div>
         </div>
     </div>
 
@@ -161,9 +161,9 @@
     <div class="ebuy-mobile-menu" id="mobileMenu">
         <div class="ebuy-mobile-menu-header">
             <a href="{{ url('/') }}" class="ebuy-brand-main">
-                <img src="{{ asset('images/ebuy_1.png') }}" alt="Ebuy Properties">
+                <img src="{{ asset('images/ebuy_1.png') }}" alt="Ebuy Properties" style="height: 40px; max-width: 140px; object-fit: contain;">
             </a>
-            <button class="ebuy-mobile-close" id="mobileMenuClose">
+            <button class="ebuy-mobile-close" id="mobileMenuClose" style="width: 36px; height: 36px; border: none; background: #f8fafc; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #64748b; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); position: relative; z-index: 10001; flex-shrink: 0; margin-right: 10px;">
                 <i class="fa fa-times"></i>
             </button>
         </div>
