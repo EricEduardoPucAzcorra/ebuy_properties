@@ -128,6 +128,140 @@
     <script src="{{ asset('min/map/leaflet.js') }}"></script>
     <script src="{{ asset('min/map/swiper-bundle.min.js') }}"></script>
 
+    <!-- JavaScript del Menú Móvil -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const body = document.body;
+
+            // Abrir menú móvil
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    if (mobileMenu) {
+                        mobileMenu.classList.add('active');
+                        body.style.overflow = 'hidden';
+                    }
+                });
+            }
+
+            // Cerrar menú móvil
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', function() {
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove('active');
+                        body.style.overflow = '';
+                    }
+                });
+            }
+
+            // Inicializar submenús principales como ocultos
+            document.querySelectorAll('.ebuy-mobile-submenu').forEach(submenu => {
+                submenu.style.display = 'none';
+                submenu.style.visibility = 'hidden';
+            });
+            
+            // Toggle submenús principales
+            document.querySelectorAll('.ebuy-mobile-menu-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const targetId = this.getAttribute('data-target');
+                    const submenu = document.getElementById(targetId);
+                    const icon = this.querySelector('i:last-child');
+                    
+                    if (submenu) {
+                        if (submenu.style.display === 'none') {
+                            submenu.style.display = 'block';
+                            submenu.style.visibility = 'visible';
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-up');
+                        } else {
+                            submenu.style.display = 'none';
+                            submenu.style.visibility = 'hidden';
+                            icon.classList.remove('fa-chevron-up');
+                            icon.classList.add('fa-chevron-down');
+                        }
+                    }
+                });
+            });
+
+            // Inicializar submenús anidados como ocultos
+            document.querySelectorAll('.ebuy-mobile-submenu-nested').forEach(submenu => {
+                submenu.style.display = 'none';
+                submenu.style.visibility = 'hidden';
+            });
+            
+            // Toggle submenús anidados
+            document.querySelectorAll('.ebuy-mobile-submenu-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const targetId = this.getAttribute('data-target');
+                    const submenu = document.getElementById(targetId);
+                    const icon = this.querySelector('i:last-child');
+                    
+                    if (submenu) {
+                        if (submenu.style.display === 'none') {
+                            submenu.style.display = 'block';
+                            submenu.style.visibility = 'visible';
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-up');
+                        } else {
+                            submenu.style.display = 'none';
+                            submenu.style.visibility = 'hidden';
+                            icon.classList.remove('fa-chevron-up');
+                            icon.classList.add('fa-chevron-down');
+                        }
+                    }
+                });
+            });
+
+            // Toggle idioma móvil
+            const mobileLangCurrent = document.querySelector('.ebuy-mobile-lang-current');
+            const mobileLangOptions = document.querySelector('.ebuy-mobile-lang-options');
+            
+            if (mobileLangCurrent && mobileLangOptions) {
+                mobileLangOptions.style.display = 'none';
+                mobileLangOptions.style.visibility = 'hidden';
+                
+                mobileLangCurrent.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (mobileLangOptions.style.display === 'none') {
+                        mobileLangOptions.style.display = 'block';
+                        mobileLangOptions.style.visibility = 'visible';
+                    } else {
+                        mobileLangOptions.style.display = 'none';
+                        mobileLangOptions.style.visibility = 'hidden';
+                    }
+                });
+            }
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (mobileMenu && mobileMenuToggle) {
+                    if (!mobileMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                        mobileMenu.classList.remove('active');
+                        body.style.overflow = '';
+                    }
+                }
+            });
+
+            // Cerrar menú en desktop
+            window.addEventListener('resize', function() {
+                if (mobileMenu && window.innerWidth > 991) {
+                    mobileMenu.classList.remove('active');
+                    body.style.overflow = '';
+                }
+            });
+        });
+    </script>
+
     @stack('scripts')
 </body>
 

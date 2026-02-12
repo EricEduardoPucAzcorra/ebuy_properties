@@ -1,71 +1,611 @@
 /* ==========================
-   NAVBAR MOBILE FIX
+   NAVBAR RESPONSIVE - EBAY PROPERTIES
    ========================== */
 
+/* Variables */
+:root {
+    --ebuy-green: #00B98E;
+    --ebuy-dark: #1e293b;
+    --ebuy-gray: #64748b;
+    --ebuy-light: #f8fafc;
+}
+
+/* Header principal - reset y base */
+.ebuy-header-full {
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+}
+
+/* Versión Desktop */
+.ebuy-desktop-header {
+    display: block;
+    height: 90px;
+}
+
+.ebuy-desktop-header .ebuy-container-limit {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.ebuy-desktop-header .ebuy-brand-main {
+    flex: 0 0 auto;
+    order: 1;
+}
+
+.ebuy-desktop-header .ebuy-brand-main img {
+    height: 60px;
+    width: auto;
+}
+
+.ebuy-desktop-header .ebuy-nav-center {
+    flex: 1 1 auto;
+    display: flex;
+    gap: 10px;
+    height: 100%;
+    position: static;
+    justify-content: flex-end;
+    margin: 0 30px;
+    order: 2;
+}
+
+.ebuy-desktop-header .ebuy-nav-center .ebuy-menu-item {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: static;
+    padding: 30px 0;
+}
+
+.ebuy-desktop-header .ebuy-nav-center .ebuy-link-top {
+    text-decoration: none !important;
+    color: var(--ebuy-dark) !important;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.ebuy-desktop-header .ebuy-actions-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    order: 3;
+}
+
+/* Versión Móvil */
+.ebuy-mobile-header {
+    display: none !important;
+    height: 0px !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+
+/* Estilos CSS desactivados para usar tabla con estilos inline */
+
+/* Media query para mostrar móvil en pantallas pequeñas */
 @media (max-width: 991px) {
-
-    /* Navbar base */
-    .navbar {
-        padding: 10px 15px;
+    .ebuy-desktop-header {
+        display: none !important;
     }
 
-    /* Logo */
-    .navbar-brand img {
-        width: auto !important;
-        height: 48px !important;
+    .ebuy-mobile-header {
+        display: block !important;
+        height: 70px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .ebuy-desktop-header {
+        display: block !important;
     }
 
-    /* Collapse container */
-    .navbar-collapse {
-        background: #ffffff;
-        margin-top: 10px;
-        padding: 15px;
-        border-radius: 14px;
-        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    .ebuy-mobile-header {
+        display: none !important;
+        height: 0px !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+}
+
+.ebuy-mobile-toggle span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: var(--ebuy-green);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.ebuy-mobile-toggle:hover span {
+    background: var(--ebuy-dark);
+}
+
+/* Menú móvil deslizable */
+.ebuy-mobile-menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 999999;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+}
+
+.ebuy-mobile-menu.active {
+    left: 0;
+}
+
+/* Header del menú móvil */
+.ebuy-mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 60px 30px;
+    border-bottom: 1px solid #f1f5f9;
+    background: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    min-height: 150px;
+    margin-top: 0;
+    padding-top: 60px;
+}
+
+.ebuy-mobile-menu-header .ebuy-brand-main img {
+    height: 50px;
+    max-width: 180px;
+    object-fit: contain;
+    margin-left: 10px;
+}
+
+.ebuy-mobile-close {
+    width: 55px;
+    height: 55px;
+    border: none;
+    background: #00B98E;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 185, 142, 0.3);
+    position: relative;
+    z-index: 10001;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.ebuy-mobile-close:hover {
+    background: var(--ebuy-green);
+    color: #ffffff;
+}
+
+/* Body del menú móvil */
+.ebuy-mobile-menu-body {
+    padding: 20px;
+}
+
+/* Secciones del menú móvil */
+.ebuy-mobile-menu-section {
+    margin-bottom: 25px;
+}
+
+.ebuy-mobile-section-title {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--ebuy-gray);
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    padding: 0 5px;
+}
+
+/* Items del menú móvil */
+.ebuy-mobile-menu-link {
+    display: block;
+    padding: 15px 20px;
+    background: var(--ebuy-light);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--ebuy-dark);
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    margin-bottom: 10px;
+}
+
+.ebuy-mobile-menu-link:hover,
+.ebuy-mobile-menu-link.is-active {
+    background: #f0fdf4;
+    color: var(--ebuy-green);
+    border-color: var(--ebuy-green);
+}
+
+.ebuy-mobile-menu-toggle {
+    width: 100%;
+    padding: 15px 20px;
+    background: var(--ebuy-light);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ebuy-dark);
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.ebuy-mobile-menu-toggle:hover {
+    background: #f0fdf4;
+    border-color: var(--ebuy-green);
+    color: var(--ebuy-green);
+}
+
+.ebuy-mobile-menu-toggle i {
+    transition: transform 0.3s ease;
+}
+
+/* Submenús móviles */
+.ebuy-mobile-submenu {
+    display: none;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+.ebuy-mobile-submenu.active {
+    display: block !important;
+    animation: slideDown 0.3s ease;
+}
+
+/* Toggle para submenús anidados */
+.ebuy-mobile-submenu-toggle {
+    width: 100%;
+    padding: 12px 15px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--ebuy-dark);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.ebuy-mobile-submenu-toggle:hover {
+    background: #f0fdf4;
+    border-color: var(--ebuy-green);
+    color: var(--ebuy-green);
+}
+
+.ebuy-mobile-submenu-toggle i:first-child {
+    color: var(--ebuy-green);
+    margin-right: 8px;
+}
+
+.ebuy-mobile-submenu-toggle i:last-child {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+/* Submenús anidados (tercer nivel) */
+.ebuy-mobile-submenu-nested {
+    display: none;
+    margin-top: 8px;
+    padding-left: 20px;
+    background: #fafbfc;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.ebuy-mobile-submenu-nested.active {
+    display: block !important;
+    animation: slideDown 0.3s ease;
+}
+
+.ebuy-mobile-submenu-divider {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--ebuy-gray);
+    margin: 12px 0 8px 0;
+    padding: 0 5px;
+    letter-spacing: 0.5px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 8px;
+}
+
+.ebuy-mobile-submenu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ebuy-dark);
+    font-weight: 500;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.ebuy-mobile-submenu-item:hover {
+    background: #f0fdf4;
+    border-color: var(--ebuy-green);
+    color: var(--ebuy-green);
+    transform: translateX(3px);
+}
+
+.ebuy-mobile-submenu-item i {
+    width: 18px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--ebuy-green);
+}
+
+/* Acciones móviles */
+.ebuy-mobile-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f1f5f9;
+}
+
+/* Selector de idioma móvil */
+.ebuy-mobile-lang {
+    margin-bottom: 20px;
+}
+
+.ebuy-mobile-lang-current {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background: var(--ebuy-light);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--ebuy-green);
+    transition: all 0.3s ease;
+}
+
+.ebuy-mobile-lang-current:hover {
+    background: #f0fdf4;
+    border-color: var(--ebuy-green);
+}
+
+.ebuy-mobile-lang-options {
+    display: none;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+.ebuy-mobile-lang-options.active {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+.ebuy-mobile-lang-options a {
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ebuy-dark);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.ebuy-mobile-lang-options a:hover {
+    background: #f0fdf4;
+    border-color: var(--ebuy-green);
+    color: var(--ebuy-green);
+}
+
+/* Botones móviles */
+.btn-mobile {
+    width: 100%;
+    margin-bottom: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.ebuy-mobile-user {
+    position: relative;
+}
+
+/* Ajustes para componentes incluidos en móvil */
+.ebuy-mobile-menu-body .ebuy-menu-item {
+    margin-bottom: 10px;
+}
+
+.ebuy-mobile-menu-body .ebuy-link-top {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    background: var(--ebuy-light);
+    border-radius: 12px;
+    text-align: left;
+    border: 2px solid transparent;
+    text-decoration: none;
+    color: var(--ebuy-dark);
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.ebuy-mobile-menu-body .ebuy-link-top:hover,
+.ebuy-mobile-menu-body .ebuy-link-top.is-active {
+    background: #f0fdf4;
+    border-color: var(--ebuy-green);
+    color: var(--ebuy-green);
+}
+
+.ebuy-mobile-menu-body .ebuy-dropdown-float {
+    position: static !important;
+    display: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-top: 10px !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: none !important;
+}
+
+.ebuy-mobile-menu-body .ebuy-menu-item:hover .ebuy-dropdown-float {
+    display: block !important;
+    animation: slideDown 0.3s ease !important;
+}
+
+.ebuy-mobile-menu-body .grid-menu-inner {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+}
+
+.ebuy-mobile-menu-body .ebuy-grid-link {
+    padding: 12px 15px !important;
+    border: 1px solid #f1f5f9 !important;
+    background: #ffffff !important;
+    text-decoration: none !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.ebuy-mobile-menu-body .ebuy-grid-link:hover {
+    background: #f0fdf4 !important;
+    border-color: var(--ebuy-green) !important;
+    transform: none !important;
+}
+
+.ebuy-mobile-menu-body .ebuy-grid-link .icon-box {
+    width: 35px;
+    height: 35px;
+    background: var(--ebuy-light);
+    color: var(--ebuy-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.ebuy-mobile-menu-body .ebuy-grid-link .text-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.ebuy-mobile-menu-body .ebuy-grid-link .title {
+    color: var(--ebuy-dark);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.ebuy-mobile-menu-body .ebuy-grid-link .desc {
+    color: var(--ebuy-gray);
+    font-size: 12px;
+}
+
+/* Ocultar dropdowns de Bootstrap en móvil por defecto */
+.ebuy-mobile-menu .dropdown-menu {
+    position: static !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border: 1px solid #f1f5f9 !important;
+    margin-top: 10px !important;
+}
+
+/* Animaciones */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
     }
 
-    /* Menu links */
-    .navbar-nav .nav-link {
-        padding: 12px 0;
-        font-weight: 500;
-        border-bottom: 1px solid #f1f1f1;
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
     }
 
-    .navbar-nav .nav-link:last-child {
-        border-bottom: none;
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ==========================
+   MEDIA QUERIES
+   ========================== */
+
+/* Móvil - mostrar versión móvil, ocultar desktop */
+@media (max-width: 991px) {
+    .ebuy-desktop-header {
+        display: none;
     }
 
-    /* Dropdowns */
-    .dropdown-menu {
-        border-radius: 10px;
-        box-shadow: none;
-        margin-top: 5px;
+    .ebuy-mobile-header {
+        display: block;
+    }
+}
+
+/* Desktop - mostrar versión desktop, ocultar móvil */
+@media (min-width: 992px) {
+    .ebuy-mobile-header {
+        display: none;
     }
 
-    /* Right section (lang + auth) */
-    .navbar-collapse .d-flex {
-        flex-direction: column;
-        align-items: stretch !important;
-        margin-top: 15px;
-        gap: 10px;
-    }
-
-    /* Language button */
-    .navbar-collapse .nav-item.dropdown > a {
-        padding: 10px;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        text-align: center;
-    }
-
-    /* Login / Register buttons */
-    .navbar-collapse .btn {
-        width: 100%;
-        padding: 10px;
-        font-weight: 500;
-    }
-
-    .navbar-collapse .btn + .btn {
-        margin-top: 8px;
+    .ebuy-mobile-menu {
+        display: none !important;
     }
 }

@@ -15,29 +15,29 @@
 <div class="container-fluid bg-white py-5">
     <div class="container">
 
-        <div class="row mb-5">
-            <div class="col-lg-6">
-                <p class="text-muted fs-5">
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-6 col-md-8">
+                <p class="text-muted fs-5 mb-0">
                     {{auto_trans('Propiedades cuidadosamente seleccionadas para quienes buscan confort, ubicación y estilo.')}}
                 </p>
             </div>
 
-            <div class="col-lg-6 text-lg-end">
-                <div class="nav nav-pills nav-pills-custom d-inline-flex">
+            <div class="col-lg-6 col-md-4">
+                <div class="nav nav-pills nav-pills-custom d-flex flex-row flex-wrap justify-content-lg-end justify-content-start gap-2">
                     @php
                         $currentOperation = request()->query('operation');
                         $otherParams = request()->except('operation');
                     @endphp
 
                     <a href="{{ route('properties', $otherParams) }}" data-post-link
-                        class="nav-link {{ is_null($currentOperation) ? 'active' : '' }}">
+                        class="nav-link flex-shrink-0 {{ is_null($currentOperation) ? 'active' : '' }}">
                         {{auto_trans('Todo')}}
                     </a>
 
                     @foreach ($type_operations as $type_operation)
                         <a data-post-link
                             href="{{ route('properties', array_merge($otherParams, ['operation' => $type_operation->id])) }}"
-                            class="nav-link {{ $currentOperation == $type_operation->id ? 'active' : '' }}">
+                            class="nav-link flex-shrink-0 {{ $currentOperation == $type_operation->id ? 'active' : '' }}">
                             {{ $type_operation->name }}
                         </a>
                     @endforeach

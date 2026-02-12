@@ -19,7 +19,7 @@
 
 .card-clean:hover {
     transform: translateY(-10px);
-    box-shadow: 0 30px 60px rgba(0,0,0,.08);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, .08);
     border-color: var(--primary-color);
 }
 
@@ -64,12 +64,12 @@
     position: absolute;
     top: 18px;
     right: 18px;
-    background: rgba(255,255,255,.95);
+    background: rgba(255, 255, 255, .95);
     padding: 6px 16px;
     border-radius: 14px;
     font-size: 13px;
     font-weight: 700;
-    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
     z-index: 5;
 }
 
@@ -104,12 +104,23 @@
 .nav-pills-custom .nav-link {
     color: var(--body-text);
     font-weight: 600;
-    padding: 10px 26px;
-    border-radius: 16px;
+    padding: 8px 16px;
+    border-radius: 12px;
     transition: all 0.3s ease;
     border: 1px solid #f0f0f0;
     background: #ffffff;
-    margin-left: 8px;
+    margin-left: 0px;
+    font-size: 0.9rem;
+}
+
+/* Primer botón sin margen */
+.nav-pills-custom .nav-link:first-child {
+    margin-left: 0;
+}
+
+/* Espaciado entre botones con gap */
+.nav-pills-custom {
+    gap: 8px;
 }
 
 .nav-pills-custom .nav-link:hover {
@@ -180,4 +191,3 @@
     color: #ccc;
     cursor: not-allowed;
 }
-

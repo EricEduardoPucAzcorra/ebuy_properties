@@ -1,0 +1,35 @@
+/* Carrusel Principal Responsivo - Desktop normal, Móvil pequeño */
+
+/* Desktop (pantallas grandes) - altura normal */
+@media (min-width: 992px) {
+    .header-carousel .img-fluid {
+        height: 700px !important;
+        object-fit: cover;
+    }
+}
+
+/* Tablet (pantallas medianas) - altura media */
+@media (min-width: 768px) and (max-width: 991px) {
+    .header-carousel .img-fluid {
+        height: 400px !important;
+        object-fit: cover;
+    }
+}
+
+/* Móvil (pantallas pequeñas) - altura pequeña */
+@media (max-width: 767px) {
+    .header-carousel .img-fluid {
+        height: 250px !important;
+        max-height: 40vh !important;
+        object-fit: cover;
+    }
+}
+
+/* Móvil muy pequeño */
+@media (max-width: 480px) {
+    .header-carousel .img-fluid {
+        height: 200px !important;
+        max-height: 35vh !important;
+        object-fit: cover;
+    }
+}
