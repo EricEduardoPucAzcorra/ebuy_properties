@@ -4,12 +4,20 @@ new Vue({
     el: '#mapvue',
     data() {
         const el = document.getElementById('mapvue');
-        const rawLocation = JSON.parse(el.getAttribute('data-location'));
+
+        let rawLocation = null;
+        if (el && el.getAttribute('data-location')) {
+            try {
+                rawLocation = JSON.parse(el.getAttribute('data-location'));
+            } catch (e) {
+                rawLocation = null;
+            }
+        }
 
         return {
             location: {
-                lat: rawLocation && rawLocation.latitude ? parseFloat(rawLocation.latitude) : 19.4326,
-                lng: rawLocation && rawLocation.longitude ? parseFloat(rawLocation.longitude) : -99.1332
+                lat: rawLocation?.latitude ? parseFloat(rawLocation.latitude) : 19.4326,
+                lng: rawLocation?.longitude ? parseFloat(rawLocation.longitude) : -99.1332
             }
         }
     }

@@ -21,6 +21,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
+    <script src="{{ asset('min/vue.min.js') }}"></script>
     @vite(['resources/site/site.css', 'resources/site/site.js'])
 </head>
 
@@ -118,13 +119,16 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="{{ asset('min/site/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('min/site/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('min/site/wow/wow.min.js') }}"></script>
+    <script src="{{ asset('min/site/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('min/site/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('min/site/owlcarousel/owl.carousel.js') }}"></script>
+    <script src="{{ asset('min/map/leaflet.js') }}"></script>
+    <script src="{{ asset('min/map/swiper-bundle.min.js') }}"></script>
 
     @stack('scripts')
-
 </body>
 
 </html>
