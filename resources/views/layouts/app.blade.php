@@ -51,7 +51,7 @@
                                 @endif
                             </div>
                         @else
-                            <div class="navbar-nav flex-row">
+                            <div class="navbar-nav flex-row align-items-center">
                                 <div x-data="languageSwitch">
                                     <button class="btn btn-outline-secondary me-2" type="button" @click="changeLang()">
                                         <span x-show="currentLang === 'es'" class="fw-bold">🇲🇽 ES</span>
@@ -59,12 +59,8 @@
                                     </button>
                                 </div>
 
-                                <button class="btn btn-outline-secondary me-2" type="button" data-fullscreen-toggle>
-                                    <i class="bi bi-arrows-fullscreen"></i>
-                                </button>
-
                                 <div class="dropdown me-2">
-                                    <button class="btn btn-outline-secondary position-relative" type="button" data-bs-toggle="dropdown">
+                                    <button class="btn btn-outline-secondary position-relative" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                         <i class="bi bi-bell"></i>
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
                                     </button>
@@ -77,7 +73,7 @@
                                 </div>
 
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                                    <button class="btn btn-outline-secondary d-flex align-items-center" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                         @if (Auth::user()->profile)
                                             <img src="{{ asset('storage/' . Auth::user()->profile) }}" width="24" height="24" class="rounded-circle me-2">
                                         @elseif (Auth::user()->profile_url)
@@ -106,6 +102,8 @@
             </header>
 
             @auth
+                <div class="sidebar-overlay" data-sidebar-overlay></div>
+                
                 <aside class="admin-sidebar" id="admin-sidebar">
                     <div class="sidebar-content">
                         @if(auth()->user()->hasRoleName('Admin'))
@@ -149,18 +147,127 @@
         document.addEventListener('DOMContentLoaded', () => {
             const toggleButton = document.querySelector('[data-sidebar-toggle]');
             const wrapper = document.getElementById('admin-wrapper');
+            const sidebarOverlay = document.querySelector('[data-sidebar-overlay]');
 
             if (toggleButton && wrapper) {
-                const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
-                if (isCollapsed) {
-                    wrapper.classList.add('sidebar-collapsed');
-                    toggleButton.classList.add('is-active');
+                // Function to check if mobile/tablet
+                function isMobile() {
+                    return window.innerWidth <= 1200; // Updated breakpoint
                 }
 
-                toggleButton.addEventListener('click', () => {
-                    const isNowCollapsed = wrapper.classList.toggle('sidebar-collapsed');
-                    toggleButton.classList.toggle('is-active', isNowCollapsed);
-                    localStorage.setItem('sidebar-collapsed', isNowCollapsed);
+                // Function to update sidebar behavior
+                function updateSidebarBehavior() {
+                    const mobile = isMobile();
+                    
+                    // Remove overlay functionality
+                    wrapper.classList.remove('sidebar-open');
+                    
+                    if (!mobile) {
+                        // Desktop: use collapsed state from localStorage
+                        const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+                        if (isCollapsed) {
+                            wrapper.classList.add('sidebar-collapsed');
+                            toggleButton.classList.add('is-active');
+                        } else {
+                            wrapper.classList.remove('sidebar-collapsed');
+                            toggleButton.classList.remove('is-active');
+                        }
+                        
+                        // Reset mobile menu state
+                        wrapper.classList.remove('mobile-menu-hidden');
+                        localStorage.removeItem('mobile-menu-hidden');
+                        
+                        // Update icon to desktop style
+                        const icon = toggleButton.querySelector('i');
+                        if (icon) {
+                            icon.className = 'bi bi-list';
+                        }
+                        
+                        // Update button styles for desktop
+                        toggleButton.style.background = 'none';
+                        toggleButton.style.border = 'none';
+                        toggleButton.style.color = '#6c757d';
+                        toggleButton.style.boxShadow = 'none';
+                        
+                    } else {
+                        // Mobile/tablet: check mobile menu state from localStorage
+                        const mobileMenuHidden = localStorage.getItem('mobile-menu-hidden') === 'true';
+                        if (mobileMenuHidden) {
+                            wrapper.classList.add('mobile-menu-hidden');
+                            toggleButton.classList.add('is-active');
+                            // Change icon to arrow-right
+                            const icon = toggleButton.querySelector('i');
+                            if (icon) {
+                                icon.className = 'bi bi-arrow-right';
+                            }
+                        } else {
+                            wrapper.classList.remove('mobile-menu-hidden');
+                            toggleButton.classList.remove('is-active');
+                            // Change icon to list
+                            const icon = toggleButton.querySelector('i');
+                            if (icon) {
+                                icon.className = 'bi bi-list';
+                            }
+                        }
+                        // Always start collapsed for better UX
+                        wrapper.classList.add('sidebar-collapsed');
+                        
+                        // Update button styles for mobile
+                        toggleButton.style.background = 'white';
+                        toggleButton.style.border = '1px solid #e0e0e0';
+                        toggleButton.style.color = '#6c757d';
+                        toggleButton.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                    }
+                }
+
+                // Initialize
+                updateSidebarBehavior();
+
+                // Single toggle button click handler for both desktop and mobile
+                toggleButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (isMobile()) {
+                        // Mobile/tablet: toggle menu hidden/shown
+                        const isNowHidden = wrapper.classList.toggle('mobile-menu-hidden');
+                        toggleButton.classList.toggle('is-active', isNowHidden);
+                        
+                        // Update icon based on state
+                        const icon = toggleButton.querySelector('i');
+                        if (icon) {
+                            if (isNowHidden) {
+                                icon.className = 'bi bi-arrow-right';
+                            } else {
+                                icon.className = 'bi bi-list';
+                            }
+                        }
+                        
+                        // Save mobile menu state
+                        localStorage.setItem('mobile-menu-hidden', isNowHidden);
+                    } else {
+                        // Desktop: toggle collapsed state
+                        const isNowCollapsed = wrapper.classList.toggle('sidebar-collapsed');
+                        toggleButton.classList.toggle('is-active', isNowCollapsed);
+                        
+                        // Save state for desktop
+                        localStorage.setItem('sidebar-collapsed', isNowCollapsed);
+                    }
+                });
+
+                // Handle window resize with immediate detection
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        const previousMobile = window.innerWidth <= 1200;
+                        updateSidebarBehavior(); // This will detect the new size
+                    }, 50); // Faster detection - 50ms delay
+                });
+                
+                // Also handle orientation change for mobile devices
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(updateSidebarBehavior, 100);
                 });
             }
         });

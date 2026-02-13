@@ -12,4 +12,117 @@
   border-right: 1px solid var(--bs-border-color);
   transition: var(--transition-base);
   z-index: $zindex-sticky;
-} 
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// Sidebar collapsed state
+.sidebar-collapsed .admin-sidebar {
+  width: 70px; // Compact width for icons only
+
+  .sidebar-nav {
+    .nav-link {
+      text-align: center;
+      padding: 0.75rem 0.5rem;
+
+      i {
+        font-size: 1.2rem;
+        margin: 0;
+      }
+
+      span {
+        display: none;
+      }
+    }
+
+    // Submenu items in collapsed state
+    .collapse {
+      display: none !important;
+    }
+
+    // Chevron icons for dropdowns
+    .bi-chevron-down {
+      display: none;
+    }
+  }
+}
+
+// Mobile responsive sidebar - always open with icons only
+@media (max-width: 1200px) {
+  .admin-sidebar {
+    width: 60px; // Fixed compact width for mobile
+    max-width: 85vw;
+    z-index: 1050;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    transform: none !important; // Never hide on mobile by default
+    left: 0 !important; // Always visible
+    transition: transform 0.3s ease-in-out, left 0.3s ease-in-out;
+  }
+
+  // Mobile menu hidden state
+  .mobile-menu-hidden .admin-sidebar {
+    transform: translateX(-100%) !important;
+    left: -60px !important;
+  }
+
+  // Mobile - always show only icons
+  .admin-sidebar {
+    .sidebar-nav {
+      .nav-link {
+        padding: 0.75rem 0.25rem;
+        text-align: center;
+
+        i {
+          font-size: 1.1rem;
+          margin: 0;
+        }
+
+        span {
+          display: none !important; // Always hide text on mobile
+        }
+      }
+
+      // Hide all text content in mobile
+      .nav-item span:not(:first-child) {
+        display: none !important;
+      }
+
+      // Hide chevrons completely
+      .bi-chevron-down {
+        display: none !important;
+      }
+
+      // Hide submenus completely
+      .collapse {
+        display: none !important;
+      }
+
+      // Hide dropdown toggles functionality
+      .nav-link[data-bs-toggle="collapse"] {
+        pointer-events: none; // Disable dropdown clicks on mobile
+      }
+    }
+  }
+
+  .admin-main {
+    margin-left: 60px !important; // Fixed margin for mobile sidebar
+    transition: margin-left 0.3s ease-in-out;
+  }
+
+  // Adjust main content when mobile menu is hidden
+  .mobile-menu-hidden .admin-main {
+    margin-left: 0 !important;
+  }
+
+  .admin-header {
+    .navbar {
+      padding-left: 4rem; // Adjust header padding for fixed sidebar
+      transition: padding-left 0.3s ease-in-out;
+    }
+  }
+
+  // Adjust header when mobile menu is hidden
+  .mobile-menu-hidden .admin-header .navbar {
+    padding-left: 1rem;
+  }
+}

@@ -26,4 +26,176 @@
       transform: translate(-75%, -50%) !important; // shift closer horizontally
     }
   }
-} 
+}
+
+// Mobile menu toggle button styles
+.mobile-menu-toggle-btn {
+  display: flex !important; // ALWAYS VISIBLE FOR DEBUGGING
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0.5rem;
+  background-color: #007bff !important; // Blue background for visibility
+  color: white !important;
+  border: 2px solid #0056b3 !important; // Blue border for visibility
+
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #0056b3 !important;
+    transform: scale(1.1);
+  }
+
+  &.is-active {
+    background-color: #dc3545 !important; // Red when active
+    border-color: #a71e2a !important;
+
+    &:hover {
+      background-color: #a71e2a !important;
+    }
+  }
+
+  i {
+    transition: transform 0.3s ease-in-out;
+    font-size: 1.2rem;
+  }
+}
+
+// Mobile optimizations for header controls
+@media (max-width: 991.98px) {
+  .admin-header {
+    .navbar {
+      padding-left: 5rem; // Space for hamburger button FIRST, then logo and controls
+      padding-right: 0.5rem;
+      position: relative; // Establish positioning context
+      transition: padding-left 0.3s ease-in-out;
+    }
+
+    .navbar-brand {
+      margin-left: 0;
+      margin-right: auto;
+      flex: 1;
+      min-width: 0;
+
+      img {
+        height: 32px !important; // Smaller logo on mobile
+      }
+    }
+
+    .navbar-nav {
+      gap: 0.25rem; // Reduced spacing between buttons
+      position: relative;
+      z-index: 1030; // Ensure dropdowns are above other elements
+    }
+
+    .btn-outline-secondary {
+      padding-left: 0.4rem !important;
+      padding-right: 0.4rem !important;
+      min-width: 40px;
+
+      // Hide text on mobile, show only icons
+      span:not([x-show]) {
+        display: none;
+      }
+
+      // Keep Alpine.js x-show elements (language flags)
+      span[x-show] {
+        font-size: 0.75rem;
+      }
+
+      // Adjust badge positioning on mobile
+      .badge {
+        transform: translate(-50%, -50%) !important;
+        font-size: 0.65rem;
+        padding: 0.15rem 0.25rem;
+      }
+    }
+
+    // Profile dropdown adjustments
+    .dropdown {
+      .btn {
+        img {
+          width: 20px !important;
+          height: 20px !important;
+        }
+
+        // Hide username text on mobile
+        .d-none.d-md-inline {
+          display: none !important;
+        }
+
+        .bi-chevron-down {
+          font-size: 0.75rem;
+        }
+      }
+    }
+
+    // Language button specific mobile styles
+    [x-data="languageSwitch"] .btn {
+      min-width: auto;
+      padding: 0.25rem 0.5rem !important;
+      font-size: 0.75rem;
+    }
+
+    // Dropdown menu mobile fixes
+    .dropdown-menu {
+      position: absolute !important;
+      top: 100% !important;
+      right: 0 !important;
+      left: auto !important;
+      margin-top: 0.25rem !important;
+      min-width: 200px;
+      max-width: 85vw;
+      z-index: 1060 !important;
+      transform: none !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+
+      // Prevent layout shift
+      &.show {
+        display: block !important;
+      }
+    }
+
+    // Ensure dropdown doesn't affect header layout
+    .dropdown.show {
+      position: static; // Keep button in place
+    }
+  }
+
+  // Adjust header when mobile menu is hidden - SAME padding since button stays in place
+  .mobile-menu-hidden .admin-header .navbar {
+    padding-left: 5rem; // Keep same padding - button doesn't move
+  }
+}
+
+// Extra small devices adjustments
+@media (max-width: 575.98px) {
+  .admin-header {
+    .navbar {
+      padding-left: 4rem; // Slightly less for very small screens but still accommodate button
+      padding-right: 0.25rem;
+    }
+
+    .navbar-brand img {
+      height: 28px !important;
+    }
+
+    .btn-outline-secondary {
+      padding-left: 0.3rem !important;
+      padding-right: 0.3rem !important;
+      min-width: 36px;
+    }
+
+    .dropdown-menu {
+      min-width: 180px;
+      font-size: 0.875rem;
+    }
+  }
+
+  // Extra small devices - mobile menu hidden state
+  .mobile-menu-hidden .admin-header .navbar {
+    padding-left: 4rem; // Keep consistent padding
+  }
+}

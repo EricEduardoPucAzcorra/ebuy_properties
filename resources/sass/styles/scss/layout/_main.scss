@@ -7,4 +7,30 @@
   margin-left: var(--sidebar-width);
   min-height: calc(100vh - var(--header-height));
   transition: var(--transition-base);
-} 
+}
+
+// Sidebar collapsed state
+.sidebar-collapsed .admin-main {
+  margin-left: 70px; // Match collapsed sidebar width
+}
+
+// Mobile responsive main content
+@media (max-width: 991.98px) {
+  .admin-main {
+    margin-left: 60px !important; // Fixed margin for mobile sidebar (always 60px)
+    padding: 1rem;
+  }
+
+  .admin-main .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+// Extra small devices
+@media (max-width: 575.98px) {
+  .admin-main {
+    padding: 0.75rem;
+    margin-left: 60px !important; // Keep consistent margin
+  }
+}
