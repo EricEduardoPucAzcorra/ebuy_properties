@@ -19,7 +19,7 @@
                 <p class="lead text-dark mb-4">{{auto_trans('No somos solo un listado. Somos el puente digital entre quienes buscan un hogar y quienes ofrecen oportunidades.')}}</p>
 
                 <p class="mb-4 text-muted">
-                    {{auto_trans('Nuestra plataforma permite a inmobiliarias y dueños particulares promocionar sus espacios con tecnología de punta, asegurando que cada propiedad brille ante los ojos de los inversores correctos.')}}'
+                    {{auto_trans('Nuestra plataforma permite a inmobiliarias y dueños particulares promocionar sus espacios con tecnología de punta, asegurando que cada propiedad brille ante los ojos de los inversores correctos.')}}
                 </p>
 
                 <div class="row g-4">
