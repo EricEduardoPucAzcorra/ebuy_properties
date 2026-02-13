@@ -29,7 +29,7 @@
                                 <i class="fa fa-building fa-2x text-primary me-3"></i>
                                 <h5 class="mb-0">{{auto_trans('Agencias')}}</h5>
                             </div>
-                            <p class="small mb-0">{{auto_trans('Gestión profesional de múltiples listados con métricas en tiempo real.')}}</p>
+                            <p class="small mb-0">{{auto_trans('Gestión profesional de múltiples listados con métricas en tiempo real....')}}</p>
                         </div>
                     </div>
                     <div class="col-sm-6">
