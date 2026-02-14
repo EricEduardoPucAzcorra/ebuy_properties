@@ -20,6 +20,9 @@ class PropertiesController extends Controller
 {
     public function properties_global(Request $request)
     {
+        // Debug para ver qué parámetros están llegando
+        \Log::info('PropertiesController - Parámetros recibidos:', $request->all());
+        
         if (!$request->operation) {
             if (request()->routeIs('properties.sale')) {
                 $op = TypeOperation::where('name', 'Venta')->first();

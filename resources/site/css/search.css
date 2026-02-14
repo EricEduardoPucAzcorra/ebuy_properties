@@ -52,6 +52,7 @@
     font-weight: 700;
     font-size: 1.1rem;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
 .btn-search:hover {
@@ -60,6 +61,15 @@
     border-color: #00B98E !important;
     transform: translateY(-2px);
     box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
+}
+
+/* Ajuste específico para botón de filtros */
+.btn-search#advanced-filters-btn {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .autocomplete {
@@ -99,5 +109,318 @@
     .search-wrapper {
         margin-top: 16px;
         padding: 15px 0;
+    }
+}
+
+/* Estilos para botón de filtros avanzados */
+.btn-filters-advanced {
+    background: var(--light) !important;
+    border: 2px solid var(--primary) !important;
+    border-radius: 16px !important;
+    color: var(--primary) !important;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    padding: 0.5rem !important;
+    min-height: 60px;
+}
+
+.btn-filters-advanced i {
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
+.btn-filters-advanced span {
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.btn-filters-advanced:hover {
+    background: var(--primary) !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 185, 142, 0.3);
+}
+
+.btn-filters-advanced:hover i,
+.btn-filters-advanced:hover span {
+    color: white !important;
+}
+
+.btn-filters-advanced.active {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+.btn-filters-advanced.active i,
+.btn-filters-advanced.active span {
+    color: white !important;
+}
+
+/* Estilos para filtros avanzados */
+.advanced-filters {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.advanced-filters .form-control,
+.advanced-filters .form-select {
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.advanced-filters .form-control:focus,
+.advanced-filters .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 185, 142, 0.1);
+}
+
+.advanced-filters .form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.advanced-filters .btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.advanced-filters .btn-primary:hover {
+    background: #00a080;
+    border-color: #00a080;
+}
+
+.advanced-filters .btn-outline-secondary {
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.advanced-filters .btn-outline-secondary:hover {
+    background: var(--secondary);
+    border-color: var(--secondary);
+}
+
+/* Estilos para información de resultados */
+.results-info {
+    border: 1px solid #e5e7eb;
+    background: var(--light);
+    border-radius: 16px;
+}
+
+.results-info h5 {
+    color: var(--primary);
+}
+
+.active-filters .badge {
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    background: rgba(0, 185, 142, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(0, 185, 142, 0.2);
+}
+
+/* Estilos para sección de tips */
+.tips-section {
+    background: linear-gradient(135deg, var(--primary) 0%, #00a080 100%);
+}
+
+.tip-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tip-icon {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Estilos para sección de contacto */
+.contact-advisory {
+    border: 2px dashed var(--primary);
+    background: var(--light);
+}
+
+.contact-advisory .btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.contact-advisory .btn-primary:hover {
+    background: #00a080;
+    border-color: #00a080;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 185, 142, 0.3);
+}
+
+.contact-advisory .btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.contact-advisory .btn-outline-primary:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 185, 142, 0.3);
+}
+
+/* Estilos para botones de navegación de operaciones */
+.nav-pills-custom .nav-link {
+    background: var(--light);
+    color: var(--dark);
+    border: 2px solid transparent;
+    border-radius: 25px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+}
+
+.nav-pills-custom .nav-link:hover {
+    background: var(--primary);
+    color: white !important;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 185, 142, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.nav-pills-custom .nav-link:hover i,
+.nav-pills-custom .nav-link:hover span {
+    color: white !important;
+}
+
+.nav-pills-custom .nav-link.active {
+    background: var(--primary);
+    color: white !important;
+    border-color: var(--primary);
+    box-shadow: 0 5px 15px rgba(0, 185, 142, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.nav-pills-custom .nav-link.active i,
+.nav-pills-custom .nav-link.active span {
+    color: white !important;
+}
+
+.nav-pills-custom .nav-link i {
+    font-size: 0.9rem;
+    color: var(--primary);
+    transition: color 0.3s ease;
+}
+
+.nav-pills-custom .nav-link span {
+    transition: color 0.3s ease;
+}
+
+/* Estilos mejorados para la tarjeta de resultados */
+.results-info {
+    border: 2px solid var(--primary);
+    background: linear-gradient(135deg, var(--light) 0%, #ffffff 100%);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 185, 142, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.results-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.results-info h4 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.results-info h4 i {
+    color: var(--secondary);
+}
+
+.active-filters .badge {
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    background: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+    box-shadow: 0 2px 8px rgba(0, 185, 142, 0.2);
+    transition: all 0.2s ease;
+}
+
+.active-filters .badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 185, 142, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .advanced-filters .row {
+        gap: 0.5rem;
+    }
+
+    .tip-card {
+        margin-bottom: 1rem;
+    }
+
+    .contact-advisory .d-flex {
+        flex-direction: column !important;
+    }
+
+    .contact-advisory .btn {
+        width: 100%;
+    }
+
+    .nav-pills-custom .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+    }
+
+    .results-info h4 {
+        font-size: 1.2rem;
     }
 }

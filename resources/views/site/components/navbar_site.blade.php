@@ -387,4 +387,5 @@
     </div>
 </header>
 
+<script src="{{ asset('site/js/desktop-menu.js') }}"></script>
 <script src="{{ asset('site/js/mobile-menu.js') }}"></script>

@@ -128,9 +128,47 @@
     <script src="{{ asset('min/map/leaflet.js') }}"></script>
     <script src="{{ asset('min/map/swiper-bundle.min.js') }}"></script>
 
-    <!-- JavaScript del Menú Móvil -->
+    <!-- JavaScript del Menú Desktop y Móvil -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // ===== MENÚ DESKTOP - MEGA MENU INTERACTIONS =====
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const targetId = this.getAttribute('data-target');
+                    const targetPane = document.getElementById(targetId);
+                    
+                    if (!targetPane) {
+                        console.log('No se encontró el pane con ID:', targetId);
+                        return;
+                    }
+                    
+                    // Remove active class from all sidebar items in this mega menu
+                    const megaCard = this.closest('.mega-card');
+                    if (megaCard) {
+                        megaCard.querySelectorAll('.sidebar-item').forEach(sidebarItem => {
+                            sidebarItem.classList.remove('active');
+                        });
+                        
+                        // Hide all panes in this mega menu
+                        megaCard.querySelectorAll('.mega-pane').forEach(pane => {
+                            pane.classList.remove('active');
+                        });
+                    }
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Show target pane
+                    targetPane.classList.add('active');
+                    
+                    console.log('Activado pane:', targetId);
+                });
+            });
+            
+            // ===== MENÚ MÓVIL =====
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             const mobileMenu = document.getElementById('mobileMenu');
