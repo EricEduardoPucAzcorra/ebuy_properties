@@ -6,6 +6,63 @@
     --dark: #0E2E50;
 }
 
+.ebuy-step-card {
+    border-radius: 26px;
+}
+
+.ebuy-step-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 185, 142, 0.12);
+    border: 1px solid rgba(0, 185, 142, 0.2);
+    color: var(--primary);
+    margin-bottom: 14px;
+    font-size: 22px;
+}
+
+.ebuy-accordion .accordion-item {
+    border: 1px solid #f1f5f9;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 0 12px 24px rgba(2, 6, 23, 0.04);
+}
+
+.ebuy-accordion .accordion-button {
+    font-weight: 800;
+    color: #0f172a;
+    background: #ffffff;
+}
+
+.ebuy-accordion .accordion-button:not(.collapsed) {
+    color: #0f172a;
+    background: rgba(0, 185, 142, 0.08);
+    box-shadow: none;
+}
+
+.ebuy-accordion .accordion-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 185, 142, 0.15);
+}
+
+.ebuy-faq-note {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 12px 24px rgba(2, 6, 23, 0.04);
+}
+
+.ebuy-final-cta {
+    border-radius: 28px;
+    padding: 28px;
+    background: linear-gradient(135deg, rgba(0, 185, 142, 0.10) 0%, rgba(14, 46, 80, 0.06) 100%);
+    border: 1px solid rgba(0, 185, 142, 0.18);
+}
+
 .back-to-top {
     position: fixed;
     display: none;
@@ -120,7 +177,7 @@
         padding: 0;
     }
 
-    .navbar-light .navbar-nav .nav-link  {
+    .navbar-light .navbar-nav .nav-link {
         margin-right: 0;
         padding: 10px 0;
     }
@@ -203,7 +260,7 @@
     }
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     color: #DDDDDD;
 }
 
@@ -379,7 +436,7 @@
     align-items: center;
     justify-content: center;
     color: var(--light);
-    border: 1px solid rgba(255,255,255,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 35px;
     transition: .3s;
 }
@@ -414,7 +471,7 @@
 }
 
 .footer .form-control {
-    border-color: rgba(255,255,255,0.5);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .footer .copyright {
@@ -438,4 +495,3 @@
     padding-right: 0;
     border-right: none;
 }
-

@@ -44,23 +44,23 @@
                 <div class="row g-5">
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Ebuy Properties</h5>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Mérida, Yuc</p>
-                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+52 00000000</p>
-                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>ebuypro@gmail.com</p>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ auto_trans('Mérida, Yucatán, México') }}</p>
+                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i><a class="text-white-50" href="tel:+520000000000">+52 00 00 00 00 00</a></p>
+                        <p class="mb-2"><i class="fa fa-envelope me-3"></i><a class="text-white-50" href="mailto:contacto@ebuyproperties.com">contacto@ebuyproperties.com</a></p>
                         <div class="d-flex pt-2">
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-outline-light btn-social" href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-light btn-social" href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-light btn-social" href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-light btn-social" href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">{{auto_trans('Enlaces rapidos')}}</h5>
-                        <a class="btn btn-link text-white-50" href="">About Us</a>
-                        <a class="btn btn-link text-white-50" href="">Contact Us</a>
-                        <a class="btn btn-link text-white-50" href="">Our Services</a>
-                        <a class="btn btn-link text-white-50" href="">Privacy Policy</a>
-                        <a class="btn btn-link text-white-50" href="">Terms & Condition</a>
+                        <a class="btn btn-link text-white-50" href="{{ route('welcome.site') }}">{{ auto_trans('Inicio') }}</a>
+                        <a class="btn btn-link text-white-50" href="{{ route('properties') }}">{{ auto_trans('Propiedades') }}</a>
+                        <a class="btn btn-link text-white-50" href="{{ route('properties.sale') }}">{{ auto_trans('En venta') }}</a>
+                        <a class="btn btn-link text-white-50" href="{{ route('properties.rent') }}">{{ auto_trans('En renta') }}</a>
+                        <a class="btn btn-link text-white-50" href="{{ route('about') }}">{{ auto_trans('Acerca de') }}</a>
                     </div>
                     {{-- <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Photo Gallery</h5>
@@ -107,10 +107,10 @@
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">
-                                <a href="/">{{auto_trans('Inicio')}}</a>
-                                <a href="">Cookies</a>
-                                <a href="">Help</a>
-                                <a href="">FQAs</a>
+                                <a href="{{ route('welcome.site') }}">{{auto_trans('Inicio')}}</a>
+                                <a href="{{ route('properties') }}">{{ auto_trans('Propiedades') }}</a>
+                                <a href="{{ route('about') }}">{{ auto_trans('Acerca de') }}</a>
+                                <a href="mailto:contacto@ebuyproperties.com">{{ auto_trans('Contacto') }}</a>
                             </div>
                         </div>
                     </div>

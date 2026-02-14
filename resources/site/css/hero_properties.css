@@ -2,8 +2,8 @@
     min-height: 450px;
     display: flex;
     align-items: center;
-    background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
-                url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1500&q=80');
+    background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
+        url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1500&q=80');
     background-size: cover;
     background-position: center;
     padding: 80px 0;
@@ -24,4 +24,208 @@
 
 .hero-custom .search-wrapper {
     margin-top: 20px;
+}
+
+.ebuy-hero {
+    padding: 30px 0 10px;
+}
+
+.ebuy-hero-copy {
+    max-width: 520px;
+}
+
+.ebuy-hero .ebuy-hero-copy {
+    padding-top: 36px;
+}
+
+.ebuy-hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 185, 142, 0.12);
+    color: #0f766e;
+    border: 1px solid rgba(0, 185, 142, 0.25);
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.ebuy-hero-title {
+    color: #0f172a;
+    font-size: 2.35rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.12;
+}
+
+.ebuy-hero-subtitle {
+    color: #64748b;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.ebuy-hero-mini {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 18px;
+    padding: 14px 12px;
+}
+
+.ebuy-hero-mini .value {
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.1;
+}
+
+.ebuy-hero-mini .label {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.ebuy-hero-carousel-card {
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 30px 60px rgba(2, 6, 23, 0.08);
+    background: #0b1220;
+}
+
+.ebuy-hero-slide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.ebuy-hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.05);
+}
+
+.ebuy-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(80% 60% at 20% 20%, rgba(0, 185, 142, 0.20) 0%, rgba(2, 6, 23, 0.10) 45%, rgba(2, 6, 23, 0.70) 100%),
+        linear-gradient(180deg, rgba(2, 6, 23, 0.05) 0%, rgba(2, 6, 23, 0.72) 100%);
+}
+
+.ebuy-hero-slide-content {
+    position: absolute;
+    left: 26px;
+    right: 26px;
+    bottom: 22px;
+    color: #ffffff;
+    z-index: 2;
+}
+
+.ebuy-hero-slide-content .tag {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    margin-bottom: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.ebuy-hero-slide-content .title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+}
+
+.ebuy-hero-slide-content .meta {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.ebuy-hero-carousel .owl-nav {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.ebuy-hero-carousel .owl-nav button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+}
+
+.ebuy-hero-carousel .owl-nav button:hover {
+    background: rgba(255, 255, 255, 0.22) !important;
+    transform: translateY(-50%) scale(1.03);
+}
+
+.ebuy-hero-carousel .owl-nav .owl-prev {
+    left: 18px;
+}
+
+.ebuy-hero-carousel .owl-nav .owl-next {
+    right: 18px;
+}
+
+.ebuy-hero-carousel .owl-dots {
+    position: absolute;
+    bottom: 14px;
+    right: 18px;
+    display: flex;
+    gap: 8px;
+    z-index: 3;
+}
+
+.ebuy-hero-carousel .owl-dot span {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.35) !important;
+}
+
+.ebuy-hero-carousel .owl-dot.active span {
+    width: 26px;
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+@media (max-width: 991px) {
+    .ebuy-hero {
+        padding: 10px 0 0;
+    }
+
+    .ebuy-hero .ebuy-hero-copy {
+        padding-top: 18px;
+    }
+
+    .ebuy-hero-title {
+        font-size: 2rem;
+    }
+
+    .ebuy-hero-carousel-card {
+        border-radius: 22px;
+    }
+
+    .ebuy-hero-carousel .owl-nav {
+        display: none;
+    }
 }

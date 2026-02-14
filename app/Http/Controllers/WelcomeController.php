@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Stevebauman\Location\Facades\Location;
 use App\Models\Countrie;
 use App\Models\State;
 use App\Models\Citie;
+use App\Models\AddressPropertie;
 use App\Models\Propertie;
 use App\Services\PropertyRecommendationService;
 
@@ -39,7 +41,62 @@ class WelcomeController extends Controller
             $properties = $query->orderBy('created_at', 'desc')->paginate(10);
         }
 
-        return view('site.welcome', compact('properties', 'recommendedIds'));
+        $stats = [
+            'properties' => Propertie::where('is_active', true)->count(),
+            'states' => State::count(),
+            'cities' => Citie::count(),
+        ];
+
+        $topStateCounts = DB::table((new AddressPropertie())->getTable() . ' as ap')
+            ->join((new Propertie())->getTable() . ' as p', 'p.id', '=', 'ap.property_id')
+            ->select('ap.state_id', DB::raw('COUNT(*) as properties_count'))
+            ->where('p.is_active', true)
+            ->whereNotNull('ap.state_id')
+            ->groupBy('ap.state_id')
+            ->orderByDesc('properties_count')
+            ->limit(6)
+            ->get();
+
+        $topStatesById = State::whereIn('id', $topStateCounts->pluck('state_id'))
+            ->get()
+            ->keyBy('id');
+
+        $topStates = $topStateCounts
+            ->map(function ($row) use ($topStatesById) {
+                $st = $topStatesById->get($row->state_id);
+                if (!$st) return null;
+                $st->properties_count = (int) $row->properties_count;
+                return $st;
+            })
+            ->filter()
+            ->values();
+
+        $topCityCounts = DB::table((new AddressPropertie())->getTable() . ' as ap')
+            ->join((new Propertie())->getTable() . ' as p', 'p.id', '=', 'ap.property_id')
+            ->select('ap.city_id', DB::raw('COUNT(*) as properties_count'))
+            ->where('p.is_active', true)
+            ->whereNotNull('ap.city_id')
+            ->groupBy('ap.city_id')
+            ->orderByDesc('properties_count')
+            ->limit(6)
+            ->get();
+
+        $topCitiesById = Citie::whereIn('id', $topCityCounts->pluck('city_id'))
+            ->with('state')
+            ->get()
+            ->keyBy('id');
+
+        $topCities = $topCityCounts
+            ->map(function ($row) use ($topCitiesById) {
+                $ct = $topCitiesById->get($row->city_id);
+                if (!$ct) return null;
+                $ct->properties_count = (int) $row->properties_count;
+                return $ct;
+            })
+            ->filter()
+            ->values();
+
+        return view('site.welcome.welcome', compact('properties', 'recommendedIds', 'stats', 'topStates', 'topCities'));
     }
 
     public function searchLocation(Request $request)

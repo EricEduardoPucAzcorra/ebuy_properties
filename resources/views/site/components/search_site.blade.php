@@ -6,8 +6,8 @@
     $type_operations = TypeOperation::all();
 @endphp
 
-<div class="container search-wrapper">
-    <div class="search-card">
+<div class="container-fluid search-wrapper px-4 px-xl-5">
+    <div class="search-card" style="max-width: 1200px; margin: 0 auto;">
         <form class="row g-3 align-items-center search-form" method="GET" action="{{ route('properties') }}">
 
             <div class="col-lg-2 col-md-6 search-group">
