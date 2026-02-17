@@ -15,7 +15,7 @@
 <div class="container-fluid bg-white py-5">
     <div class="container">
 
-        <!-- Información de Resultados -->
+        <!-- INformacion de propiedades -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="results-info p-3 rounded-3">
@@ -30,36 +30,57 @@
                             <div class="active-filters d-flex flex-wrap gap-2 justify-content-md-end">
                                 @php
                                     $activeFilters = [];
-                                    
+
                                     if(request('operation')) {
                                         $operation = $type_operations->firstWhere('id', request('operation'));
                                         if($operation) $activeFilters[] = $operation->name;
                                     }
-                                    
+
                                     if(request('type')) {
                                         $type = $type_properties->firstWhere('id', request('type'));
                                         if($type) $activeFilters[] = $type->name;
                                     }
-                                    
-                                    if(request('q')) {
+
+                                    $locationDisplayed = false;
+
+                                    if(request('location_type') && request('location_id') && !$locationDisplayed) {
+                                        $locationType = request('location_type');
+                                        $locationId = request('location_id');
+
+                                        if($locationType === 'state') {
+                                            $estado = \App\Models\State::with('country')->find($locationId);
+                                            if($estado) {
+                                                $activeFilters[] = $estado->statename . ', ' . $estado->country->countryname;
+                                                $locationDisplayed = true;
+                                            }
+                                        } else {
+                                            $ciudad = \App\Models\Citie::with('state.country')->find($locationId);
+                                            if($ciudad) {
+                                                $activeFilters[] = $ciudad->cityname . ', ' . $ciudad->state->statename . ', ' . $ciudad->state->country->countryname;
+                                                $locationDisplayed = true;
+                                            }
+                                        }
+                                    }
+
+                                    if(request('q') && !$locationDisplayed) {
                                         $activeFilters[] = request('q');
                                     }
-                                    
+
                                     if(request('price_min') || request('price_max')) {
                                         $priceRange = [];
                                         if(request('price_min')) $priceRange[] = '$' . number_format(request('price_min'), 0);
                                         if(request('price_max')) $priceRange[] = '$' . number_format(request('price_max'), 0);
                                         $activeFilters[] = implode(' - ', $priceRange);
                                     }
-                                    
+
                                     if(request('bedrooms')) {
                                         $activeFilters[] = request('bedrooms') . ' ' . auto_trans('hab');
                                     }
-                                    
+
                                     if(request('bathrooms')) {
                                         $activeFilters[] = request('bathrooms') . ' ' . auto_trans('baños');
                                     }
-                                    
+
                                     if(request('area_min') || request('area_max')) {
                                         $areaRange = [];
                                         if(request('area_min')) $areaRange[] = request('area_min') . 'm²';
@@ -67,7 +88,7 @@
                                         $activeFilters[] = implode(' - ', $areaRange);
                                     }
                                 @endphp
-                                
+
                                 @if(count($activeFilters) > 0)
                                     @foreach($activeFilters as $filter)
                                         <span class="badge">
@@ -246,7 +267,7 @@
             </div>
         @endif
 
-        <!-- Sección Adicional: Tips y Guías -->
+        <!-- Secciones de ayuda -->
         <div class="row mt-5">
             <div class="col-12">
                 <div class="tips-section bg-gradient-primary text-white p-4 rounded-3">
@@ -296,7 +317,7 @@
             </div>
         </div>
 
-        <!-- Sección de Contacto para Asesoría -->
+        <!-- Contacto de asesoria-->
         <div class="row mt-4">
             <div class="col-12">
                 <div class="contact-advisory bg-light p-4 rounded-3 text-center">

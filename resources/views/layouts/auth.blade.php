@@ -14,7 +14,7 @@
     <header class="auth-header">
         <div class="auth-header-inner">
             <a href="/" class="auth-logo">
-                <img src="{{ asset('images/ebuy_1.png') }}" height="55" alt="Ebuy Properties">
+                {{-- <img src="{{ asset('images/ebuy_1.png') }}" height="55" alt="Ebuy Properties"> --}}
             </a>
 
             <div class="lang-switch">

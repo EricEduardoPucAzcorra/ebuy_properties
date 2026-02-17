@@ -6,11 +6,13 @@
     <div class="login-card" style="padding-top:25px;">
 
         <div class="login-brand" style="text-align:center; margin-bottom:6px;">
-            <img
-                src="{{ asset('images/ebuy_1.png') }}"
-                alt="eBuy Properties"
-                style="max-width:140px; width:100%;"
-            >
+            <a href="/">
+                <img
+                    src="{{ asset('images/ebuy_1.png') }}"
+                    alt="eBuy Properties"
+                    style="max-width:140px; width:100%;"
+                >
+            </a>
         </div>
 
         <p class="login-subtitle" style="text-align:center; margin-bottom:12px;">

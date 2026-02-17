@@ -124,25 +124,27 @@ class Propertie extends Model
             'address.city', 'address.state', 'address.country', 'type', 'operation', 'attributes'
         ])->where('is_active', true);
 
-        // Debug para ver los filtros aplicados
-        \Log::info('Propertie::filtered - Filtros recibidos:', $filters);
 
-        // Filtro por tipo de operación
         if (!empty($filters['operation'])) {
             $query->where('type_operation_id', $filters['operation']);
-            \Log::info('Aplicando filtro operation:', ['operation' => $filters['operation']]);
         }
 
-        // Filtro por tipo de propiedad
         if (!empty($filters['type'])) {
             $query->where('type_property_id', $filters['type']);
-            \Log::info('Aplicando filtro type:', ['type' => $filters['type']]);
         }
 
-        // Búsqueda por texto (título, descripción, ubicación, atributos)
-        if (!empty($filters['q'])) {
+        if (!empty($filters['location_type']) && !empty($filters['location_id'])) {
+            $query->whereHas('address', function ($q) use ($filters) {
+                if ($filters['location_type'] === 'state') {
+                    $q->where('state_id', $filters['location_id']);
+                } else {
+                    $q->where('city_id', $filters['location_id']);
+                }
+            });
+        }
+
+        if(!empty($filters['q']) && empty($filters['location_type']) && empty($filters['location_id'])) {
             $searchTerm = $filters['q'];
-            \Log::info('Aplicando búsqueda por texto:', ['q' => $searchTerm]);
             $query->where(function ($q) use ($searchTerm) {
                 // Buscar en título y descripción
                 $q->where('title', 'LIKE', "%{$searchTerm}%")
@@ -169,37 +171,27 @@ class Propertie extends Model
                   ->orWhereHas('attributes', function ($attrQ) use ($searchTerm) {
                       $attrQ->where('key', 'LIKE', "%{$searchTerm}%")
                             ->orWhere('value', 'LIKE', "%{$searchTerm}%");
+                  })
+                  //Buscar features
+                  ->orWhereHas('features', function ($featureQ) use ($searchTerm) {
+                        $featureQ->where('name', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('description', 'LIKE', "%{$searchTerm}%");
                   });
-            });
-        }
-
-        // Filtro por ubicación específica (autocomplete)
-        if (!empty($filters['location_type']) && !empty($filters['location_id'])) {
-            \Log::info('Aplicando filtro location:', ['location_type' => $filters['location_type'], 'location_id' => $filters['location_id']]);
-            $query->whereHas('address', function ($q) use ($filters) {
-                if ($filters['location_type'] === 'state') {
-                    $q->where('state_id', $filters['location_id']);
-                } else {
-                    $q->where('city_id', $filters['location_id']);
-                }
             });
         }
 
         // Filtro por rango de precios
         if (!empty($filters['price_min'])) {
             $query->where('price', '>=', $filters['price_min']);
-            \Log::info('Aplicando filtro price_min:', ['price_min' => $filters['price_min']]);
         }
 
         if (!empty($filters['price_max'])) {
             $query->where('price', '<=', $filters['price_max']);
-            \Log::info('Aplicando filtro price_max:', ['price_max' => $filters['price_max']]);
         }
 
         // Filtro por número de habitaciones
         if (!empty($filters['bedrooms'])) {
-            \Log::info('Aplicando filtro bedrooms:', ['bedrooms' => $filters['bedrooms']]);
-            if ($filters['bedrooms'] === '5+') {
+            if ($filters['bedrooms'] === '5+') { //camss seria lo mismo que recamaras dato importante por si algun dia ven eto
                 $query->whereHas('attributes', function ($q) {
                     $q->where('key', 'Camas')->where('value', '>=', 5);
                 });
@@ -212,7 +204,6 @@ class Propertie extends Model
 
         // Filtro por número de baños
         if (!empty($filters['bathrooms'])) {
-            \Log::info('Aplicando filtro bathrooms:', ['bathrooms' => $filters['bathrooms']]);
             if ($filters['bathrooms'] === '4+') {
                 $query->whereHas('attributes', function ($q) {
                     $q->where('key', 'Baños')->where('value', '>=', 4);
@@ -226,21 +217,16 @@ class Propertie extends Model
 
         // Filtro por superficie (m²)
         if (!empty($filters['area_min'])) {
-            \Log::info('Aplicando filtro area_min:', ['area_min' => $filters['area_min']]);
             $query->whereHas('attributes', function ($q) use ($filters) {
                 $q->where('key', 'M²')->where('value', '>=', $filters['area_min']);
             });
         }
 
         if (!empty($filters['area_max'])) {
-            \Log::info('Aplicando filtro area_max:', ['area_max' => $filters['area_max']]);
             $query->whereHas('attributes', function ($q) use ($filters) {
                 $q->where('key', 'M²')->where('value', '<=', $filters['area_max']);
             });
         }
-
-        // Log de la consulta SQL generada
-        \Log::info('SQL Query:', ['sql' => $query->toSql()]);
 
         return $query->orderBy('created_at', 'desc');
     }
