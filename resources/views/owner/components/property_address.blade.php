@@ -48,7 +48,6 @@
                     v-model="propertyForm.address.country"
                     :class="{ 'is-invalid': errors.country }"
                 ></autocomplete>
-                @{{propertyForm.address.country}}
                 <div class="invalid-feedback">
                     <span>@{{errors.country}}</span>
                 </div>
@@ -92,7 +91,8 @@
             <map-selector
                 v-model="propertyForm.address.location"
                 app-icon="{{asset('images/ebuy_icon.png')}}"
-                title="{{auto_trans('Seleciona tu propiedad')}}">
+                title="{{auto_trans('Seleciona tu propiedad')}}"
+                @location-selected="handleLocationSelection">
             </map-selector>
         </div>
     </div>

@@ -8,7 +8,7 @@ new Vue({
 
     data: {
         type_operations: [],
-        type_properties:[],
+        type_properties: [],
         properties: [],
         pagination: {},
         loading: true,
@@ -19,26 +19,27 @@ new Vue({
         activeFormTab: 'info',
         // features: [],
         featureCategories: [],
-        propertyForm:{
-            cadastral_code:'',
+        updatingFromMap: false,
+        propertyForm: {
+            cadastral_code: '',
             title: '',
             description: '',
             type_property_id: null,
             type_operation_id: null,
             status_property_id: 2, //pendiente
             price: 0.0,
-            price_negotiable:'NO',
+            price_negotiable: 'NO',
             currency: 'MNX',
-            address:{
+            address: {
                 street: '',
                 number: '',
                 neighborhood: '',
                 address: '',
                 postal_code: '',
                 country: { id: null, name: '' },
-                state:   { id: null, name: '' },
-                city:    { id: null, name: '' },
-                location:{
+                state: { id: null, name: '' },
+                city: { id: null, name: '' },
+                location: {
                     lat: 19.4326,
                     lng: -99.1332
                 },
@@ -86,18 +87,18 @@ new Vue({
 
     watch: {
         'propertyForm.address.country'(val) {
-            // Solo actualiza si no es edición o si queremos forzar el reseteo al cambiar país
-            if (!this.isEdit && val?.lat && val?.lng) {
+            // Solo actualiza si no es edición y no estamos actualizando desde el mapa
+            if (!this.isEdit && !this.updatingFromMap && val?.lat && val?.lng) {
                 this.propertyForm.address.location = { lat: val.lat, lng: val.lng };
             }
         },
         'propertyForm.address.state'(val) {
-            if (!this.isEdit && val?.lat && val?.lng) {
+            if (!this.isEdit && !this.updatingFromMap && val?.lat && val?.lng) {
                 this.propertyForm.address.location = { lat: val.lat, lng: val.lng };
             }
         },
         'propertyForm.address.city'(val) {
-            if (!this.isEdit && val?.lat && val?.lng) {
+            if (!this.isEdit && !this.updatingFromMap && val?.lat && val?.lng) {
                 this.propertyForm.address.location = { lat: val.lat, lng: val.lng };
             }
         },
@@ -142,18 +143,18 @@ new Vue({
                     type_operation_id: this.activeTab
                 }
             })
-            .then(res => {
-                this.properties = res.data.data
-                this.pagination = res.data
-            })
-            .finally(() => {
-                this.loading = false
-            })
+                .then(res => {
+                    this.properties = res.data.data
+                    this.pagination = res.data
+                })
+                .finally(() => {
+                    this.loading = false
+                })
         },
 
-        fetchTypeOperations(){
+        fetchTypeOperations() {
             let self = this;
-            axios.get('/types_operations').then(function(response){
+            axios.get('/types_operations').then(function (response) {
                 self.type_operations = response.data;
                 if (self.type_operations.length > 0) {
                     self.activeTab = self.type_operations[0].id
@@ -162,9 +163,9 @@ new Vue({
             });
         },
 
-        fetchTypeOProperties(){
+        fetchTypeOProperties() {
             let self = this;
-            axios.get('/types_properties').then(function(response){
+            axios.get('/types_properties').then(function (response) {
                 self.type_properties = response.data;
             });
         },
@@ -286,7 +287,7 @@ new Vue({
             formData.append('type_operation_id', this.propertyForm.type_operation_id);
             formData.append('status_property_id', 3);
             formData.append('price', this.propertyForm.price);
-            formData.append('price_negotiable',this.propertyForm.price_negotiable);
+            formData.append('price_negotiable', this.propertyForm.price_negotiable);
             formData.append('currency', this.propertyForm.currency);
 
             formData.append('address[street]', this.propertyForm.address.street);
@@ -346,46 +347,46 @@ new Vue({
             axios.post(url, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
-            .then(res => {
-                // alert('¡Propiedad guardada correctamente!');
-
-                Swal.fire({
-                    icon: 'success',
-                    title: this.isEdit
-                        ? 'Propiedad actualizada'
-                        : 'Propiedad guardada'
-                });
-
-                this.showForm = false;
-                this.resetForm();
-                this.fetchProperties();
-                this.isEdit = false;
-                this.editId = null;
-            })
-            .catch(err => {
-                this.isSubmitting = false;
-                let er = err;
-                if (er.response && er.response.data.errors) {
-                    const errors = err.response.data.errors;
-                    let errorHtml = '<ul style="text-align:left;">';
-
-                    Object.keys(errors).forEach(field => {
-                        errors[field].forEach(msg => {
-                            errorHtml += `<li>${msg}</li>`;
-                        });
-                    });
-
-                    errorHtml += '</ul>';
+                .then(res => {
+                    // alert('¡Propiedad guardada correctamente!');
 
                     Swal.fire({
-                        icon: 'error',
-                        title: window.erros_validation,
-                        html: errorHtml
+                        icon: 'success',
+                        title: this.isEdit
+                            ? 'Propiedad actualizada'
+                            : 'Propiedad guardada'
                     });
-                }
-            }).finally(() => {
-                this.isSubmitting = false;
-            });
+
+                    this.showForm = false;
+                    this.resetForm();
+                    this.fetchProperties();
+                    this.isEdit = false;
+                    this.editId = null;
+                })
+                .catch(err => {
+                    this.isSubmitting = false;
+                    let er = err;
+                    if (er.response && er.response.data.errors) {
+                        const errors = err.response.data.errors;
+                        let errorHtml = '<ul style="text-align:left;">';
+
+                        Object.keys(errors).forEach(field => {
+                            errors[field].forEach(msg => {
+                                errorHtml += `<li>${msg}</li>`;
+                            });
+                        });
+
+                        errorHtml += '</ul>';
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: window.erros_validation,
+                            html: errorHtml
+                        });
+                    }
+                }).finally(() => {
+                    this.isSubmitting = false;
+                });
         },
 
         editProperty(property) {
@@ -565,8 +566,8 @@ new Vue({
             return Object.keys(this.errors).length === 0;
         },
 
-        resetForm(){
-             this.propertyForm = this.getInitialPropertyForm();
+        resetForm() {
+            this.propertyForm = this.getInitialPropertyForm();
 
             this.newAttribute = {
                 key: '',
@@ -628,6 +629,63 @@ new Vue({
                 return url.split('/storage/')[1];
             }
             return url;
+        },
+
+        async handleLocationSelection(location) {
+            try {
+                this.updatingFromMap = true;
+
+                const response = await fetch(`/location/reverse-geocode?lat=${location.lat}&lng=${location.lng}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error('Error en reverse geocoding:', data.error);
+                    return;
+                }
+
+                if (data.country) {
+                    this.propertyForm.address.country = {
+                        id: data.country.id,
+                        name: data.country.name,
+                        lat: data.country.lat,
+                        lng: data.country.lng
+                    };
+                }
+
+                if (data.state) {
+                    this.propertyForm.address.state = {
+                        id: data.state.id,
+                        name: data.state.name,
+                        lat: data.state.lat,
+                        lng: data.state.lng
+                    };
+                }
+
+                if (data.city) {
+                    this.propertyForm.address.city = {
+                        id: data.city.id,
+                        name: data.city.name,
+                        lat: data.city.lat,
+                        lng: data.city.lng
+                    };
+                }
+
+                this.$nextTick(() => {
+                    console.log('Ubicación actualizada:', {
+                        country: this.propertyForm.address.country?.name,
+                        state: this.propertyForm.address.state?.name,
+                        city: this.propertyForm.address.city?.name
+                    });
+
+                    setTimeout(() => {
+                        this.updatingFromMap = false;
+                    }, 100);
+                });
+
+            } catch (error) {
+                console.error('Error al obtener la ubicación:', error);
+                this.updatingFromMap = false;
+            }
         },
     }
 })

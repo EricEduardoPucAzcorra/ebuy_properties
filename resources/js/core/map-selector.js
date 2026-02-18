@@ -38,8 +38,8 @@ Vue.component('map-selector', {
     },
 
     watch: {
-        'value.lat': function(newVal) { this.updateMarkerPos(); },
-        'value.lng': function(newVal) { this.updateMarkerPos(); }
+        'value.lat': function (newVal) { this.updateMarkerPos(); },
+        'value.lng': function (newVal) { this.updateMarkerPos(); }
     },
 
     methods: {
@@ -109,12 +109,23 @@ Vue.component('map-selector', {
             if (this.map && this.marker) {
                 const pos = [this.value.lat, this.value.lng];
                 this.marker.setLatLng(pos);
-                this.map.panTo(pos);
+
+                // Hacer pan con animación suave y ajustar zoom si es necesario
+                this.map.flyTo(pos, 16, {
+                    duration: 0.5,
+                    easeLinearity: 0.5
+                });
             }
         },
 
         emitLocation(latlng) {
             this.$emit('input', {
+                lat: latlng.lat,
+                lng: latlng.lng
+            });
+
+            // Emitir evento adicional para que el componente padre pueda actualizar los autocompletes
+            this.$emit('location-selected', {
                 lat: latlng.lat,
                 lng: latlng.lng
             });
