@@ -2,25 +2,25 @@
     <h5 class="fw-bold mb-3">{{ auto_trans('Información del inmueble') }}</h5>
 
     <div class="row mb-3">
-         <div class="col-md-6">
+        <div class="col-md-6">
+            <label class="form-label">{{ auto_trans('Título') }} <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" v-model="propertyForm.title"  :class="{ 'is-invalid': errors.title }">
+            <div class="invalid-feedback d-block" v-if="errors.title">
+                <span>@{{errors.title}}</span>
+            </div>
+        </div>
+        <div class="col-md-6">
             <label class="form-label">{{ auto_trans('Identificador del catastro') }}</label>
             <input type="text" class="form-control" v-model="propertyForm.cadastral_code"  :class="{ 'is-invalid': errors.cadastral_code }">
             <div class="invalid-feedback d-block" v-if="errors.cadastral_code">
                 <span>@{{errors.cadastral_code}}</span>
             </div>
         </div>
-        <div class="col-md-6">
-            <label class="form-label">{{ auto_trans('Título') }}</label>
-            <input type="text" class="form-control" v-model="propertyForm.title"  :class="{ 'is-invalid': errors.title }">
-            <div class="invalid-feedback d-block" v-if="errors.title">
-                <span>@{{errors.title}}</span>
-            </div>
-        </div>
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
-            <label class="form-label">{{ auto_trans('Tipo de operación') }}</label>
+            <label class="form-label">{{ auto_trans('Tipo de operación') }} <span class="text-danger">*</span></label>
             <select class="form-select" v-model="propertyForm.type_operation_id" :class="{ 'is-invalid': errors.type_operation_id }">
                 <option value="null">{{ auto_trans('Seleccione') }}</option>
                 <option v-for="type in type_operations"
@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-md-6">
-            <label class="form-label">{{ auto_trans('Tipo de propiedad') }}</label>
+            <label class="form-label">{{ auto_trans('Tipo de propiedad') }} <span class="text-danger">*</span></label>
             <select class="form-select" v-model="propertyForm.type_property_id" :class="{ 'is-invalid': errors.type_property_id }">
                 <option value="null">{{ auto_trans('Seleccione') }}</option>
                 <option v-for="type_pro in type_properties"

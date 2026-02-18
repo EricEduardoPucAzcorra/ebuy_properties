@@ -21,7 +21,7 @@ class PropertiesController extends Controller
     public function properties_global(Request $request)
     {
         \Log::info('PropertiesController - Parámetros recibidos:', $request->all());
-        
+
         if (!$request->operation) {
             if (request()->routeIs('properties.sale')) {
                 $op = TypeOperation::where('name', 'Venta')->first();
@@ -178,7 +178,7 @@ class PropertiesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'cadastral_code'=>'required|string|max:255|unique:properties,cadastral_code',
+            'cadastral_code'=>'nullable|string|max:255|unique:properties,cadastral_code',
             'title' => 'required|string|max:255',
             'type_property_id' => 'required|integer',
             'type_operation_id' => 'required|integer',
@@ -334,7 +334,7 @@ class PropertiesController extends Controller
         $property = Propertie::findOrFail($id);
 
         $request->validate([
-            'cadastral_code' => 'required|string|max:255|unique:properties,cadastral_code,' . $property->id,
+            'cadastral_code' => 'nullable|string|max:255|unique:properties,cadastral_code,' . $property->id,
             'title' => 'required|string|max:255',
             'type_property_id' => 'required|integer',
             'type_operation_id' => 'required|integer',

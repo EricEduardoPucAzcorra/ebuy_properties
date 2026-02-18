@@ -16,6 +16,7 @@ new Vue({
         activeTab: null,
         showForm: false,
         activeCreateTab: 'form',
+        activeFormTab: 'info',
         // features: [],
         featureCategories: [],
         propertyForm:{
@@ -26,7 +27,7 @@ new Vue({
             type_operation_id: null,
             status_property_id: 2, //pendiente
             price: 0.0,
-            price_negotiable:false,
+            price_negotiable:'NO',
             currency: 'MNX',
             address:{
                 street: '',
@@ -543,7 +544,7 @@ new Vue({
         validateForm() {
             let newErrors = {};
 
-            if (!this.propertyForm.cadastral_code.trim()) newErrors.cadastral_code = 'Ingresa el numero catastral';
+            // if (!this.propertyForm.cadastral_code.trim()) newErrors.cadastral_code = 'Ingresa el numero catastral';
             if (!this.propertyForm.title.trim()) newErrors.title = 'Ingrese el titulo';
             // if (!this.propertyForm.description.trim()) newErrors.description = 'Ingrese una descripción';
             if (!this.propertyForm.type_property_id) newErrors.type_property_id = 'Selecciona un tipo de propiedad';
@@ -595,7 +596,7 @@ new Vue({
                 type_operation_id: null,
                 status_property_id: 2,
                 price: 0.0,
-                price_negotiable: false,
+                price_negotiable: 'NO',
                 currency: 'MNX',
                 address: {
                     street: '',

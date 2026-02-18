@@ -3,7 +3,7 @@
 
     <div class="row mb-3">
         <div class="col-md-2">
-            <label class="form-label">{{ auto_trans('Calle') }}</label>
+            <label class="form-label">{{ auto_trans('Calle') }} <span class="text-danger">*</span></label>
             <input type="text" class="form-control" v-model="propertyForm.address.street" :class="{ 'is-invalid': errors.street }">
              <div class="invalid-feedback">
                 <span>@{{errors.street}}</span>
@@ -11,7 +11,7 @@
         </div>
 
         <div class="col-md-3">
-            <label class="form-label">{{ auto_trans('Numero') }}</label>
+            <label class="form-label">{{ auto_trans('Numero') }} <span class="text-danger">*</span> </label>
             <input type="number" class="form-control" v-model="propertyForm.address.number" :class="{ 'is-invalid': errors.number }">
             <div class="invalid-feedback">
                  <span>@{{errors.number}}</span>
@@ -19,7 +19,7 @@
         </div>
 
         <div class="col-md-3">
-            <label class="form-label">{{ auto_trans('Codigo postal') }}</label>
+            <label class="form-label">{{ auto_trans('Codigo postal') }} <span class="text-danger">*</span> </label>
             <input type="text" class="form-control" v-model="propertyForm.address.postal_code" :class="{ 'is-invalid': errors.postal_code }">
             <div class="invalid-feedback">
                  <span>@{{errors.postal_code}}</span>
@@ -48,6 +48,7 @@
                     v-model="propertyForm.address.country"
                     :class="{ 'is-invalid': errors.country }"
                 ></autocomplete>
+                @{{propertyForm.address.country}}
                 <div class="invalid-feedback">
                     <span>@{{errors.country}}</span>
                 </div>
