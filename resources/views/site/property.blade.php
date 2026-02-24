@@ -158,7 +158,7 @@
                     <map-selector
                         v-model="location"
                         :readonly="true"
-                        price="{{ $propertie->price }}"
+                        price="{{ $propertie->price }}"g
                         currency="{{ $propertie->currency }}"
                         image="{{ $propertie->images['main'] }}"
                         title="{{ $propertie->title }}"
