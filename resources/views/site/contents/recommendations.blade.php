@@ -38,6 +38,8 @@
                                         <span class="floating-tag">
                                             {{ $property->operation->name ?? 'Venta' }}
                                         </span>
+                                        
+                                        @include('components.favorite-button', ['propertyId' => $property->id])
                                     </div>
 
                                     <div class="p-4 flex-grow-1">

@@ -9,3 +9,4 @@ Route::get('/about', [WelcomeController::class, 'about'])->name('about');
 Route::get('/location-search', [WelcomeController::class, 'searchLocation'])->name('location.search');
 
 
+

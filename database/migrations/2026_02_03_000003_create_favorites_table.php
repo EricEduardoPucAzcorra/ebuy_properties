@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('property_id')->constrained()->cascadeOnDelete();
+            $table->string('session_id')->nullable(); 
             $table->timestamps();
         });
     }

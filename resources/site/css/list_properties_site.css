@@ -63,7 +63,8 @@
 .floating-tag {
     position: absolute;
     top: 18px;
-    right: 18px;
+    left: 18px;
+    /* Cambiado a la izquierda */
     background: rgba(255, 255, 255, .95);
     padding: 6px 16px;
     border-radius: 14px;

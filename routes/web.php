@@ -15,3 +15,5 @@ require __DIR__ . '/website/properties.php';
 require __DIR__ . '/google/google.php';
 require __DIR__ . '/website/general.php';
 require __DIR__ . '/owner/owner.php';
+require __DIR__ . '/website/mapa.php';
+

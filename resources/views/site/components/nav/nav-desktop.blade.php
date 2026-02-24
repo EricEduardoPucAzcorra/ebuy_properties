@@ -75,6 +75,7 @@
                                     {{ Auth::user()->name }}
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg">
+                                    <!-- <li><a class="dropdown-item" href="{{route('favorites')}}"><i class="fa fa-heart me-2"></i>{{ __('Mis Favoritos') }}</a></li> -->
                                     <li><a class="dropdown-item" href="{{route('home')}}">{{ __('Dashboard') }}</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>

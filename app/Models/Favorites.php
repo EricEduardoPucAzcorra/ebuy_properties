@@ -11,6 +11,7 @@ class Favorites extends Model
     protected $fillable = [
         'user_id',
         'property_id',
+        'session_id',
     ];
 
     protected $casts = [
@@ -64,6 +65,16 @@ class Favorites extends Model
     public static function isFavoritedBy($userId, $propertyId)
     {
         return self::where('user_id', $userId)
+            ->where('property_id', $propertyId)
+            ->exists();
+    }
+
+    /**
+     * Comprueba si una sesión ya marcó una propiedad como favorita
+     */
+    public static function isFavoritedBySession($sessionId, $propertyId)
+    {
+        return self::where('session_id', $sessionId)
             ->where('property_id', $propertyId)
             ->exists();
     }

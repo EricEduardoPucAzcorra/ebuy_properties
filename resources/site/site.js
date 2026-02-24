@@ -15,5 +15,7 @@ window.L = L
 
 import './js/main.js';
 import './js/code/property.js';
+import './js/code/mapa.js';
+import './js/code/favorites.js';
 
 

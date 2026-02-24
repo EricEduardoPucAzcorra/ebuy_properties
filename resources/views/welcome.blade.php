@@ -8,6 +8,8 @@
 
     <meta name="description" content="Ebuy Properties - Bienes Raíces">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="icon" href="{{ asset('img/favicon.ico') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -175,6 +175,8 @@
                             <div class="floating-tag">
                                 {{ $property->operation->name ?? '' }}
                             </div>
+                            
+                            @include('components.favorite-button', ['propertyId' => $property->id])
                         </div>
 
                         <div class="p-4 pb-3 flex-grow-1">

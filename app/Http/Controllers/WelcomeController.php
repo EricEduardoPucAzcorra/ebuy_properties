@@ -135,8 +135,12 @@ class WelcomeController extends Controller
             $results[] = [
                 'label' => "{$city->cityname}, {$city->state->statename}, {$city->state->country->countryname}",
                 'type'  => $city->type,
-                'id'    => $city->id
+                'id'    => $city->id,
+                'cityid' => $city->cityid,  // <-- AGREGAR ESTO
+                'lat'   => $city->latitude,
+                'lng'   => $city->longitude
             ];
+            \Log::info('City found for autocomplete: ' . $city->cityname . ' (ID: ' . $city->id . ', CityID: ' . $city->cityid . ', Type: ' . $city->type . ')');
         }
 
         $statesQuery = State::with('country')
@@ -150,8 +154,12 @@ class WelcomeController extends Controller
             $results[] = [
                 'label' => "{$stateItem->statename}, {$stateItem->country->countryname}",
                 'type'  => 'state',
-                'id'    => $stateItem->id
+                'id'    => $stateItem->id,
+                'stateid' => $stateItem->stateid,  // <-- AGREGAR ESTO
+                'lat'   => $stateItem->latitude,
+                'lng'   => $stateItem->longitude
             ];
+            \Log::info('State found for autocomplete: ' . $stateItem->statename . ' (ID: ' . $stateItem->id . ', StateID: ' . $stateItem->stateid . ')');
         }
 
         return response()->json($results);
@@ -161,5 +169,4 @@ class WelcomeController extends Controller
     {
         return view('site.about');
     }
-
 }

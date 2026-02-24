@@ -8,9 +8,7 @@
             <span class="text-muted small border-start ps-3 d-none d-lg-inline">{{ Str::limit(auto_trans($propertie->title), 80) }}</span>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-none" title="{{auto_trans('Mi favorito')}}">
-                <i class="far fa-heart me-1"></i>
-            </button>
+            @include('components.favorite-button', ['propertyId' => $propertie->id])
             <button class="btn btn-success btn-sm rounded-pill px-4 shadow-sm fw-bold border-0"
                     style="background-color: #00b388;"
                     onclick="scrollToContact()">
