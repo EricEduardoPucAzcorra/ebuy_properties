@@ -8,7 +8,9 @@
             <span class="text-muted small border-start ps-3 d-none d-lg-inline">{{ Str::limit(auto_trans($propertie->title), 80) }}</span>
         </div>
         <div class="d-flex gap-2">
-            @include('components.favorite-button', ['propertyId' => $propertie->id])
+            <div class="favorite-btn-wrapper">
+                @include('components.favorite-button', ['propertyId' => $propertie->id, 'absolute' => false])
+            </div>
             <button class="btn btn-success btn-sm rounded-pill px-4 shadow-sm fw-bold border-0"
                     style="background-color: #00b388;"
                     onclick="scrollToContact()">
@@ -131,18 +133,38 @@
             </div>
 
 
-            <h4 class="fw-bold mb-3 border-start border-success border-4 ps-3">{{auto_trans('Ubicación')}}</h4>
-            <div id="mapvue"
-                data-location="{{ json_encode($propertie->address['location']) }}">
-                <map-selector
-                    v-model="location"
-                    :readonly="true"
-                    price="{{ $propertie->price }}"
-                    currency="{{ $propertie->currency }}"
-                    image="{{ $propertie->images['main'] }}"
-                    title="{{ $propertie->title }}"
-                    app-icon="{{ asset('images/ebuy_icon.png') }}">
-                </map-selector>
+            <div class="map-container">
+                <div class="map-header">
+                    <h4 class="map-title">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        {{auto_trans('Ubicación')}}
+                    </h4>
+                    <div class="map-actions">
+                        <!-- <button class="map-btn" onclick="toggleFullscreen()">
+                            <i class="bi bi-arrows-fullscreen"></i>
+                            {{auto_trans('Pantalla completa')}}
+                        </button> -->
+                        <button class="map-btn" onclick="refreshMap()">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            {{auto_trans('Actualizar')}}
+                        </button>
+                    </div>
+                </div>
+                <div id="mapvue"
+                    data-location="{{ json_encode($propertie->address['location']) }}">
+                    <div class="map-loading">
+                        <div class="map-loading-spinner"></div>
+                    </div>
+                    <map-selector
+                        v-model="location"
+                        :readonly="true"
+                        price="{{ $propertie->price }}"
+                        currency="{{ $propertie->currency }}"
+                        image="{{ $propertie->images['main'] }}"
+                        title="{{ $propertie->title }}"
+                        app-icon="{{ asset('images/ebuy_icon.png') }}">
+                    </map-selector>
+                </div>
             </div>
 
         </div>
@@ -252,3 +274,122 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+// Funciones para el mapa
+function toggleFullscreen() {
+    const mapContainer = document.querySelector('#mapvue map-selector, #mapvue .map-selector, #mapvue');
+    if (!mapContainer) return;
+    
+    if (!document.fullscreenElement) {
+        // Crear un contenedor temporal para el modo fullscreen
+        const fsContainer = document.createElement('div');
+        fsContainer.id = 'map-fullscreen-container';
+        fsContainer.style.cssText = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999 !important;
+            background: white !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        `;
+        
+        // Clonar el contenido del mapa
+        const mapClone = mapContainer.cloneNode(true);
+        mapClone.style.cssText = `
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 0 !important;
+        `;
+        
+        fsContainer.appendChild(mapClone);
+        document.body.appendChild(fsContainer);
+        
+        // Intentar entrar en fullscreen
+        if (fsContainer.requestFullscreen) {
+            fsContainer.requestFullscreen();
+        } else if (fsContainer.webkitRequestFullscreen) {
+            fsContainer.webkitRequestFullscreen();
+        } else if (fsContainer.msRequestFullscreen) {
+            fsContainer.msRequestFullscreen();
+        }
+        
+        // Agregar botón de salir
+        const exitBtn = document.createElement('button');
+        exitBtn.innerHTML = '<i class="bi bi-x-lg"></i> Salir';
+        exitBtn.style.cssText = `
+            position: absolute !important;
+            top: 20px !important;
+            right: 20px !important;
+            z-index: 10000 !important;
+            background: #00b388 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 10px 20px !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            box-shadow: 0 4px 15px rgba(0, 179, 136, 0.3) !important;
+        `;
+        exitBtn.onclick = exitFullscreen;
+        fsContainer.appendChild(exitBtn);
+        
+    } else {
+        exitFullscreen();
+    }
+}
+
+function exitFullscreen() {
+    const fsContainer = document.getElementById('map-fullscreen-container');
+    if (fsContainer) {
+        fsContainer.remove();
+    }
+    
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}
+
+function refreshMap() {
+    const mapLoading = document.querySelector('.map-loading');
+    if (mapLoading) {
+        mapLoading.style.display = 'flex';
+        // Simular recarga del mapa (aquí podrías agregar lógica real)
+        setTimeout(() => {
+            mapLoading.style.display = 'none';
+            // Disparar evento de recarga si el mapa lo necesita
+            window.dispatchEvent(new Event('resize'));
+        }, 1000);
+    }
+}
+
+// Ocultar loading cuando el mapa esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        const mapLoading = document.querySelector('.map-loading');
+        if (mapLoading) {
+            mapLoading.style.display = 'none';
+        }
+    }, 2000);
+});
+
+// Escuchar cambios de fullscreen
+document.addEventListener('fullscreenchange', function() {
+    if (!document.fullscreenElement) {
+        const fsContainer = document.getElementById('map-fullscreen-container');
+        if (fsContainer) {
+            fsContainer.remove();
+        }
+    }
+});
+</script>
+@endpush

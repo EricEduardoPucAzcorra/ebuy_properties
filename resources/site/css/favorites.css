@@ -1,37 +1,34 @@
-/* Estilos para botones de favoritos */
+/* Estilos para botones de favoritos - Diseño global mejorado */
 .favorite-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 179, 136, 0.2);
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 15;
-    /* Aumentado para estar por encima de badges */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
+    color: #dc3545;
+    font-size: 16px;
 }
 
-/* Ajuste especial cuando hay una etiqueta de operación - CORAZÓN EN DERECHA, ETIQUETA EN IZQUIERDA */
-.property-badge~.favorite-btn,
-.floating-tag~.favorite-btn {
+/* Para botones que necesitan posicionamiento absoluto (galerías, cards) */
+.favorite-btn.absolute-position {
+    position: absolute;
     top: 10px;
-    /* Mantener en la misma altura */
     right: 10px;
-    /* Mantener en la derecha */
 }
 
 .favorite-btn:hover {
     background: white;
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: #00b388;
+    transform: scale(1.05);
+    box-shadow: 0 3px 10px rgba(0, 179, 136, 0.2);
 }
 
 .favorite-btn:active {
@@ -39,20 +36,12 @@
 }
 
 .favorite-btn.favorited {
-    background: #00B98E;
-    /* Verde limón de la plantilla */
-    border: 2px solid #00B98E;
-}
-
-.favorite-btn.favorited:hover {
-    background: #00a878;
-    /* Verde limón más oscuro al hover */
-    border-color: #00a878;
+    background: #00b388;
+    border-color: #00b388;
 }
 
 .favorite-btn.favorited i {
-    color: #dc3545;
-    /* Rojo fuerte y sólido */
+    color: white;
 }
 
 .favorite-btn:hover i {

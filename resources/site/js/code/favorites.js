@@ -1,24 +1,15 @@
 class FavoriteManager {
     constructor() {
         console.log('FAVORITES: Constructor called');
-        this.favorites = new Map(); // Usamos localStorage
+        this.favorites = new Map();
         this.init();
         console.log('FAVORITES: Constructor finished');
     }
 
     init() {
-        console.log('FAVORITES: Initializing...');
-
-        // Cargar favoritos desde localStorage
         this.loadFavoritesFromStorage();
-
-        // Configurar event listeners - ESTO FALTABA
         this.setupEventListeners();
-
-        // Inicializar botones
         this.initializeButtons();
-
-        console.log('FAVORITES: Initialization complete');
     }
 
     loadFavoritesFromStorage() {
@@ -45,9 +36,6 @@ class FavoriteManager {
     }
 
     setupEventListeners() {
-        console.log('FAVORITES: Setting up event listeners...');
-
-        // Event listener para botones de favoritos
         document.addEventListener('click', (e) => {
             const favoriteBtn = e.target.closest('.favorite-btn');
             if (favoriteBtn) {
@@ -57,15 +45,12 @@ class FavoriteManager {
             }
         });
 
-        // Event listener para hover
         document.addEventListener('mouseover', (e) => {
             const favoriteBtn = e.target.closest('.favorite-btn');
             if (favoriteBtn) {
                 this.updateTooltip(favoriteBtn);
             }
         });
-
-        console.log('FAVORITES: Event listeners setup complete');
     }
 
     async toggleFavorite(button) {
@@ -75,13 +60,9 @@ class FavoriteManager {
             return;
         }
 
-        console.log('Toggle favorite clicked:', propertyId);
-
-        // Mostrar estado de carga
         this.setLoadingState(button, true);
 
         try {
-            // Enviar petición al servidor para alternar favorito
             const response = await fetch('/favorites/toggle', {
                 method: 'POST',
                 headers: {
@@ -94,30 +75,21 @@ class FavoriteManager {
                     _token: this.getCSRFToken()
                 })
             });
-
-            console.log('Response received:', response);
-
             const data = await response.json();
-            console.log('Data parsed:', data);
 
             if (data.success) {
-                // Actualizar estado local en localStorage
                 if (data.is_favorited) {
                     this.favorites.set(propertyId, true);
                 } else {
                     this.favorites.delete(propertyId);
                 }
 
-                // Guardar en localStorage
                 this.saveFavoritesToStorage();
 
-                // Actualizar UI con el estado correcto
                 this.updateButtonState(button, data.is_favorited);
 
-                // Mostrar notificación
                 this.showNotification(data.message, 'success');
 
-                // Disparar evento personalizado
                 this.dispatchFavoriteEvent(propertyId, data.is_favorited);
             } else {
                 this.showNotification(data.message || 'Error al actualizar favoritos', 'error');
@@ -131,15 +103,10 @@ class FavoriteManager {
     }
 
     getCSRFToken() {
-        // Múltiples formas de obtener el token CSRF
         let token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
             document.querySelector('input[name="_token"]')?.value ||
             window.Laravel?.csrfToken ||
             '';
-
-        console.log('CSRF Token found:', token ? 'YES' : 'NO');
-
-        // Si no hay token, intentar obtener del formulario
         if (!token) {
             const form = document.querySelector('form[method="POST"]');
             if (form) {
@@ -150,7 +117,6 @@ class FavoriteManager {
             }
         }
 
-        // Si todavía no hay token, buscar en cualquier parte
         if (!token) {
             const inputs = document.querySelectorAll('input[name="_token"]');
             if (inputs.length > 0) {
@@ -158,7 +124,6 @@ class FavoriteManager {
             }
         }
 
-        // Último intento: obtener de las cookies de Laravel
         if (!token) {
             const cookies = document.cookie.split(';');
             for (let cookie of cookies) {
@@ -193,7 +158,6 @@ class FavoriteManager {
     }
 
     async loadFavoriteStates() {
-        // Cargar estado de todos los botones de favoritos en la página
         const favoriteButtons = document.querySelectorAll('.favorite-btn');
 
         const promises = Array.from(favoriteButtons).map(async (button) => {
@@ -209,7 +173,6 @@ class FavoriteManager {
     }
 
     initializeButtons() {
-        // Actualizar todos los botones existentes basados en localStorage
         document.querySelectorAll('.favorite-btn').forEach(button => {
             const propertyId = button.dataset.propertyId;
             if (propertyId && this.favorites.has(propertyId)) {
@@ -222,7 +185,6 @@ class FavoriteManager {
         const icon = button.querySelector('i');
 
         if (isFavorited) {
-            // Botón VERDE + Corazón ROJO cuando está activo
             button.classList.add('favorited');
             button.classList.remove('text-muted');
             icon.classList.remove('far');
@@ -230,7 +192,6 @@ class FavoriteManager {
             button.title = 'Quitar de favoritos';
             button.setAttribute('aria-label', 'Quitar de favoritos');
         } else {
-            // Botón VERDE + Corazón BLANCO cuando no está activo
             button.classList.remove('favorited');
             button.classList.add('text-muted');
             icon.classList.remove('fas');
@@ -239,7 +200,6 @@ class FavoriteManager {
             button.setAttribute('aria-label', 'Agregar a favoritos');
         }
 
-        // Agregar animación de corazón latiendo
         icon.classList.add('heart-beat');
         setTimeout(() => {
             icon.classList.remove('heart-beat');
@@ -255,7 +215,6 @@ class FavoriteManager {
         }, 200);
 
         if (action === 'added') {
-            // Efecto de corazón latiendo
             button.classList.add('heart-beat');
             setTimeout(() => {
                 button.classList.remove('heart-beat');
@@ -264,7 +223,6 @@ class FavoriteManager {
     }
 
     updateCounter(propertyId, count) {
-        // Actualizar contadores si existen
         const counters = document.querySelectorAll(`[data-favorites-count="${propertyId}"]`);
         counters.forEach(counter => {
             counter.textContent = count;
@@ -298,7 +256,6 @@ class FavoriteManager {
     }
 
     showNotification(message, type = 'info') {
-        // Usar el sistema de notificaciones existente si está disponible
         if (window.AdminApp?.notificationManager) {
             switch (type) {
                 case 'success':
@@ -316,12 +273,12 @@ class FavoriteManager {
         }
     }
 
-    handleAuthRequired() {
-        // Mostrar mensaje o redirigir a login
-        if (confirm('Debes iniciar sesión para agregar favoritos. ¿Deseas ir a la página de login?')) {
-            window.location.href = '/login';
-        }
-    }
+    // handleAuthRequired() {
+    //     // Mostrar mensaje o redirigir a login
+    //     if (confirm('Debes iniciar sesión para agregar favoritos. ¿Deseas ir a la página de login?')) {
+    //         window.location.href = '/login';
+    //     }
+    // }
 
     dispatchFavoriteEvent(propertyId, isFavorited) {
         const event = new CustomEvent('favoriteChanged', {
@@ -333,12 +290,10 @@ class FavoriteManager {
         document.dispatchEvent(event);
     }
 
-    // Método público para verificar si una propiedad es favorita
     isFavorited(propertyId) {
         return this.favorites.get(propertyId) || false;
     }
 
-    // Método público para obtener todos los favoritos
     getAllFavorites() {
         return Array.from(this.favorites.entries())
             .filter(([id, isFav]) => isFav)
@@ -346,12 +301,9 @@ class FavoriteManager {
     }
 }
 
-// Inicializar el gestor de favoritos
+
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('FAVORITES: DOM loaded, initializing...');
     window.favoriteManager = new FavoriteManager();
-    console.log('FAVORITES: FavoriteManager initialized');
 });
 
-// Exportar para uso global
 window.FavoriteManager = FavoriteManager;
