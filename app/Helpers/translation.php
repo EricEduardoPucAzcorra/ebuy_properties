@@ -1,63 +1,69 @@
 <?php
 
 use App\Services\TranslationService;
+use Illuminate\Support\Facades\Log;
 
 if (!function_exists('auto_trans')) {
     function auto_trans($text, $replace = [], $locale = null)
     {
-        // Si es null o vacío, retornar igual
         if (is_null($text) || $text === '') {
             return $text;
         }
 
-        // Si es un array, traducir cada elemento
         if (is_array($text)) {
-            $result = [];
-            foreach ($text as $key => $value) {
-                $result[$key] = auto_trans($value, $replace, $locale);
-            }
-            return $result;
+            return array_map(function($item) use ($replace, $locale) {
+                return auto_trans($item, $replace, $locale);
+            }, $text);
         }
 
-        // Para textos muy largos, usar método especial
-        if (is_string($text) && strlen($text) > 2000) {
-            return app(TranslationService::class)->translateLongText($text, $locale);
-        }
+        $text = trim((string)$text);
+        if (empty($text)) return $text;
 
-        // Primero intentar con Laravel
+        // Validar locale (opcional pero recomendado)
+        $locale = $locale ?? app()->getLocale();
+        $locale = in_array($locale, ['es', 'en', 'fr', 'it', 'de', 'pt']) ? $locale : 'es';
+
+        // Intentar con Laravel primero
         $translation = trans($text, $replace, $locale);
-
-        // Si no existe o es el mismo texto, usar traducción automática
-        if ($translation === $text) {
-            $translation = app(TranslationService::class)->translate($text, $locale);
-
-            // Aplicar reemplazos de manera más eficiente
-            if (!empty($replace)) {
-                $search = [];
-                $replaceValues = [];
-
-                foreach ($replace as $key => $value) {
-                    $search[] = ':' . $key;
-                    $search[] = ':' . strtoupper($key);
-                    $search[] = ':' . ucfirst($key);
-                    $search[] = '{' . $key . '}'; // Formato adicional
-
-                    // Repetir el valor para cada búsqueda
-                    $replaceValues = array_merge($replaceValues, [$value, $value, $value, $value]);
-                }
-
-                $translation = str_replace($search, $replaceValues, $translation);
-            }
+        if ($translation !== $text) {
+            return $translation;
         }
 
-        return $translation;
+        // Usar V3
+        try {
+            $service = app(TranslationService::class);
+            $translated = $service->translate($text, $locale);
+
+            if (!empty($replace) && $translated !== $text) {
+                $translated = apply_auto_trans_replacements($translated, $replace);
+            }
+
+            return $translated;
+
+        } catch (Exception $e) {
+            Log::error('Error en traducción: ' . $e->getMessage(), [
+                'text' => substr($text, 0, 100),
+                'locale' => $locale
+            ]);
+
+            if (!empty($replace)) {
+                return apply_auto_trans_replacements($text, $replace);
+            }
+            return $text;
+        }
     }
 }
 
-// Helper adicional para detectar idioma
-if (!function_exists('detect_lang')) {
-    function detect_lang($text)
+if (!function_exists('apply_auto_trans_replacements')) {
+    function apply_auto_trans_replacements($text, $replace)
     {
-        return app(TranslationService::class)->detectLanguage($text);
+        if (empty($replace)) return $text;
+
+        $map = [];
+        foreach ($replace as $key => $value) {
+            $map[':' . $key] = $value;
+            $map['{' . $key . '}'] = $value;
+        }
+        return strtr($text, $map);
     }
 }

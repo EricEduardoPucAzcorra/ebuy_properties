@@ -44,7 +44,7 @@ return [
 
         'project_id' => env('GOOGLE_PROJECT_ID'),
         'translate_api_key' => env('GOOGLE_TRANSLATE_API_KEY'),
-        'application_credentials' => env('GOOGLE_APPLICATION_CREDENTIALS'),
+        'credentials_path' => env('GOOGLE_APPLICATION_CREDENTIALS'),
     ],
     'gemini' => [
         'key' => env('GEMINI_API_KEY'),
