@@ -17,8 +17,10 @@
 
                     <p class="ebuy-hero-subtitle animated fadeIn mb-4">
                         <p class="ebuy-hero-subtitle animated fadeIn mb-4">
-                            {{ auto_trans('Encuentra un hogar diseñado para brindar comodidad, seguridad y bienestar.') }}
-                            {{ auto_trans('Un espacio donde cada momento se convierte en un recuerdo especial.') }}
+                            {{ auto_trans('Encuentra un hogar diseñado para brindar') }}
+                            {{ auto_trans('comodidad, seguridad y bienestar.') }}
+                            {{ auto_trans('Un espacio donde cada momento') }}
+                            {{ auto_trans('se convierte en un recuerdo especial.') }}
                         </p>
                     </p>
 
