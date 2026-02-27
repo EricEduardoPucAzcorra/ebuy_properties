@@ -41,6 +41,10 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
+
+        'project_id' => env('GOOGLE_PROJECT_ID'),
+        'translate_api_key' => env('GOOGLE_TRANSLATE_API_KEY'),
+        'application_credentials' => env('GOOGLE_APPLICATION_CREDENTIALS'),
     ],
     'gemini' => [
         'key' => env('GEMINI_API_KEY'),
