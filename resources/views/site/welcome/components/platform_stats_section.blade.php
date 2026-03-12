@@ -50,7 +50,7 @@
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
                         <div>
                             <h4 class="fw-bold mb-1">{{ auto_trans('Encuentra tu propiedad con confianza') }}</h4>
-                            <p class="text-muted mb-0">{{ auto_trans('Búsqueda rápida, resultados claros y propiedades verificadas por nuestros anunciantes.') }}</p>
+                            <p class="text-muted mb-0">{{ __('site.content_welcome_1') }}</p>
                         </div>
                         <div class="d-flex gap-2">
                             <a href="{{ route('properties') }}" class="btn btn-primary px-4">{{ auto_trans('Explorar') }}</a>
