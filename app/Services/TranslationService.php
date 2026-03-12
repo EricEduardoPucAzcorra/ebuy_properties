@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Google\Cloud\Translate\V3\TranslateTextRequest;
+use Google\ApiCore\ApiException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -11,81 +12,158 @@ use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 class TranslationService
 {
     protected $projectId;
-    protected $apiKey;
+    protected $credentialsPath;
     protected $sourceLang = 'es';
     protected $cacheTime = 2592000; // 30 días
-    protected $maxChunkSize = 2800;
+    protected $client = null;
+    protected $maxChunkSize = 2800; // Google recomienda 3000, usamos 2800 por seguridad
 
     public function __construct()
     {
         $this->projectId = config('services.google.project_id');
-        $this->apiKey = config('services.google.translate_api_key');
+        $this->initializeCredentials();
 
-        Log::info('TranslationService INICIADO', [
-            'project_id' => $this->projectId,
-            'api_key' => !empty($this->apiKey) ? 'CONFIGURADA' : 'NO CONFIGURADA',
+        Log::info('TranslationService inicializado', [
+            'project' => $this->projectId,
+            'credenciales' => file_exists($this->credentialsPath) ? '✓' : '✗',
+            'ruta' => $this->credentialsPath,
             'ambiente' => app()->environment()
         ]);
     }
 
     /**
-     * MÉTODO PRINCIPAL DE TRADUCCIÓN
+     * Inicializa las credenciales buscando en múltiples ubicaciones
+     */
+    protected function initializeCredentials()
+    {
+        $credentialsFile = config('services.google.credentials_path', 'google-credentials.json');
+
+        // Posibles ubicaciones del archivo de credenciales
+        $possiblePaths = [
+            storage_path('app/' . $credentialsFile),
+            base_path($credentialsFile),
+            storage_path('app/google-credentials.json'),
+            base_path('google-credentials.json'),
+            env('GOOGLE_APPLICATION_CREDENTIALS', '')
+        ];
+
+        foreach ($possiblePaths as $path) {
+            if (!empty($path) && file_exists($path)) {
+                $this->credentialsPath = $path;
+                break;
+            }
+        }
+
+        // Si no encuentra, usar la ruta por defecto
+        if (!isset($this->credentialsPath)) {
+            $this->credentialsPath = storage_path('app/google-credentials.json');
+        }
+    }
+
+    /**
+     * Obtiene el cliente de traducción
+     */
+    protected function getClient()
+    {
+        if ($this->client) {
+            return $this->client;
+        }
+
+        try {
+            // Intentar con API Key primero (más simple para producción)
+            if (config('services.google.api_key')) {
+                $this->client = new TranslationServiceClient([
+                    'apiKey' => config('services.google.api_key'),
+                    'transport' => 'rest'
+                ]);
+
+                Log::info('Usando API Key para autenticación');
+                return $this->client;
+            }
+
+            // Si no hay API Key, usar credenciales JSON
+            if (!file_exists($this->credentialsPath)) {
+                throw new Exception('Archivo de credenciales no encontrado en: ' . $this->credentialsPath);
+            }
+
+            $credentialsContent = file_get_contents($this->credentialsPath);
+            $credentials = json_decode($credentialsContent, true);
+
+            if (!$credentials) {
+                throw new Exception('Credenciales JSON inválidas');
+            }
+
+            // Usar project_id de las credenciales si no está configurado
+            if (empty($this->projectId) && isset($credentials['project_id'])) {
+                $this->projectId = $credentials['project_id'];
+            }
+
+            $this->client = new TranslationServiceClient([
+                'credentials' => $credentials,
+                'transport' => 'rest',
+            ]);
+
+            Log::info('Usando credenciales JSON para autenticación');
+            return $this->client;
+
+        } catch (Exception $e) {
+            Log::error('Error creando cliente de traducción: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Método principal de traducción
      */
     public function translate($text, $targetLang = null, $sourceLang = null)
     {
         try {
-            // VALIDACIONES BÁSICAS
+            // Validaciones básicas
             if (empty(trim($text))) return $text;
             if (!is_string($text)) return $text;
 
             $targetLang = $targetLang ?? app()->getLocale();
             $sourceLang = $sourceLang ?? $this->sourceLang;
 
-            // NORMALIZAR IDIOMAS
-            $targetLang = $this->normalizeLanguage($targetLang);
-            $sourceLang = $this->normalizeLanguage($sourceLang);
+            // Normalizar códigos de idioma
+            $targetLang = $this->normalizeLanguageCode($targetLang);
+            $sourceLang = $this->normalizeLanguageCode($sourceLang);
 
-            // MISMO IDIOMA = NO TRADUCIR
+            // Si es el mismo idioma, no traducir
             if ($targetLang === $sourceLang) return $text;
 
-            // LOG PARA DEBUG
-            Log::info('🔄 Traduciendo', [
-                'longitud' => strlen($text),
-                'target' => $targetLang,
-                'primeros_50' => substr($text, 0, 50)
-            ]);
+            // Cache key
+            $cacheKey = 'trans_v3_' . md5($text . $targetLang . $sourceLang);
 
-            // CACHE
-            $cacheKey = 'trans_' . md5($text . $targetLang . $sourceLang);
+            // Intentar obtener de caché
             $cached = Cache::get($cacheKey);
             if ($cached) return $cached;
 
-            // DECIDIR MÉTODO SEGÚN LONGITUD
+            // Determinar método según longitud
             $result = (strlen($text) > $this->maxChunkSize)
-                ? $this->translateLargo($text, $targetLang, $sourceLang)
-                : $this->translateCorto($text, $targetLang, $sourceLang);
+                ? $this->translateLongText($text, $targetLang, $sourceLang)
+                : $this->translateWithV3($text, $targetLang, $sourceLang);
 
-            // GUARDAR EN CACHE
+            // Guardar en caché
             Cache::put($cacheKey, $result, $this->cacheTime);
 
             return $result;
 
         } catch (Exception $e) {
-            Log::error('❌ Error en translate: ' . $e->getMessage());
+            Log::error('Error en translate: ' . $e->getMessage(), [
+                'texto' => substr($text, 0, 100)
+            ]);
             return $text;
         }
     }
 
     /**
-     * TRADUCCIÓN DE TEXTOS CORTOS (< 2800 caracteres)
+     * Traducción directa con V3
      */
-    protected function translateCorto($text, $targetLang, $sourceLang)
+    protected function translateWithV3($text, $targetLang, $sourceLang)
     {
         try {
-            $client = new TranslationServiceClient([
-                'apiKey' => $this->apiKey,
-                'transport' => 'rest'
-            ]);
+            $client = $this->getClient();
 
             $parent = sprintf('projects/%s/locations/global', $this->projectId ?: 'traduccion-app');
 
@@ -106,106 +184,132 @@ class TranslationService
             return $translations[0]->getTranslatedText();
 
         } catch (Exception $e) {
-            Log::warning('⚠️ Error en translateCorto: ' . $e->getMessage());
+            Log::warning('Error en translateWithV3: ' . $e->getMessage(), [
+                'texto' => substr($text, 0, 50)
+            ]);
             return $text;
         }
     }
 
     /**
-     * TRADUCCIÓN DE TEXTOS LARGOS (> 2800 caracteres) - VERSIÓN PRODUCCIÓN
+     * Traducción de textos largos (corregido)
      */
-    protected function translateLargo($text, $targetLang, $sourceLang)
+    public function translateLongText($text, $targetLang, $sourceLang)
     {
         try {
-            Log::info('📏 translateLargo iniciado', ['longitud' => strlen($text)]);
+            // 1. Dividir por párrafos
+            $paragraphs = preg_split('/\n\s*\n/', $text, -1, PREG_SPLIT_NO_EMPTY);
 
-            // ESTRATEGIA 1: DIVIDIR POR PÁRRAFOS (doble salto de línea)
-            if (strpos($text, "\n\n") !== false) {
-                $partes = explode("\n\n", $text);
-                Log::info('Dividido por párrafos: ' . count($partes) . ' partes');
-                return $this->procesarPartes($partes, "\n\n", $targetLang, $sourceLang);
+            if (count($paragraphs) > 1) {
+                return $this->translateParagraphs($paragraphs, $targetLang, $sourceLang);
             }
 
-            // ESTRATEGIA 2: DIVIDIR POR ORACIONES (punto y espacio)
-            if (strpos($text, '. ') !== false) {
-                $partes = explode('. ', $text);
-                // Reconstruir los puntos
-                foreach ($partes as $key => $parte) {
-                    if ($key < count($partes) - 1) {
-                        $partes[$key] = $parte . '.';
-                    }
-                }
-                Log::info('Dividido por oraciones: ' . count($partes) . ' partes');
-                return $this->procesarPartes($partes, ' ', $targetLang, $sourceLang);
+            // 2. Dividir por oraciones
+            $sentences = $this->splitSentences($text);
+
+            if (count($sentences) > 3) {
+                return $this->translateSentences($sentences, $targetLang, $sourceLang);
             }
 
-            // ESTRATEGIA 3: DIVIDIR POR PUNTOS SEGUIDOS
-            if (strpos($text, '.') !== false) {
-                $partes = explode('.', $text);
-                foreach ($partes as $key => $parte) {
-                    if (!empty(trim($parte)) && $key < count($partes) - 1) {
-                        $partes[$key] = $parte . '.';
-                    }
-                }
-                Log::info('Dividido por puntos: ' . count($partes) . ' partes');
-                return $this->procesarPartes($partes, ' ', $targetLang, $sourceLang);
-            }
-
-            // ESTRATEGIA 4: DIVIDIR POR CHUNKS (MÉTODO INFALIBLE)
-            Log::info('Usando método de chunks');
-            return $this->traducirPorChunks($text, $targetLang, $sourceLang);
+            // 3. Dividir por chunks
+            return $this->translateByChunks($text, $targetLang, $sourceLang);
 
         } catch (Exception $e) {
-            Log::error('❌ Error en translateLargo: ' . $e->getMessage());
-            return $this->traducirPorChunks($text, $targetLang, $sourceLang);
+            Log::error('Error en translateLongText: ' . $e->getMessage());
+            return $this->translateByChunks($text, $targetLang, $sourceLang);
         }
     }
 
     /**
-     * PROCESA PARTES DE TEXTO
+     * Traduce párrafos
      */
-    protected function procesarPartes($partes, $separador, $targetLang, $sourceLang)
+    protected function translateParagraphs($paragraphs, $targetLang, $sourceLang)
     {
-        $traducidas = [];
+        $translated = [];
+        foreach ($paragraphs as $index => $paragraph) {
+            if (empty(trim($paragraph))) continue;
 
-        foreach ($partes as $index => $parte) {
-            $parte = trim($parte);
-            if (empty($parte)) continue;
-
-            // Si la parte aún es larga, procesar recursivamente
-            if (strlen($parte) > $this->maxChunkSize) {
-                $traducidas[] = $this->translateLargo($parte, $targetLang, $sourceLang);
+            if (strlen($paragraph) > $this->maxChunkSize) {
+                $translated[] = $this->translateLongText($paragraph, $targetLang, $sourceLang);
             } else {
-                $traducidas[] = $this->translateCorto($parte, $targetLang, $sourceLang);
+                $translated[] = $this->translateWithV3($paragraph, $targetLang, $sourceLang);
             }
 
-            // Pausa entre partes
-            if ($index < count($partes) - 1) {
-                usleep(150000); // 150ms
+            // Pausa entre párrafos
+            if ($index < count($paragraphs) - 1) {
+                usleep(150000);
             }
         }
 
-        return implode($separador, $traducidas);
+        return implode("\n\n", $translated);
     }
 
     /**
-     * MÉTODO INFALIBLE: DIVIDIR POR CHUNKS DE TAMAÑO FIJO
+     * Traduce oraciones
      */
-    protected function traducirPorChunks($text, $targetLang, $sourceLang, $chunkSize = 2000)
+    protected function translateSentences($sentences, $targetLang, $sourceLang)
     {
-        $chunks = [];
-        $longitud = strlen($text);
+        $translated = [];
+        $batch = [];
+        $batchSize = 0;
 
-        for ($i = 0; $i < $longitud; $i += $chunkSize) {
-            $chunks[] = substr($text, $i, $chunkSize);
+        foreach ($sentences as $sentence) {
+            $sentence = trim($sentence);
+            if (empty($sentence)) continue;
+
+            // Agrupar oraciones pequeñas
+            if ($batchSize + strlen($sentence) < $this->maxChunkSize) {
+                $batch[] = $sentence;
+                $batchSize += strlen($sentence);
+            } else {
+                // Traducir batch actual
+                if (!empty($batch)) {
+                    $translated[] = $this->translateWithV3(implode(' ', $batch), $targetLang, $sourceLang);
+                    usleep(100000);
+                }
+
+                // Nuevo batch
+                $batch = [$sentence];
+                $batchSize = strlen($sentence);
+            }
         }
 
-        Log::info('📦 traducirPorChunks: ' . count($chunks) . ' chunks');
+        // Traducir último batch
+        if (!empty($batch)) {
+            $translated[] = $this->translateWithV3(implode(' ', $batch), $targetLang, $sourceLang);
+        }
 
-        $traducidos = [];
+        return implode(' ', $translated);
+    }
+
+    /**
+     * Traduce por chunks de tamaño fijo
+     */
+    protected function translateByChunks($text, $targetLang, $sourceLang, $chunkSize = 2500)
+    {
+        $words = explode(' ', $text);
+        $chunks = [];
+        $currentChunk = '';
+
+        foreach ($words as $word) {
+            if (strlen($currentChunk) + strlen($word) + 1 > $chunkSize) {
+                if (!empty($currentChunk)) {
+                    $chunks[] = $currentChunk;
+                }
+                $currentChunk = $word;
+            } else {
+                $currentChunk .= (empty($currentChunk) ? '' : ' ') . $word;
+            }
+        }
+
+        if (!empty($currentChunk)) {
+            $chunks[] = $currentChunk;
+        }
+
+        $translated = [];
         foreach ($chunks as $index => $chunk) {
             if (!empty(trim($chunk))) {
-                $traducidos[] = $this->translateCorto($chunk, $targetLang, $sourceLang);
+                $translated[] = $this->translateWithV3($chunk, $targetLang, $sourceLang);
 
                 if ($index < count($chunks) - 1) {
                     usleep(150000);
@@ -213,33 +317,49 @@ class TranslationService
             }
         }
 
-        return implode('', $traducidos);
+        return implode(' ', $translated);
     }
 
     /**
-     * NORMALIZA CÓDIGOS DE IDIOMA
+     * Divide texto en oraciones
      */
-    protected function normalizeLanguage($lang)
+    protected function splitSentences($text)
     {
-        $lang = strtolower($lang);
+        // Patrón mejorado para español
+        $pattern = '/(?<=[.?!])\s+(?=[A-ZÁÉÍÓÚÑ])/';
+        $sentences = preg_split($pattern, $text, -1, PREG_SPLIT_NO_EMPTY);
 
+        if (count($sentences) < 2) {
+            // Si no funciona, dividir por puntos seguidos de espacio
+            $sentences = explode('. ', $text);
+        }
+
+        return array_map('trim', $sentences);
+    }
+
+    /**
+     * Normaliza códigos de idioma
+     */
+    protected function normalizeLanguageCode($lang)
+    {
         $map = [
             'es' => 'es',
-            'es-es' => 'es',
             'en' => 'en',
-            'en-us' => 'en',
             'fr' => 'fr',
             'it' => 'it',
             'de' => 'de',
             'pt' => 'pt',
             'pt-br' => 'pt',
+            'en-us' => 'en',
+            'es-es' => 'es',
         ];
 
+        $lang = strtolower($lang);
         return $map[$lang] ?? $lang;
     }
 
     /**
-     * TRADUCCIÓN SEGURA
+     * Traducción segura (siempre devuelve string)
      */
     public function translateSafe($text, $targetLang = null)
     {

@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Cache;
 
 if (!function_exists('auto_trans')) {
     /**
-     * TRADUCE TEXTO AUTOMÁTICAMENTE
+     * Traduce texto automáticamente
      */
     function auto_trans($text, $replace = [], $locale = null)
     {
-        // VALIDACIONES
+        // Validaciones básicas
         if (is_null($text) || $text === '') {
             return $text;
         }
@@ -24,36 +24,35 @@ if (!function_exists('auto_trans')) {
         $text = trim((string)$text);
         if (empty($text)) return $text;
 
-        // DETERMINAR IDIOMA
+        // Determinar locale
         $locale = $locale ?? app()->getLocale();
 
-        // IDIOMAS SOPORTADOS
+        // Idiomas soportados
         $supportedLocales = ['es', 'en', 'fr', 'it', 'de', 'pt'];
         $locale = in_array($locale, $supportedLocales) ? $locale : 'es';
 
-        // CACHE CORTO (1 hora)
+        // Cache para evitar traducciones repetidas
         $cacheKey = 'auto_trans_' . md5($text . $locale . json_encode($replace));
 
         return Cache::remember($cacheKey, 3600, function() use ($text, $replace, $locale) {
             try {
-                // 1. INTENTAR CON LARAVEL PRIMERO
+                // Intentar con Laravel primero
                 $translation = trans($text, $replace, $locale);
                 if ($translation !== $text) {
                     return $translation;
                 }
 
-                // 2. USAR GOOGLE TRANSLATE
+                // Usar Google Translate
                 $service = app(TranslationService::class);
 
-                // REGISTRO PARA DEBUG
-                Log::info('auto_trans llamando a servicio', [
-                    'longitud' => strlen($text),
-                    'locale' => $locale
-                ]);
+                // Textos largos necesitan tratamiento especial
+                if (strlen($text) > 3000) {
+                    $translated = translate_long_text($text, $locale, $service);
+                } else {
+                    $translated = $service->translate($text, $locale);
+                }
 
-                $translated = $service->translate($text, $locale);
-
-                // 3. APLICAR REEMPLAZOS
+                // Aplicar reemplazos
                 if (!empty($replace) && $translated !== $text) {
                     $translated = apply_replacements($translated, $replace);
                 }
@@ -61,7 +60,7 @@ if (!function_exists('auto_trans')) {
                 return $translated ?: $text;
 
             } catch (Exception $e) {
-                Log::error('❌ Error en auto_trans: ' . $e->getMessage(), [
+                Log::error('Error en auto_trans: ' . $e->getMessage(), [
                     'texto' => substr($text, 0, 100),
                     'locale' => $locale
                 ]);
@@ -72,9 +71,38 @@ if (!function_exists('auto_trans')) {
     }
 }
 
+if (!function_exists('translate_long_text')) {
+    /**
+     * Traduce textos largos manualmente
+     */
+    function translate_long_text($text, $locale, $service)
+    {
+        // Dividir en oraciones
+        $sentences = preg_split('/(?<=[.?!])\s+(?=[A-ZÁÉÍÓÚÑ])/', $text, -1, PREG_SPLIT_NO_EMPTY);
+
+        if (count($sentences) < 2) {
+            return $service->translate($text, $locale);
+        }
+
+        $translated = [];
+        foreach ($sentences as $sentence) {
+            if (!empty(trim($sentence))) {
+                $translated[] = $service->translate($sentence, $locale);
+
+                // Pequeña pausa cada 5 oraciones
+                if (count($translated) % 5 == 0) {
+                    usleep(100000);
+                }
+            }
+        }
+
+        return implode(' ', $translated);
+    }
+}
+
 if (!function_exists('apply_replacements')) {
     /**
-     * APLICA REEMPLAZOS AL TEXTO
+     * Aplica reemplazos al texto traducido
      */
     function apply_replacements($text, $replace)
     {
