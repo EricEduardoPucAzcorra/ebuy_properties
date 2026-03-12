@@ -38,7 +38,7 @@
                                         <span class="floating-tag">
                                             {{ $property->operation->name ?? 'Venta' }}
                                         </span>
-                                        
+
                                         @include('components.favorite-button', ['propertyId' => $property->id])
                                     </div>
 
@@ -104,7 +104,7 @@
             <div class="row">
                 <div class="col-12 text-center py-5">
                     <h5 class="text-muted">
-                        {{ auto_trans('No hay propiedades disponibles en este momento.') }}
+                        {{ __('site.no_propiedades') }}
                     </h5>
                     <p class="text-muted">
                         {{ auto_trans('Por favor, vuelve más tarde o contacta con nosotros para más información.') }}

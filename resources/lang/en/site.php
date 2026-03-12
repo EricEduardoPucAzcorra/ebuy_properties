@@ -7,4 +7,5 @@ return array (
   'discover_best_real_estate_opportunities_quickly_and_easily' => 'Discover the best real estate opportunities quickly and easily',
   'content_welcome_1'=>'Quick search, clear results, and properties verified by our advertisers.',
   'content_welcome_2'=>'Quick search, clear results, and properties verified by our advertisers.',
+  'no_propiedades'=>'There are no properties available at this time.'
 );
