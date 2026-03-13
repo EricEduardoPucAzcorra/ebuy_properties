@@ -9,7 +9,7 @@
 @endphp
 <div class="ebuy-menu-item">
     <a href="javascript:void(0)" class="ebuy-link-top">
-        {{ auto_trans('Rentar') }}
+        {{ auto_trans('Rentas') }}
         <i class="fa fa-chevron-down ms-1 icon-arrow-nav"></i>
     </a>
 

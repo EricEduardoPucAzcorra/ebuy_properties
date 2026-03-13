@@ -34,13 +34,13 @@
                 @php
                     use App\Models\TypeOperation;
                     use App\Models\TypePropetie;
-                    
+
                     $type_operationbuy = TypeOperation::where('name','Venta')->first();
                     $property_typebuy = TypePropetie::where('name','Casa')->first();
                     $type_operationdep = TypeOperation::where('name','Venta')->first();
                     $property_typedep = TypePropetie::where('name','Departamento')->first();
                 @endphp
-                
+
                 <!-- Casas -->
                 <button class="ebuy-mobile-submenu-toggle" data-target="mobile-buy-casas">
                     <i class="bi bi-houses"></i>
@@ -55,7 +55,7 @@
                             {{ $st->statename }}
                         </a>
                     @endforeach
-                    
+
                     <div class="ebuy-mobile-submenu-divider">{{ auto_trans('Ciudades destacadas') }}</div>
                     @forelse($featuredCities as $city)
                         <a href="{{ route('properties', array_merge(['operation' => $type_operationbuy->id, 'type'=> $property_typebuy->id, 'location_type'=>$city->type, 'location_id'=>$city->id])) }}" class="ebuy-mobile-submenu-item">
@@ -69,7 +69,7 @@
                         </a>
                     @endforelse
                 </div>
-                
+
                 <!-- Departamentos -->
                 <button class="ebuy-mobile-submenu-toggle" data-target="mobile-buy-departamentos">
                     <i class="bi bi-building"></i>
@@ -84,7 +84,7 @@
                             {{ $st->statename }}
                         </a>
                     @endforeach
-                    
+
                     <div class="ebuy-mobile-submenu-divider">{{ auto_trans('Ciudades destacadas') }}</div>
                     @forelse($featuredCities as $city)
                         <a href="{{ route('properties', array_merge(['operation' => $type_operationdep->id, 'type'=> $property_typedep->id, 'location_type'=>$city->type, 'location_id'=>$city->id])) }}" class="ebuy-mobile-submenu-item">
@@ -104,7 +104,7 @@
         <!-- Menú de renta versión móvil -->
         <div class="ebuy-mobile-menu-section">
             <button class="ebuy-mobile-menu-toggle" data-target="mobile-rent-menu">
-                {{ auto_trans('Rentar') }}
+                {{ auto_trans('Rentas') }}
                 <i class="fa fa-chevron-down"></i>
             </button>
             <div class="ebuy-mobile-submenu" id="mobile-rent-menu">
@@ -113,7 +113,7 @@
                     $property_typehouse = TypePropetie::where('name','Casa')->first();
                     $property_typedep = TypePropetie::where('name','Departamento')->first();
                 @endphp
-                
+
                 <!-- Casas -->
                 <button class="ebuy-mobile-submenu-toggle" data-target="mobile-rent-casas">
                     <i class="bi bi-houses"></i>
@@ -128,7 +128,7 @@
                             {{ $st->statename }}
                         </a>
                     @endforeach
-                    
+
                     <div class="ebuy-mobile-submenu-divider">{{ auto_trans('Ciudades destacadas') }}</div>
                     @forelse($featuredCities as $city)
                         <a href="{{ route('properties', array_merge(['operation' => $type_operationrent->id, 'type'=> $property_typehouse->id, 'location_type'=>$city->type, 'location_id'=>$city->id])) }}" class="ebuy-mobile-submenu-item">
@@ -142,7 +142,7 @@
                         </a>
                     @endforelse
                 </div>
-                
+
                 <!-- Departamentos -->
                 <button class="ebuy-mobile-submenu-toggle" data-target="mobile-rent-departamentos">
                     <i class="bi bi-building"></i>
@@ -157,7 +157,7 @@
                             {{ $st->statename }}
                         </a>
                     @endforeach
-                    
+
                     <div class="ebuy-mobile-submenu-divider">{{ auto_trans('Ciudades destacadas') }}</div>
                     @forelse($featuredCities as $city)
                         <a href="{{ route('properties', array_merge(['operation' => $type_operationrent->id, 'type'=> $property_typedep->id, 'location_type'=>$city->type, 'location_id'=>$city->id])) }}" class="ebuy-mobile-submenu-item">
