@@ -635,6 +635,7 @@ new Vue({
             try {
                 this.updatingFromMap = true;
 
+                // Primero obtener país, estado, ciudad (como antes)
                 const response = await fetch(`/location/reverse-geocode?lat=${location.lat}&lng=${location.lng}`);
                 const data = await response.json();
 
@@ -668,6 +669,107 @@ new Vue({
                         lat: data.city.lat,
                         lng: data.city.lng
                     };
+                }
+
+                // Ahora obtener dirección completa con Nominatim
+                try {
+                    // Intentar con múltiples servicios para mejor precisión
+                    let addressData = null;
+
+                    // 1. Primero intentar con Nominatim (más preciso para direcciones)
+                    try {
+                        const nominatimResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}&zoom=18&addressdetails=1&polygon_geojson=1`, {
+                            headers: {
+                                'User-Agent': 'ebuy-properties/1.0',
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        const nominatimData = await nominatimResponse.json();
+                        if (nominatimData && nominatimData.address) {
+                            addressData = nominatimData;
+                            console.log('Datos de Nominatim:', nominatimData);
+                        }
+                    } catch (nominatimError) {
+                        console.warn('Error con Nominatim:', nominatimError);
+                    }
+
+                    // 2. Si Nominatim falla, intentar con API alternativa
+                    if (!addressData) {
+                        try {
+                            const photonResponse = await fetch(`https://photon.komoot.io/reverse?lat=${location.lat}&lon=${location.lng}`);
+                            const photonData = await photonResponse.json();
+                            if (photonData && photonData.features && photonData.features.length > 0) {
+                                const feature = photonData.features[0];
+                                addressData = {
+                                    address: {
+                                        road: feature.properties?.street || feature.properties?.name,
+                                        house_number: feature.properties?.housenumber,
+                                        suburb: feature.properties?.suburb || feature.properties?.district,
+                                        postcode: feature.properties?.postcode,
+                                        city: feature.properties?.city,
+                                        state: feature.properties?.state,
+                                        country: feature.properties?.country
+                                    }
+                                };
+                                console.log('Datos de Photon:', addressData);
+                            }
+                        } catch (photonError) {
+                            console.warn('Error con Photon:', photonError);
+                        }
+                    }
+
+                    // Procesar datos obtenidos
+                    if (addressData && addressData.address) {
+                        const addr = addressData.address;
+
+                        // Calle - buscar en múltiples campos posibles
+                        const street = addr.road || addr.street || addr.pedestrian || addr.name || '';
+                        if (street) {
+                            this.propertyForm.address.street = street;
+                        }
+
+                        // Número - solo si existe y es razonable
+                        if (addr.house_number && addr.house_number.length <= 6) {
+                            this.propertyForm.address.number = addr.house_number;
+                        } else {
+                            // Limpiar si el número parece incorrecto
+                            if (!this.propertyForm.address.number || this.propertyForm.address.number.length > 6) {
+                                this.propertyForm.address.number = '';
+                            }
+                        }
+
+                        // Vecindario/Colonia - buscar en múltiples campos
+                        const neighborhood = addr.suburb || addr.neighbourhood || addr.district || addr.quarter || '';
+                        if (neighborhood) {
+                            this.propertyForm.address.neighborhood = neighborhood;
+                        }
+
+                        // Código Postal
+                        if (addr.postcode) {
+                            this.propertyForm.address.postal_code = addr.postcode;
+                        }
+
+                        // Actualizar dirección completa siempre
+                        if (addressData.display_name) {
+                            this.propertyForm.address.address = addressData.display_name;
+                        }
+
+                        console.log('Dirección procesada:', {
+                            original_lat: location.lat,
+                            original_lng: location.lng,
+                            street: this.propertyForm.address.street,
+                            number: this.propertyForm.address.number,
+                            neighborhood: this.propertyForm.address.neighborhood,
+                            postal_code: this.propertyForm.address.postal_code,
+                            full_address: this.propertyForm.address.address
+                        });
+                    } else {
+                        console.warn('No se pudo obtener dirección detallada');
+                    }
+
+                } catch (error) {
+                    console.warn('Error general obteniendo dirección:', error);
                 }
 
                 this.$nextTick(() => {

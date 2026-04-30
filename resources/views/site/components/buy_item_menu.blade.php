@@ -3,9 +3,9 @@
     use App\Models\TypePropetie;
 
     $type_operationbuy = TypeOperation::where('name','Venta')->first();
-    $property_typebuy = TypePropetie::where('name','Casa')->first();
+    $property_typebuy = TypePropetie::where('name','Casas')->first();
     $type_operationdep = TypeOperation::where('name','Venta')->first();
-    $property_typedep = TypePropetie::where('name','Departamento')->first();
+    $property_typedep = TypePropetie::where('name','Departamentos')->first();
 
 @endphp
 <div class="ebuy-menu-item">

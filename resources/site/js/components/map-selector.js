@@ -65,7 +65,7 @@ Vue.component('map-selector', {
 
             this.marker.bindPopup(popupHtml, { maxWidth: 220, className: 'custom-leaflet-popup' });
 
-            if(this.readonly) setTimeout(() => this.marker.openPopup(), 400);
+            if (this.readonly) setTimeout(() => this.marker.openPopup(), 400);
         },
 
         toggleFullscreen() {

@@ -3,8 +3,8 @@
     use App\Models\TypePropetie;
 
     $type_operationrent = TypeOperation::where('name','Renta')->first();
-    $property_typehouse = TypePropetie::where('name','Casa')->first();
-    $property_typedep = TypePropetie::where('name','Departamento')->first();
+    $property_typehouse = TypePropetie::where('name','Casas')->first();
+    $property_typedep = TypePropetie::where('name','Departamentos')->first();
 
 @endphp
 <div class="ebuy-menu-item">

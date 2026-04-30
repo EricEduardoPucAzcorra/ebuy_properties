@@ -57,7 +57,7 @@
                                         </div>
 
                                         <div class="text-muted small mb-2">
-                                            {{ $property->type->name ?? 'Casa' }}
+                                            {{ $property->type->name ?? 'Casas' }}
                                         </div>
 
                                         <p class="text-muted small mb-0">
