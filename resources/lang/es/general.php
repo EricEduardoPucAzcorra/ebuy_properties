@@ -28,6 +28,13 @@ return [
     'select_image_file'=>"Selecciona una imagen solo si deseas cambiarla",
     'select_file'=>"Selecione un archivo",
     'erros_validation' => 'Errores de validación',
+    
+    // Validación de archivos
+    'file_too_large' => 'El archivo excede el tamaño máximo permitido.',
+    'image_too_large' => 'Las imágenes no pueden exceder 10MB.',
+    'video_too_large' => 'Los videos no pueden exceder 50MB.',
+    'invalid_file_type' => 'Tipo de archivo no permitido. Solo se aceptan imágenes (JPG, PNG) y videos (MP4, MOV).',
+    'max_images_reached' => 'Has alcanzado el número máximo de imágenes permitidas.',
 
         // Módulo: Usuarios
         'users.title' => 'Usuarios',

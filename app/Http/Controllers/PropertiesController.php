@@ -196,7 +196,23 @@ class PropertiesController extends Controller
             'features' => 'nullable|array',
             'attributes' => 'nullable|array',
             'media.files' => 'nullable|array',
-            'media.files.*.file' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
+            'media.files.*.file' => [
+                'nullable',
+                'file',
+                'mimes:jpg,jpeg,png,mp4,mov',
+                function ($attribute, $value, $fail) {
+                    $maxImageSize = 10 * 1024; // 10MB en KB
+                    $maxVideoSize = 50 * 1024; // 50MB en KB
+                    
+                    if ($value->getSize() > $maxVideoSize * 1024) {
+                        $fail('Los videos no pueden exceder 50MB.');
+                    }
+                    
+                    if (str_starts_with($value->getMimeType(), 'image/') && $value->getSize() > $maxImageSize * 1024) {
+                        $fail('Las imágenes no pueden exceder 10MB.');
+                    }
+                }
+            ],
             'contacts' => 'nullable|array',
             'contacts.*.name' => 'required|string|max:255',
             'contacts.*.phone' => 'required|string|max:50',

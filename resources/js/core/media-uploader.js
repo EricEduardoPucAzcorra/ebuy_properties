@@ -63,9 +63,49 @@ Vue.component('media-uploader', {
     methods: {
         handleFiles(event) {
             const files = Array.from(event.target.files);
-            files.forEach(file => {
-                if (file.type.startsWith('image/') && this.countImages() >= this.maxImages) return;
+            const validFiles = [];
+            let errorMessage = '';
 
+            // Validar todos los archivos primero
+            files.forEach(file => {
+                if (file.type.startsWith('image/') && this.countImages() >= this.maxImages) {
+                    errorMessage = 'Has alcanzado el límite máximo de archivos permitidos. Límite total: 60MB.';
+                    return;
+                }
+
+                // Validar tamaño
+                const maxImageSize = 10 * 1024 * 1024; // 10MB
+                const maxVideoSize = 50 * 1024 * 1024; // 50MB
+
+                if (file.type.startsWith('image/') && file.size > maxImageSize) {
+                    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1);
+                    errorMessage = `El archivo "${file.name}" tiene ${fileSizeMB}MB y excede el límite permitido.`;
+                    return;
+                }
+
+                if (file.type.startsWith('video/') && file.size > maxVideoSize) {
+                    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1);
+                    errorMessage = `El archivo "${file.name}" tiene ${fileSizeMB}MB y excede el límite permitido.`;
+                    return;
+                }
+
+                validFiles.push(file);
+            });
+
+            // Mostrar advertencia con SweetAlert2 si hay
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Advertencia',
+                    text: errorMessage,
+                    confirmButtonColor: '#f59e0b'
+                });
+                event.target.value = '';
+                return;
+            }
+
+            // Procesar archivos válidos
+            validFiles.forEach(file => {
                 const type = file.type.startsWith('image/') ? 'image' : 'video';
                 const reader = new FileReader();
 
@@ -81,6 +121,7 @@ Vue.component('media-uploader', {
                 };
                 reader.readAsDataURL(file);
             });
+
             event.target.value = '';
         },
 

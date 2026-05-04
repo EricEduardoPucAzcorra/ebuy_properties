@@ -19,7 +19,7 @@
             <label class="form-label">{{ auto_trans('¿Precio negociable?') }}</label>
             <select class="form-select" v-model="propertyForm.price_negotiable">
                 <option value="NO" selected>{{ auto_trans('NO')}}</option>
-                <option value="SI">{{ auto_trans('SI')}}</option>
+                <option value="SI">{{ auto_trans('YES')}}</option>
             </select>
         </div>
     </div>
