@@ -64,6 +64,11 @@ class Propertie extends Model
         return $this->hasMany(PropertyVideo::class, 'property_id', 'id');
     }
 
+    public function tours()
+    {
+        return $this->hasMany(PropertyTour::class, 'property_id', 'id');
+    }
+
     public function attributes()
     {
         return $this->hasMany(PropertyAttribute::class, 'property_id', 'id');

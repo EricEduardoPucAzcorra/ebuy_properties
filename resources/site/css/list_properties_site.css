@@ -17,11 +17,11 @@
     transition: all .35s ease;
 }
 
-.card-clean:hover {
+/* .card-clean:hover {
     transform: translateY(-10px);
     box-shadow: 0 30px 60px rgba(0, 0, 0, .08);
     border-color: var(--primary-color);
-}
+} */
 
 .img-frame {
     position: relative;

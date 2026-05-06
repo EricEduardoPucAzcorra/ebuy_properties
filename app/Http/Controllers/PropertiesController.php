@@ -7,6 +7,8 @@ use App\Models\Citie;
 use App\Models\Countrie;
 use App\Models\Propertie;
 use App\Models\PropertyContact;
+use App\Models\PropertyVideo;
+use App\Models\PropertyTour;
 use App\Models\State;
 use App\Models\StatePropertie;
 use App\Models\TypeOperation;
@@ -62,6 +64,7 @@ class PropertiesController extends Controller
                 'address.city.state.country',
                 'images',
                 'videos',
+                'tours',
                 'attributes',
                 'features',
                 'contacts'
@@ -149,7 +152,8 @@ class PropertiesController extends Controller
                     'main' => $mainImage ? asset('storage/' . $mainImage->path) : null,
                     'others' => $otherImages->map(fn($img) => asset('storage/' . $img->path)),
                 ],
-                'videos' => $property->videos->map(fn($video) => asset('storage/' . $video->url)),
+               'videos' => $property->videos->map(fn($video) => $video->url),
+'tours'  => $property->tours->map(fn($tour) => $tour->url),
                 'attributes' => $property->attributes->map(fn($attr) => [
                     'key'   => $attr->key,
                     'value' => $attr->value,
@@ -213,6 +217,10 @@ class PropertiesController extends Controller
                     }
                 }
             ],
+            'videos' => 'nullable|array',
+            'videos.*' => 'nullable|url',
+            'tours360' => 'nullable|array',
+            'tours360.*' => 'nullable|url',
             'contacts' => 'nullable|array',
             'contacts.*.name' => 'required|string|max:255',
             'contacts.*.phone' => 'required|string|max:50',
@@ -303,6 +311,28 @@ class PropertiesController extends Controller
                 }
             }
 
+            // Procesar URLs de videos
+            if ($request->filled('videos')) {
+                foreach ($request->videos as $videoUrl) {
+                    if (!empty($videoUrl)) {
+                        $property->videos()->create([
+                            'url' => $videoUrl,
+                        ]);
+                    }
+                }
+            }
+
+            // Procesar URLs de tours 360°
+            if ($request->filled('tours360')) {
+                foreach ($request->tours360 as $tourUrl) {
+                    if (!empty($tourUrl)) {
+                        $property->tours()->create([
+                            'url' => $tourUrl,
+                        ]);
+                    }
+                }
+            }
+
             if ($request->filled('contacts')) {
                 foreach ($request->contacts as $index => $contact) {
 
@@ -364,6 +394,10 @@ class PropertiesController extends Controller
             'attributes' => 'nullable|array',
             'keep_media' => 'nullable|array',
             'media' => 'nullable|array',
+            'videos' => 'nullable|array',
+            'videos.*' => 'nullable|url',
+            'tours360' => 'nullable|array',
+            'tours360.*' => 'nullable|url',
             'contacts' => 'nullable|array',
         ]);
 
@@ -427,7 +461,11 @@ class PropertiesController extends Controller
             }
 
             $keepVideoPaths = collect($keepMediaRaw)->where('type', 'video')->pluck('path')->toArray();
-            $videosToDelete = $property->videos()->whereNotIn('url', $keepVideoPaths)->get();
+            // Solo eliminar videos subidos como archivos, no las URLs
+            $videosToDelete = $property->videos()
+                ->whereNotIn('url', $keepVideoPaths)
+                ->whereRaw("url NOT LIKE 'http%' AND url NOT LIKE 'https%'")
+                ->get();
             foreach ($videosToDelete as $vid) {
                 Storage::disk('public')->delete($vid->url);
                 $vid->delete();
@@ -456,6 +494,50 @@ class PropertiesController extends Controller
                         $property->videos()->create(['url' => $path]);
                     }
                 }
+            }
+
+            // Procesar URLs de videos (sincronización completa)
+            if ($request->filled('videos')) {
+                // Eliminar todos los videos existentes que son URLs
+                $property->videos()
+                    ->whereRaw("url LIKE 'http%' OR url LIKE 'https%'")
+                    ->delete();
+                
+                // Agregar las nuevas URLs
+                foreach ($request->videos as $videoUrl) {
+                    if (!empty($videoUrl)) {
+                        $property->videos()->create([
+                            'url' => $videoUrl,
+                        ]);
+                    }
+                }
+            } else {
+                // Si no se envían videos, eliminar todas las URLs existentes
+                $property->videos()
+                    ->whereRaw("url LIKE 'http%' OR url LIKE 'https%'")
+                    ->delete();
+            }
+
+            // Procesar URLs de tours 360° (sincronización completa)
+            if ($request->filled('tours360')) {
+                // Eliminar todos los tours existentes que son URLs
+                $property->tours()
+                    ->whereRaw("url LIKE 'http%' OR url LIKE 'https%'")
+                    ->delete();
+                
+                // Agregar las nuevas URLs
+                foreach ($request->tours360 as $tourUrl) {
+                    if (!empty($tourUrl)) {
+                        $property->tours()->create([
+                            'url' => $tourUrl,
+                        ]);
+                    }
+                }
+            } else {
+                // Si no se envían tours, eliminar todas las URLs existentes
+                $property->tours()
+                    ->whereRaw("url LIKE 'http%' OR url LIKE 'https%'")
+                    ->delete();
             }
 
             $incomingContacts = collect($request->input('contacts', []));

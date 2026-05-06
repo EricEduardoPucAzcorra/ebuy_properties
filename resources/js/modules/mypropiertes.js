@@ -51,6 +51,8 @@ new Vue({
             media: {
                 files: []
             },
+            videos: [],
+            tours360: [],
             contacts: [],
         },
         newAttribute: {
@@ -66,6 +68,12 @@ new Vue({
             date_atention: '',
             photo: null
         },
+        newVideoUrl: '',
+        editingVideoIndex: null,
+        editingVideoUrl: '',
+        newTour360Url: '',
+        editingTour360Index: null,
+        editingTour360Url: '',
 
         ///edicion
         isEdit: false,
@@ -340,6 +348,16 @@ new Vue({
 
             });
 
+            // Agregar videos al FormData
+            this.propertyForm.videos.forEach((video, i) => {
+                formData.append(`videos[${i}]`, video);
+            });
+
+            // Agregar tours 360° al FormData
+            this.propertyForm.tours360.forEach((tour, i) => {
+                formData.append(`tours360[${i}]`, tour);
+            });
+
             const url = this.isEdit
                 ? `/update/mypropertie/${this.editId}`
                 : '/save/mypropertie';
@@ -390,6 +408,9 @@ new Vue({
         },
 
         editProperty(property) {
+            console.log('Editando propiedad:', property);
+            console.log('Videos de la propiedad:', property.videos);
+
             this.showForm = true;
             this.isEdit = true;
             this.editId = property.id;
@@ -481,6 +502,35 @@ new Vue({
                         }))
                     ]
                 },
+                videos: (property.videos || []).map(v => {
+                    // Si v es un string, usarlo directamente
+                    if (typeof v === 'string') return v;
+                    // Si v es un objeto con propiedad url, usar v.url
+                    if (v && typeof v === 'object' && v.url) return v.url;
+                    // Si v es un objeto con otra estructura, intentar extraer la URL
+                    if (v && typeof v === 'object') {
+                        // Buscar cualquier propiedad que contenga 'http'
+                        const values = Object.values(v);
+                        const urlValue = values.find(val => typeof val === 'string' && val.includes('http'));
+                        return urlValue || '';
+                    }
+                    return '';
+                }).filter(url => url && url.trim() !== '').map(url => this.cleanVideoUrl(url)),
+
+                tours360: (property.tours || []).map(t => {
+                    // Si t es un string, usarlo directamente
+                    if (typeof t === 'string') return t;
+                    // Si t es un objeto con propiedad url, usar t.url
+                    if (t && typeof t === 'object' && t.url) return t.url;
+                    // Si t es un objeto con otra estructura, intentar extraer la URL
+                    if (t && typeof t === 'object') {
+                        const values = Object.values(t);
+                        const urlValue = values.find(val => typeof val === 'string' && val.includes('http'));
+                        return urlValue || '';
+                    }
+                    return '';
+                }).filter(url => url && url.trim() !== '').map(url => this.cleanVideoUrl(url)),
+
                 contacts: (property.contacts || []).map(c => ({
                     id: c.id ?? null,
                     name: c.name ?? '',
@@ -491,6 +541,8 @@ new Vue({
                 }))
 
             };
+
+            console.log('Videos asignados al formulario:', this.propertyForm.videos);
         },
 
         openStateModal(property) {
@@ -583,6 +635,12 @@ new Vue({
                 photo: null
             };
 
+            this.newVideoUrl = '';
+            this.editingVideoIndex = null;
+            this.editingVideoUrl = '';
+            this.newTour360Url = '';
+            this.editingTour360Index = null;
+            this.editingTour360Url = '';
             this.errors = {};
 
             this.loadDefaultAttributes();
@@ -619,6 +677,8 @@ new Vue({
                 media: {
                     files: []
                 },
+                videos: [],
+                tours360: [],
                 contacts: []
             };
         },
@@ -789,6 +849,324 @@ new Vue({
                 this.updatingFromMap = false;
             }
         },
+
+        // Métodos para manejo de videos
+        addVideo() {
+            if (this.newVideoUrl.trim()) {
+                // Validar límite de 5 videos
+                if (this.propertyForm.videos.length >= 5) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Límite alcanzado',
+                        text: 'Solo puedes agregar un máximo de 5 videos.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                // Validar URL básica
+                try {
+                    new URL(this.newVideoUrl);
+
+                    // Evitar duplicados
+                    if (!this.propertyForm.videos.includes(this.newVideoUrl.trim())) {
+                        this.propertyForm.videos.push(this.newVideoUrl.trim());
+                        this.newVideoUrl = '';
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Video duplicado',
+                            text: 'Esta URL de video ya ha sido agregada.',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    }
+                } catch (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'URL inválida',
+                        text: 'Por favor ingresa una URL válida.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                }
+            }
+        },
+
+        removeVideo(index) {
+            this.propertyForm.videos.splice(index, 1);
+        },
+
+        // Métodos para edición de videos
+        startVideoEdit(index) {
+            this.editingVideoIndex = index;
+            this.editingVideoUrl = this.propertyForm.videos[index] || '';
+            this.$nextTick(() => {
+                // Buscar el input por ref específico del índice
+                const inputRef = `videoEditInput_${index}`;
+                if (this.$refs[inputRef] && this.$refs[inputRef][0]) {
+                    this.$refs[inputRef][0].focus();
+                }
+            });
+        },
+
+        saveVideoEdit(index) {
+            if (!this.editingVideoUrl || !this.editingVideoUrl.trim()) {
+                this.cancelVideoEdit();
+                return;
+            }
+
+            // Validar URL
+            try {
+                new URL(this.editingVideoUrl);
+
+                // Evitar duplicados
+                const isDuplicate = this.propertyForm.videos.some((video, i) =>
+                    i !== index && video === this.editingVideoUrl.trim()
+                );
+
+                if (isDuplicate) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'URL duplicada',
+                        text: 'Esta URL de video ya existe en la lista.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                // Guardar cambios
+                this.propertyForm.videos.splice(index, 1, this.editingVideoUrl.trim());
+                this.cancelVideoEdit();
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'URL inválida',
+                    text: 'Por favor ingresa una URL válida.',
+                    confirmButtonColor: '#3085d6'
+                });
+            }
+        },
+
+        cancelVideoEdit() {
+            this.editingVideoIndex = null;
+            this.editingVideoUrl = '';
+        },
+
+        // Método para detectar plataforma de video y obtener icono
+        getVideoPlatformIcon(url) {
+            if (!url) return 'bi-link-45deg';
+
+            const urlLower = url.toLowerCase();
+
+            if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) {
+                return 'bi-youtube text-danger';
+            } else if (urlLower.includes('vimeo.com')) {
+                return 'bi-vimeo text-primary';
+            } else if (urlLower.includes('facebook.com') || urlLower.includes('fb.watch')) {
+                return 'bi-facebook text-primary';
+            } else if (urlLower.includes('instagram.com') || urlLower.includes('instagr.am')) {
+                return 'bi-instagram text-danger';
+            } else if (urlLower.includes('tiktok.com')) {
+                return 'bi-tiktok text-dark';
+            } else if (urlLower.includes('twitter.com') || urlLower.includes('x.com')) {
+                return 'bi-twitter text-info';
+            } else if (urlLower.includes('dailymotion.com')) {
+                return 'bi-play-circle text-info';
+            } else if (urlLower.includes('twitch.tv')) {
+                return 'bi-twitch text-purple';
+            } else {
+                return 'bi-link-45deg text-secondary';
+            }
+        },
+
+        getVideoPlatformName(url) {
+            if (!url) return 'Video';
+
+            const urlLower = url.toLowerCase();
+
+            if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) {
+                return 'YouTube';
+            } else if (urlLower.includes('vimeo.com')) {
+                return 'Vimeo';
+            } else if (urlLower.includes('facebook.com') || urlLower.includes('fb.watch')) {
+                return 'Facebook';
+            } else if (urlLower.includes('instagram.com') || urlLower.includes('instagr.am')) {
+                return 'Instagram';
+            } else if (urlLower.includes('tiktok.com')) {
+                return 'TikTok';
+            } else if (urlLower.includes('twitter.com') || urlLower.includes('x.com')) {
+                return 'Twitter/X';
+            } else if (urlLower.includes('dailymotion.com')) {
+                return 'Dailymotion';
+            } else if (urlLower.includes('twitch.tv')) {
+                return 'Twitch';
+            } else {
+                return 'Video';
+            }
+        },
+
+        cleanVideoUrl(url) {
+            if (!url) return '';
+
+            // Si la URL contiene el dominio local, extraer la URL real
+            if (url.includes('localhost:8000/storage/https://')) {
+                return url.replace('http://localhost:8000/storage/https://', 'https://');
+            }
+            if (url.includes('localhost:8000/storage/http://')) {
+                return url.replace('http://localhost:8000/storage/http://', 'http://');
+            }
+
+            return url;
+        },
+
+        // Métodos para Tours 360°
+        addTour360() {
+            if (this.newTour360Url.trim()) {
+                // Validar límite de 1 tour 360°
+                if (this.propertyForm.tours360.length >= 1) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Límite alcanzado',
+                        text: 'Solo puedes agregar un máximo de 1 recorrido 360°.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                // Validar URL básica
+                try {
+                    new URL(this.newTour360Url);
+
+                    // Evitar duplicados
+                    if (!this.propertyForm.tours360.includes(this.newTour360Url.trim())) {
+                        this.propertyForm.tours360.push(this.newTour360Url.trim());
+                        this.newTour360Url = '';
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tour 360° duplicado',
+                            text: 'Esta URL de tour 360° ya ha sido agregada.',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    }
+                } catch (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'URL inválida',
+                        text: 'Por favor ingresa una URL válida.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                }
+            }
+        },
+
+        removeTour360(index) {
+            this.propertyForm.tours360.splice(index, 1);
+        },
+
+        startTour360Edit(index) {
+            this.editingTour360Index = index;
+            this.editingTour360Url = this.propertyForm.tours360[index] || '';
+            this.$nextTick(() => {
+                const inputRef = `tour360EditInput_${index}`;
+                if (this.$refs[inputRef] && this.$refs[inputRef][0]) {
+                    this.$refs[inputRef][0].focus();
+                }
+            });
+        },
+
+        saveTour360Edit(index) {
+            if (!this.editingTour360Url || !this.editingTour360Url.trim()) {
+                this.cancelTour360Edit();
+                return;
+            }
+
+            // Validar URL
+            try {
+                new URL(this.editingTour360Url);
+
+                // Evitar duplicados
+                const isDuplicate = this.propertyForm.tours360.some((tour, i) =>
+                    i !== index && tour === this.editingTour360Url.trim()
+                );
+
+                if (isDuplicate) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Tour 360° duplicado',
+                        text: 'Esta URL de tour 360° ya existe en la lista.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                // Guardar cambios
+                this.propertyForm.tours360.splice(index, 1, this.editingTour360Url.trim());
+                this.cancelTour360Edit();
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'URL inválida',
+                    text: 'Por favor ingresa una URL válida.',
+                    confirmButtonColor: '#3085d6'
+                });
+            }
+        },
+
+        cancelTour360Edit() {
+            this.editingTour360Index = null;
+            this.editingTour360Url = '';
+        },
+
+        getTour360PlatformIcon(url) {
+            if (!url) return 'bi-link-45deg';
+
+            const urlLower = url.toLowerCase();
+
+            if (urlLower.includes('matterport.com')) {
+                return 'bi-house-door text-danger';
+            } else if (urlLower.includes('kuula.co')) {
+                return 'bi-camera text-primary';
+            } else if (urlLower.includes('roundme.com')) {
+                return 'bi-badge-3d text-info';
+            } else if (urlLower.includes('panoskin')) {
+                return 'bi-globe text-success';
+            } else if (urlLower.includes('3dvista')) {
+                return 'bi-badge-3d text-warning';
+            } else if (urlLower.includes('google.com/maps')) {
+                return 'bi-map text-success';
+            } else if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) {
+                return 'bi-youtube text-danger';
+            } else if (urlLower.includes('vimeo.com')) {
+                return 'bi-vimeo text-primary';
+            } else {
+                return 'bi-link-45deg text-secondary';
+            }
+        },
+
+        getTour360PlatformName(url) {
+            if (!url) return 'Tour 360°';
+
+            const urlLower = url.toLowerCase();
+
+            if (urlLower.includes('matterport.com')) {
+                return 'Matterport';
+            } else if (urlLower.includes('kuula.co')) {
+                return 'Kuula';
+            } else if (urlLower.includes('roundme.com')) {
+                return 'RoundMe';
+            } else if (urlLower.includes('panoskin')) {
+                return 'Panoskin';
+            } else if (urlLower.includes('3dvista')) {
+                return '3DVista';
+            } else if (urlLower.includes('google.com/maps')) {
+                return 'Google Street View';
+            } else if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) {
+                return 'YouTube 360°';
+            } else if (urlLower.includes('vimeo.com')) {
+                return 'Vimeo 360°';
+            } else {
+                return 'Tour 360°';
+            }
+        },
     }
 })
-

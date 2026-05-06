@@ -99,7 +99,7 @@
                         <button class="nav-link" :class="{ active: activeFormTab === 'media' }"
                                 @click="activeFormTab = 'media'"
                                 style="color: #2e7d32; font-weight: 500;">
-                            <i class="bi bi-images me-2"></i>{{auto_trans('Media')}}
+                            <i class="bi bi-images me-2"></i>{{auto_trans('Multimedia')}}
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
