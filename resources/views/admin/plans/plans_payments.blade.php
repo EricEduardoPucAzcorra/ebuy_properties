@@ -181,152 +181,312 @@
             </div>
         </div>
 
-        <!-- PASO 3: Formulario de pago -->
         <div v-if="currentStep === 3 && selectedPlan" class="step-content">
+
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <div class="card border-0 shadow-lg">
+
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
                         <div class="card-body p-4 p-lg-5">
-                            <div class="row g-4">
-                                <!-- Formulario de pago -->
+
+                            <div class="row g-5">
+
+                                <!-- FORMULARIO -->
                                 <div class="col-lg-7">
+
                                     <div class="d-flex align-items-center mb-4">
-                                        <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                                            <i class="bi bi-credit-card text-success fs-3"></i>
-                                        </div>
                                         <div>
-                                            <h4 class="fw-bold mb-1">Información de pago</h4>
-                                            <p class="text-muted mb-0">Completa los datos de tu tarjeta</p>
+                                            <h4 class="fw-bold mb-1">
+                                                Información de pago
+                                            </h4>
+
+                                            <p class="text-muted mb-0">
+                                                Completa los datos de tu tarjeta
+                                            </p>
                                         </div>
                                     </div>
 
-                                    <form @submit.prevent="processPayment">
-                                        <div class="mb-3">
+                                    <form
+                                        id="payment-form"
+                                        @submit.prevent="processPayment">
+
+                                        <!-- Nombre -->
+                                        <div class="mb-4">
                                             <label class="form-label fw-semibold">
-                                                <i class="bi bi-person me-2"></i>Nombre en la tarjeta
+                                                <i class="bi bi-person me-2"></i>
+                                                Nombre en la tarjeta
                                             </label>
-                                            <input type="text" class="form-control form-control-lg"
-                                                   v-model="payment.name" required
-                                                   placeholder="Como aparece en la tarjeta">
+                                            <input
+                                                type="text"
+                                                class="form-control form-control-lg"
+                                                v-model="payment.name"
+                                                data-openpay-card="holder_name"
+                                                required
+                                                placeholder="Como aparece en la tarjeta">
                                         </div>
 
+                                        <!-- Número -->
                                         <div class="mb-3">
+
                                             <label class="form-label fw-semibold">
-                                                <i class="bi bi-credit-card me-2"></i>Número de tarjeta
+                                                <i class="bi bi-credit-card me-2"></i>
+                                                Número de tarjeta
                                             </label>
-                                            <input type="text" class="form-control form-control-lg"
-                                                   v-model="payment.card" required
-                                                   @input="formatCardNumber"
-                                                   placeholder="1234 5678 9012 3456"
-                                                   maxlength="19">
+
+                                            <input
+                                                type="text"
+                                                class="form-control form-control-lg"
+                                                v-model="payment.card"
+                                                data-openpay-card="card_number"
+                                                @input="formatCardNumber"
+                                                autocomplete="off"
+                                                required
+                                                placeholder="1234 5678 9012 3456"
+                                                maxlength="19">
+
+                                        </div>
+
+                                        <!-- LOGOS -->
+                                        <div class="d-flex align-items-center gap-3 mb-4">
+                                            <img
+                                                src="{{ asset('openpay/cards1.png') }}"
+                                                height="25">
                                         </div>
 
                                         <div class="row mb-4">
-                                            <div class="col-md-6">
+
+                                            <!-- MES -->
+                                            <div class="col-md-3">
+
                                                 <label class="form-label fw-semibold">
-                                                    <i class="bi bi-calendar me-2"></i>Fecha expiración
+                                                    Mes
                                                 </label>
-                                                <input type="text" class="form-control form-control-lg"
-                                                       v-model="payment.exp" required
-                                                       @input="formatExpiration"
-                                                       placeholder="MM/AA"
-                                                       maxlength="5">
+
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-lg"
+                                                    v-model="payment.expMonth"
+                                                    data-openpay-card="expiration_month"
+                                                    placeholder="MM"
+                                                    maxlength="2">
+
                                             </div>
-                                            <div class="col-md-6">
+
+                                            <!-- AÑO -->
+                                            <div class="col-md-3">
+
                                                 <label class="form-label fw-semibold">
-                                                    <i class="bi bi-lock me-2"></i>CVV
+                                                    Año
                                                 </label>
-                                                <input type="text" class="form-control form-control-lg"
-                                                       v-model="payment.cvv" required
-                                                       @input="formatCVV"
-                                                       placeholder="123"
-                                                       maxlength="4">
+
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-lg"
+                                                    v-model="payment.expYear"
+                                                    data-openpay-card="expiration_year"
+                                                    placeholder="AA"
+                                                    maxlength="2">
+
                                             </div>
+
+                                            <!-- CVV -->
+                                            <div class="col-md-6">
+
+                                                <label class="form-label fw-semibold">
+                                                      <img
+                                                        src="{{ asset('openpay/cvv.png') }}"
+                                                        height="25">
+                                                    CVV
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-lg"
+                                                    v-model="payment.cvv"
+                                                    data-openpay-card="cvv2"
+                                                    autocomplete="off"
+                                                    placeholder="123"
+                                                    maxlength="4">
+
+                                            </div>
+
                                         </div>
 
                                         <div class="d-flex gap-3">
-                                            <button type="button"
-                                                    class="btn btn-outline-secondary btn-lg px-4"
-                                                    @click="goToStep2">
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary btn-lg px-4"
+                                                @click="goToStep2">
+
                                                 <i class="bi bi-arrow-left me-2"></i>
                                                 Atrás
+
                                             </button>
-                                            <button type="submit"
-                                                    class="btn btn-success btn-lg fw-bold py-3 flex-grow-1"
-                                                    :disabled="processingPayment">
-                                                <span v-if="processingPayment"
-                                                      class="spinner-border spinner-border-sm me-2"></span>
-                                                <i v-else class="bi bi-shield-check me-2"></i>
-                                                Pagar $@{{ selectedPlan.price.toLocaleString() }}
+                                            <button
+                                                type="submit"
+                                                class="btn btn-success btn-lg fw-bold py-3 flex-grow-1"
+                                                :disabled="processingPayment">
+                                                Pagar
+                                                $@{{ selectedPlan.price.toLocaleString() }}
+
                                             </button>
                                         </div>
+
                                     </form>
+
+                                    <div class="alert alert-light border rounded-4 mt-4">
+                                        <div class="d-flex align-items-center">
+                                            <img
+                                                src="{{ asset('openpay/openpay.png') }}"
+                                                height="30"
+                                                class="me-3">
+                                            <small class="text-muted">
+                                                Tus pagos se procesan de forma segura
+                                                mediante OpenPay y cifrado SSL de 256 bits.
+                                            </small>
+                                        </div>
+                                    </div>
 
                                     <div class="mt-4 text-center">
                                         <small class="text-muted">
-                                            <i class="bi bi-shield-lock me-1"></i>
+                                            <img
+                                                src="{{ asset('openpay/security.png') }}"
+                                                height="30"
+                                                class="me-3">
+
                                             Tus datos están seguros y encriptados
                                         </small>
                                     </div>
+
                                 </div>
 
-                                <!-- Resumen del plan -->
                                 <div class="col-lg-5">
-                                    <div class="border rounded-4 p-4 bg-light">
+
+                                    <div class="border rounded-4 p-4 bg-light h-100">
+
                                         <h5 class="fw-bold mb-4">
+
                                             <i class="bi bi-receipt me-2"></i>
                                             Resumen de tu compra
+
                                         </h5>
 
-                                        <div class="d-flex align-items-center mb-4">
-                                            {{-- <div class="plan-icon-small me-3">
-                                                <i :class="getPlanIcon(selectedPlan.name)"
-                                                   class="fs-3 text-success"></i>
-                                            </div> --}}
-                                            <div>
-                                                <h6 class="fw-bold mb-1">@{{ selectedPlan.name }}</h6>
-                                                <small class="text-muted">@{{ selectedPlan.description }}</small>
-                                            </div>
+                                        <div class="mb-4">
+
+                                            <h6 class="fw-bold mb-1">
+                                                @{{ selectedPlan.name }}
+                                            </h6>
+
+                                            <small class="text-muted">
+                                                @{{ selectedPlan.description }}
+                                            </small>
+
                                         </div>
 
                                         <div class="border-top border-bottom py-3 mb-3">
-                                            <div v-for="feature in selectedPlan.features.slice(0, 3)"
-                                                 :key="feature.id"
-                                                 class="d-flex align-items-center mb-2">
+
+                                            <div
+                                                v-for="feature in selectedPlan.features.slice(0,3)"
+                                                :key="feature.id"
+                                                class="d-flex align-items-center mb-2">
+
                                                 <i class="bi bi-check-circle text-success me-2"></i>
+
                                                 <small>@{{ feature.name }}</small>
+
                                             </div>
-                                            <div v-if="selectedPlan.features.length > 3"
-                                                 class="text-muted small mt-2">
-                                                @{{ selectedPlan.features.length - 3 }} características adicionales
+
+                                            <div
+                                                v-if="selectedPlan.features.length > 3"
+                                                class="text-muted small mt-2">
+
+                                                @{{ selectedPlan.features.length - 3 }}
+                                                características adicionales
+
                                             </div>
+
                                         </div>
 
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="fw-semibold">Subtotal mensual:</span>
-                                            <span class="fw-bold">$@{{ selectedPlan.price.toLocaleString() }}</span>
+                                        <div class="d-flex justify-content-between mb-3">
+
+                                            <span class="fw-semibold">
+                                                Subtotal mensual:
+                                            </span>
+
+                                            <span class="fw-bold">
+                                                $@{{ selectedPlan.price.toLocaleString() }}
+                                            </span>
+
                                         </div>
 
                                         <hr>
 
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="fs-5 fw-bold">Total a pagar:</span>
-                                            <span class="fs-3 fw-bold text-success">
-                                                $@{{ selectedPlan.price.toLocaleString() }}
+                                        <div class="d-flex justify-content-between align-items-center">
+
+                                            <span class="fs-5 fw-bold">
+                                                Total:
                                             </span>
+
+                                            <span class="fs-3 fw-bold text-success">
+
+                                                $@{{ selectedPlan.price.toLocaleString() }}
+
+                                            </span>
+
                                         </div>
 
-                                        <div class="alert alert-success small mb-0 mt-3">
+                                        <div class="alert alert-success small mt-4 mb-0">
+
                                             <i class="bi bi-arrow-repeat me-2"></i>
+
                                             Pago mensual, puedes cancelar cuando quieras
+
                                         </div>
+
                                     </div>
+
                                 </div>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+
+<style>
+    .form-control-lg {
+    border-radius: 14px;
+    padding: 14px 18px;
+    border: 1px solid #dcdcdc;
+    transition: all .3s ease;
+}
+
+.form-control-lg:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 .2rem rgba(25, 135, 84, .15);
+}
+
+.card {
+    border-radius: 24px;
+}
+
+.btn-success {
+    border-radius: 14px;
+}
+
+.btn-outline-secondary {
+    border-radius: 14px;
+}
+
+.alert {
+    border-radius: 16px;
+}
+</style>

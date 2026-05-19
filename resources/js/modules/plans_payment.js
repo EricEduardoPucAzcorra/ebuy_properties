@@ -7,10 +7,13 @@ new Vue({
             loadingView: true,
             currentStep: 1, // 1: Elegir plan, 2: Detalles, 3: Pago
             processingPayment: false,
+            deviceSessionId: null,
+            processingPayment: false,
             payment: {
                 name: '',
                 card: '',
-                exp: '',
+                expMonth: '',
+                expYear: '',
                 cvv: ''
             }
         }
@@ -18,6 +21,17 @@ new Vue({
 
     mounted() {
         this.fetchPlans();
+
+        OpenPay.setId('TU_MERCHANT_ID');
+
+        OpenPay.setApiKey('TU_PUBLIC_KEY');
+
+        OpenPay.setSandboxMode(true);
+
+        this.deviceSessionId = OpenPay.deviceData.setup(
+            'payment-form',
+            'deviceIdHiddenFieldName'
+        );
     },
 
     methods: {
@@ -208,12 +222,68 @@ new Vue({
             } else {
                 alert(`${title}: ${message}`);
             }
+        },
+
+
+        formatCardNumber() {
+
+            this.payment.card = this.payment.card
+                .replace(/\s/g, '')
+                .replace(/(.{4})/g, '$1 ')
+                .trim();
+        },
+
+        processPayment() {
+
+            this.processingPayment = true;
+
+            OpenPay.token.extractFormAndCreate(
+                'payment-form',
+                this.successCallback,
+                this.errorCallback
+            );
+        },
+
+        successCallback(response) {
+
+            const tokenId = response.data.id;
+
+            axios.post('/api/payments/process', {
+
+                token_id: tokenId,
+
+                device_session_id: this.deviceSessionId,
+
+                plan_id: this.selectedPlan.id
+
+            }).then((response) => {
+
+                this.processingPayment = false;
+
+                alert('Pago realizado correctamente');
+
+            }).catch((error) => {
+
+                this.processingPayment = false;
+
+                alert('Error procesando el pago');
+
+            });
+        },
+
+        errorCallback(response) {
+
+            this.processingPayment = false;
+
+            let desc = response.data.description || response.message;
+
+            alert(`ERROR [${response.status}] ${desc}`);
         }
     },
 
     watch: {
         currentStep(newVal) {
-            switch(newVal) {
+            switch (newVal) {
                 case 1:
                     document.title = 'Elige tu plan | Ebuy Properties';
                     break;

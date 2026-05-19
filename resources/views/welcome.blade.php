@@ -46,8 +46,8 @@
                 <div class="row g-5">
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Ebuy Properties</h5>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ auto_trans('Mérida, Yucatán, México') }}</p>
-                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i><a class="text-white-50" href="tel:+520000000000">+52 00 00 00 00 00</a></p>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ auto_trans('Calle 10 #317 x 25B y 25B1, Colonia Benito Juárez Oriente en Mérida, Yucatán.') }}</p>
+                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i><a class="text-white-50" href="tel:+520000000000">+52 999 725 5903</a></p>
                         <p class="mb-2"><i class="fa fa-envelope me-3"></i><a class="text-white-50" href="mailto:contacto@ebuyproperties.com">contacto@ebuyproperties.com</a></p>
                         <div class="d-flex pt-2">
                             <a class="btn btn-outline-light btn-social" href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -90,10 +90,10 @@
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">{{auto_trans('Conoce EBuy Properties')}}</h5>
                         <p>{{auto_trans('La plataforma líder para comprar, vender y rentar propiedades de forma inteligente. Conecta con las mejores oportunidades del mercado inmobiliario en un solo lugar.')}}</p>
-                        <div class="position-relative mx-auto" style="max-width: 400px;">
+                        <!-- <div class="position-relative mx-auto" style="max-width: 400px;">
                             <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Tu correo electrónico">
                             <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">{{auto_trans('Iniciar')}}</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -101,11 +101,11 @@
                 <div class="copyright">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="/">Ebuy Properties</a>, {{auto_trans('Todos los derechos reservados.')}}
+                            &copy; <a class="border-bottom" href="http://ebuyproperties.com/">Ebuy Properties</a>, {{auto_trans('Todos los derechos reservados.')}}
 
 							<!--/*** Mis creditos a los creadores de esta plantilla mil gracias ***/-->
                             <!--/*** Son expertos e increimbles. ***/-->
-                            {{auto_trans('Mis creditos a')}} <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                            <!-- {{auto_trans('Mis creditos a')}} <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> -->
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">
@@ -116,6 +116,24 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banner de Cookies y Privacidad -->
+    <div id="cookieConsent" class="cookie-consent" style="display: none;">
+        <div class="cookie-container">
+            <div class="cookie-content">
+                <i class="fas fa-cookie-bite cookie-icon"></i>
+                <div class="cookie-text">
+                    <strong>{{auto_trans('Uso de cookies y privacidad')}}</strong>
+                    <p>{{auto_trans('Utilizamos cookies para mejorar tu experiencia. Al hacer clic en "Aceptar", consientes su uso. Revisa nuestro')}} 
+                    <a href="{{ asset('ebuy/Aviso de privacidad Ebuy.pdf') }}" target="_blank">{{auto_trans('Aviso de Privacidad')}}</a>.</p>
+                </div>
+                <div class="cookie-buttons">
+                    <button id="acceptCookies" class="btn btn-primary btn-sm">{{auto_trans('Aceptar')}}</button>
+                    <button id="rejectCookies" class="btn btn-outline-light btn-sm">{{auto_trans('Rechazar')}}</button>
                 </div>
             </div>
         </div>
@@ -299,6 +317,64 @@
                     body.style.overflow = '';
                 }
             });
+        });
+    </script>
+
+    <script>
+        class CookieConsentManager {
+            constructor() {
+                this.consentKey = 'ebuy_cookie_consent';
+                this.init();
+            }
+            
+            init() {
+                this.checkConsent();
+                this.setupEventListeners();
+            }
+            
+            checkConsent() {
+                const saved = localStorage.getItem(this.consentKey);
+                if (saved === 'accepted') {
+                    return;
+                }
+                if (saved === 'rejected') {
+                    return;
+                }
+                this.showBanner();
+            }
+            
+            showBanner() {
+                const banner = document.getElementById('cookieConsent');
+                if (banner) banner.style.display = 'block';
+            }
+            
+            hideBanner() {
+                const banner = document.getElementById('cookieConsent');
+                if (banner) banner.style.display = 'none';
+            }
+            
+            setupEventListeners() {
+                const acceptBtn = document.getElementById('acceptCookies');
+                const rejectBtn = document.getElementById('rejectCookies');
+                
+                if (acceptBtn) {
+                    acceptBtn.addEventListener('click', () => {
+                        localStorage.setItem(this.consentKey, 'accepted');
+                        this.hideBanner();
+                    });
+                }
+                
+                if (rejectBtn) {
+                    rejectBtn.addEventListener('click', () => {
+                        localStorage.setItem(this.consentKey, 'rejected');
+                        this.hideBanner();
+                    });
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => new CookieConsentManager(), 100);
         });
     </script>
 

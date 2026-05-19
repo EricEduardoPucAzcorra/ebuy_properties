@@ -1,3 +1,7 @@
+@php
+    use App\Models\Propertie;
+    $propertiesCountThisMounth = Propertie::RegisterThisMonth()->count();
+@endphp
 @extends('welcome')
 @section('content')
 <div class="container-fluid bg-white py-5">
@@ -7,7 +11,7 @@
                 <div class="img-stack">
                     <img class="img-fluid w-100" src="{{asset('images/ebuy_1.png')}}" alt="Propiedades">
                     <div class="floating-card">
-                        <h5 class="mb-1 text-primary">+1,200</h5>
+                        <h5 class="mb-1 text-primary">+{{$propertiesCountThisMounth}}</h5>
                         <p class="mb-0 small text-muted">{{auto_trans('Propiedades publicadas este mes')}}</p>
                     </div>
                 </div>
@@ -15,32 +19,61 @@
 
             <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.3s">
                 <h6 class="text-primary text-uppercase fw-bold mb-2">{{auto_trans('Sobre Nosotros')}}</h6>
-                <h1 class="display-5 mb-4">{{auto_trans('La Nueva Era del Real Estate en')}} <span class="ebuy-gradient-text">Ebuy Properties</span></h1>
-                <p class="lead text-dark mb-4">{{auto_trans('No somos solo un listado. Somos el puente digital entre quienes buscan un hogar y quienes ofrecen oportunidades.')}}</p>
+                <!-- <h1 class="display-5 mb-4">{{auto_trans('La Nueva Era del Real Estate en')}} <span class="ebuy-gradient-text">Ebuy Properties</span></h1> -->
+                <!-- <p class="lead text-dark mb-4">{{auto_trans('Ebuy Properties fue fundada en 2021, iniciando operaciones hasta diciembre de 2022. Somos un portal inmobiliario en el que se
+                        ofrece la posibilidad de anunciar propiedades de una manera fácil, rápida y segura, ya sea a particulares, agentes inmobiliarios y/o a desarrolladores.')}}</p> -->
 
                 <p class="mb-4 text-muted">
-                    {{auto_trans('Nuestra plataforma permite a inmobiliarias y dueños particulares promocionar sus espacios con tecnología de punta, asegurando que cada propiedad brille ante los ojos de los inversores correctos.')}}
+                   {{auto_trans('Ebuy Properties fue fundada en 2021, iniciando operaciones hasta diciembre de 2022. Somos un portal inmobiliario en el que se
+                        ofrece la posibilidad de anunciar propiedades de una manera fácil, rápida y segura, ya sea a particulares, agentes inmobiliarios y/o a desarrolladores.')}}
                 </p>
 
-                <div class="row g-4">
-                    <div class="col-sm-6">
-                        <div class="feature-box">
+                <h6 class="text-primary text-uppercase fw-bold mb-2">{{auto_trans('Objetivos')}}</h6>
+
+                <p class="mb-4 text-muted">
+                   {{auto_trans(' Nuestro objetivo es poder anunciar todo tipo de inmueble en venta o renta, como pueden ser terrenos, casas, departamentos, villas, desarrollos, bodegas, etc. Primeramente, en el estado de Yucatán, hasta llegar al resto de la República Mexicana.')}}
+                </p>
+
+                <p class="mb-4 text-muted">
+                   {{auto_trans(' La ventaja principal que caracteriza nuestro portal es la fácil y rápida localización exacta en el mapa en forma simultánea con las demás propiedades anunciadas, lo que permite conocer el área donde se encuentra y compararla con las demás propiedades en precio y calidad, en forma virtual y sin tener que desplazarse hasta las propiedades.')}}
+                </p>
+
+               <div class="row g-4">
+
+                    <!-- AGENCIAS -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="feature-box h-100">
                             <div class="d-flex align-items-center mb-3">
                                 <i class="fa fa-building fa-2x text-primary me-3"></i>
-                                <h5 class="mb-0">{{auto_trans('Agencias')}}</h5>
+
+                                <h5 class="mb-0">
+                                    {{auto_trans('Agencias')}}
+                                </h5>
                             </div>
-                            <p class="small mb-0">{{auto_trans('Gestión profesional de múltiples listados con métricas en tiempo real....')}}</p>
+
+                            <p class="small mb-0">
+                                {{auto_trans('Administra múltiples propiedades y clientes desde una plataforma profesional y moderna.')}}
+                            </p>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="feature-box">
+
+                    <!-- DUEÑOS -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="feature-box h-100">
                             <div class="d-flex align-items-center mb-3">
                                 <i class="fa fa-user-check fa-2x text-primary me-3"></i>
-                                <h5 class="mb-0">{{auto_trans('Dueños')}}</h5>
+
+                                <h5 class="mb-0">
+                                    {{auto_trans('Dueños')}}
+                                </h5>
                             </div>
-                            <p class="small mb-0">{{auto_trans('Publica en minutos y mantén el control total de tu negociación.')}}</p>
+
+                            <p class="small mb-0">
+                                {{auto_trans('Publica tu propiedad fácilmente y conecta directamente con compradores.')}}
+                            </p>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="mt-5">
@@ -52,7 +85,7 @@
 </div>
 
 <!-- Statistics Section -->
-<div class="container-fluid py-5 bg-light">
+<!-- <div class="container-fluid py-5 bg-light">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
             <h6 class="text-primary text-uppercase fw-bold mb-2">{{auto_trans('Nuestros Logros')}}</h6>
@@ -97,10 +130,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Mission & Values Section -->
-<div class="container-fluid bg-white py-5">
+<!-- <div class="container-fluid bg-white py-5">
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
@@ -177,10 +210,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Team Section -->
-<div class="container-fluid bg-light py-5">
+<!-- <div class="container-fluid bg-light py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
             <h6 class="text-primary text-uppercase fw-bold mb-2">{{auto_trans('Nuestro Equipo')}}</h6>
@@ -242,10 +275,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Testimonials Section -->
-<div class="container-fluid bg-white py-5">
+<!-- <div class="container-fluid bg-white py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
             <h6 class="text-primary text-uppercase fw-bold mb-2">{{auto_trans('Testimonios')}}</h6>
@@ -306,21 +339,23 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Timeline Section -->
 <div class="container-fluid bg-light py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
             <h6 class="text-primary text-uppercase fw-bold mb-2">{{auto_trans('Nuestra Historia')}}</h6>
-            <h1 class="display-5 mb-4">{{auto_trans('Creciendo con Cada Paso')}}</h1>
-            <p class="text-muted">{{auto_trans('El viaje que nos ha convertido en líderes del mercado.')}}</p>
+            <!-- <h1 class="display-5 mb-4">{{auto_trans('Creciendo con Cada Paso')}}</h1> -->
+            <p class="text-muted">
+                {{auto_trans('Somos una empresa innovadora enfocada en transformar la experiencia del mercado inmobiliario en México y América Latina, ofreciendo una plataforma moderna, rápida y segura para conectar propiedades con personas.')}}
+            </p>
         </div>
         <div class="timeline">
             <div class="timeline-item wow fadeIn" data-wow-delay="0.1s">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h5>2020</h5>
+                    <h5>2021</h5>
                     <h6>{{auto_trans('El Comienzo')}}</h6>
                     <p class="text-muted">{{auto_trans('Nacimos con la misión de digitalizar el mercado inmobiliario.')}}</p>
                 </div>
@@ -328,33 +363,33 @@
             <div class="timeline-item wow fadeIn" data-wow-delay="0.3s">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h5>2021</h5>
-                    <h6>{{auto_trans('Primera Ronda de Inversión')}}</h6>
-                    <p class="text-muted">{{auto_trans('Recibimos funding para expandir nuestra tecnología.')}}</p>
+                    <h5>2022</h5>
+                    <h6>{{auto_trans('Inicio de operaciones')}}</h6>
+                    <p class="text-muted">{{auto_trans('Se inicio las primeras operaciones y pruebas en el mercado.')}}</p>
                 </div>
             </div>
             <div class="timeline-item wow fadeIn" data-wow-delay="0.5s">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h5>2022</h5>
-                    <h6>{{auto_trans('Expansión Nacional')}}</h6>
-                    <p class="text-muted">{{auto_trans('Llegamos a más de 20 ciudades en el país.')}}</p>
+                    <h5>2022 - 2024</h5>
+                    <h6>{{auto_trans('Pausamiento de operaciones por mejoras')}}</h6>
+                    <p class="text-muted">{{auto_trans('Durante este periodo, la empresa se enfocó en consolidar sus operaciones y mejorar su plataforma.')}}</p>
                 </div>
             </div>
             <div class="timeline-item wow fadeIn" data-wow-delay="0.7s">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h5>2023</h5>
-                    <h6>{{auto_trans('Lanzamiento de App Móvil')}}</h6>
-                    <p class="text-muted">{{auto_trans('Revolutionamos la experiencia móvil para nuestros usuarios.')}}</p>
+                    <h5>2025</h5>
+                    <h6>{{auto_trans('Retorno en su desarrollo')}}</h6>
+                    <p class="text-muted">{{auto_trans('Retornamos con nuevas herramientas y mejoras para ofrecer una experiencia aún mejor.')}}</p>
                 </div>
             </div>
             <div class="timeline-item wow fadeIn" data-wow-delay="0.9s">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h5>2024</h5>
-                    <h6>{{auto_trans('Líderes del Mercado')}}</h6>
-                    <p class="text-muted">{{auto_trans('Nos consolidamos como la plataforma preferida por miles de usuarios.')}}</p>
+                    <h5>2026</h5>
+                    <h6>{{auto_trans('Lanzamiento de la segunda versión')}}</h6>
+                    <p class="text-muted">{{auto_trans('Lanzamos la segunda versión de nuestra plataforma con nuevas funcionalidades y mejoras.')}}</p>
                 </div>
             </div>
         </div>

@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <!-- <div class="row mt-4">
             <div class="col-12 wow fadeInUp" data-wow-delay="0.35s">
                 <div class="bg-light rounded p-4" style="border: 1px dashed rgba(0, 185, 142, .3)">
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
@@ -59,6 +59,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>

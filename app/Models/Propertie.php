@@ -235,4 +235,10 @@ class Propertie extends Model
 
         return $query->orderBy('created_at', 'desc');
     }
+
+    public function scopeRegisterThisMonth($query)
+    {
+        return $query->whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year);
+    }
 }

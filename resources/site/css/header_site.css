@@ -1,0 +1,140 @@
+/* Hero principal */
+.ebuy-hero {
+    position: relative;
+    width: 100%;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fondo del carrusel */
+.ebuy-hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Carrusel 100% altura */
+.ebuy-hero-background .owl-carousel,
+.ebuy-hero-background .owl-stage-outer,
+.ebuy-hero-background .owl-stage,
+.ebuy-hero-background .owl-item,
+.ebuy-hero-background .owl-carousel-item,
+.ebuy-hero-slide {
+    height: 100%;
+}
+
+.ebuy-hero-slide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.ebuy-hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Overlay */
+.ebuy-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+.z-index-1 {
+    position: relative;
+    z-index: 2;
+}
+
+/* Pill */
+.ebuy-hero-pill {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Título */
+.ebuy-hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: white;
+    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.02em;
+}
+
+/* Subtítulo */
+.ebuy-hero-subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+    font-weight: 400;
+}
+
+/* Elimina fondos grises */
+.ebuy-hero,
+.ebuy-hero .container,
+.ebuy-hero .row,
+.ebuy-hero [class*="col-"] {
+    background: transparent !important;
+}
+
+/* RESPONSIVE MÓVIL - Imagen a full sin espacio blanco */
+@media (max-width: 768px) {
+    .ebuy-hero-title {
+        font-size: 1.8rem;
+    }
+
+    .ebuy-hero-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .ebuy-hero-pill {
+        font-size: 0.7rem;
+        padding: 4px 12px;
+    }
+
+    /* Forzar que el hero ocupe todo el ancho y la imagen se vea completa */
+    .ebuy-hero {
+        min-height: 100vh;
+        height: auto;
+    }
+
+    .ebuy-hero-background {
+        position: absolute;
+        height: 100%;
+        min-height: 100vh;
+    }
+
+    .ebuy-hero-slide {
+        min-height: 100vh;
+    }
+
+    .ebuy-hero-slide img {
+        object-fit: cover;
+        min-height: 100vh;
+    }
+
+    /* Asegurar que no haya espacio blanco debajo */
+    body,
+    html {
+        margin: 0;
+        padding: 0;
+    }
+}
