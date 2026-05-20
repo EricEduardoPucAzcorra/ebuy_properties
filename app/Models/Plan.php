@@ -17,7 +17,8 @@ class Plan extends Model
         'description',
         // 'features',
         'is_featured',
-        'is_active'
+        'is_active',
+        'openpay_plan_id'
     ];
 
     protected $casts = [

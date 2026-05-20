@@ -7,7 +7,9 @@ use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\PropertyAttributeController;
 use App\Http\Controllers\PropertyFeatureController;
 use App\Http\Controllers\TypePropertieController;
+use App\Http\Controllers\OpenpayController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/mypropiertes', [PropertiesController::class, 'ownerPropertiesView'])->name('mypropiertes');
@@ -23,4 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/property-attributes/defaults', [PropertyAttributeController::class, 'defaults']);
     Route::get('/states-properties', [PropertiesController::class, 'states_properties']);
     Route::post('/properties/{id}/status', [PropertiesController::class, 'updateStatus']);
+
+    Route::post('/payments/process', [OpenpayController::class, 'process']);
+
 });

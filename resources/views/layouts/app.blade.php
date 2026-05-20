@@ -138,8 +138,11 @@
     </div>
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> -->
-    <script src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
-    <script src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
+    <!-- <script src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
+    <script src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script> -->
+    <script src="https://js.openpay.mx/openpay.v1.min.js"></script>
+
+    <script src="https://js.openpay.mx/openpay-data.v1.min.js"></script>
 
     <script>
         window.addEventListener('load', () => {

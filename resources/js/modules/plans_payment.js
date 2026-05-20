@@ -22,9 +22,9 @@ new Vue({
     mounted() {
         this.fetchPlans();
 
-        OpenPay.setId('TU_MERCHANT_ID');
+        OpenPay.setId('mndpzbubugodrfun9l5k');
 
-        OpenPay.setApiKey('TU_PUBLIC_KEY');
+        OpenPay.setApiKey('pk_13f476df917b4b9b84d1304615d39bbb');
 
         OpenPay.setSandboxMode(true);
 
@@ -120,51 +120,51 @@ new Vue({
             this.payment.cvv = event.target.value.replace(/\D/g, '').substring(0, 4);
         },
 
-        async processPayment() {
-            if (!this.validatePayment()) {
-                return;
-            }
+        // async processPayment() {
+        //     if (!this.validatePayment()) {
+        //         return;
+        //     }
 
-            this.processingPayment = true;
+        //     this.processingPayment = true;
 
-            try {
-                await new Promise(resolve => setTimeout(resolve, 2000));
+        //     try {
+        //         await new Promise(resolve => setTimeout(resolve, 2000));
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Pago exitoso!',
-                    html: `
-                        <div class="text-center">
-                            <i class="bi bi-check-circle-fill text-success display-4 mb-3"></i>
-                            <h5 class="fw-bold">¡Felicidades!</h5>
-                            <p class="fs-5">Has adquirido el plan</p>
-                            <p class="fs-3 fw-bold text-success">${this.selectedPlan.name}</p>
-                            <p class="text-muted">$${this.selectedPlan.price.toLocaleString()}/mes</p>
-                        </div>
-                    `,
-                    confirmButtonText: 'Ir a mi cuenta',
-                    confirmButtonColor: '#198754'
-                });
+        //         Swal.fire({
+        //             icon: 'success',
+        //             title: '¡Pago exitoso!',
+        //             html: `
+        //                 <div class="text-center">
+        //                     <i class="bi bi-check-circle-fill text-success display-4 mb-3"></i>
+        //                     <h5 class="fw-bold">¡Felicidades!</h5>
+        //                     <p class="fs-5">Has adquirido el plan</p>
+        //                     <p class="fs-3 fw-bold text-success">${this.selectedPlan.name}</p>
+        //                     <p class="text-muted">$${this.selectedPlan.price.toLocaleString()}/mes</p>
+        //                 </div>
+        //             `,
+        //             confirmButtonText: 'Ir a mi cuenta',
+        //             confirmButtonColor: '#198754'
+        //         });
 
-                // Reiniciar todo después del pago exitoso
-                this.currentStep = 1;
-                this.selectedPlan = null;
-                this.resetPaymentForm();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+        //         // Reiniciar todo después del pago exitoso
+        //         this.currentStep = 1;
+        //         this.selectedPlan = null;
+        //         this.resetPaymentForm();
+        //         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            } catch (error) {
-                console.error('Error en el pago:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error en el pago',
-                    text: 'No se pudo procesar el pago. Por favor intenta nuevamente.',
-                    confirmButtonText: 'Entendido',
-                    confirmButtonColor: '#dc3545'
-                });
-            } finally {
-                this.processingPayment = false;
-            }
-        },
+        //     } catch (error) {
+        //         console.error('Error en el pago:', error);
+        //         Swal.fire({
+        //             icon: 'error',
+        //             title: 'Error en el pago',
+        //             text: 'No se pudo procesar el pago. Por favor intenta nuevamente.',
+        //             confirmButtonText: 'Entendido',
+        //             confirmButtonColor: '#dc3545'
+        //         });
+        //     } finally {
+        //         this.processingPayment = false;
+        //     }
+        // },
 
         validatePayment() {
             if (!this.payment.name.trim() || this.payment.name.length < 3) {
@@ -233,22 +233,87 @@ new Vue({
                 .trim();
         },
 
+        // processPayment() {
+
+        //     this.processingPayment = true;
+
+        //     OpenPay.token.extractFormAndCreate(
+        //         'payment-form',
+        //         this.successCallback,
+        //         this.errorCallback
+        //     );
+        // },
+
         processPayment() {
+
+            if (this.processingPayment) return;
 
             this.processingPayment = true;
 
-            OpenPay.token.extractFormAndCreate(
-                'payment-form',
-                this.successCallback,
-                this.errorCallback
-            );
+            if (this.payment.card.replace(/\s/g, '').length < 16) {
+
+                this.processingPayment = false;
+
+                alert('Número de tarjeta inválido');
+
+                return;
+            }
+
+            this.payment.card = this.payment.card.replace(/\s/g, '');
+
+            if (!this.payment.expMonth) {
+
+                this.processingPayment = false;
+
+                alert('Mes requerido');
+
+                return;
+            }
+
+            if (!this.payment.expYear) {
+
+                this.processingPayment = false;
+
+                alert('Año requerido');
+
+                return;
+            }
+
+            if (!this.payment.cvv) {
+
+                this.processingPayment = false;
+
+                alert('CVV requerido');
+
+                return;
+            }
+
+
+            this.$nextTick(() => {
+
+                OpenPay.token.extractFormAndCreate(
+
+                    'payment-form',
+
+                    (response) => {
+
+                        this.successCallback(response);
+                    },
+
+                    (response) => {
+
+                        this.errorCallback(response);
+                    }
+                );
+
+            });
         },
 
         successCallback(response) {
 
             const tokenId = response.data.id;
 
-            axios.post('/api/payments/process', {
+            axios.post('/payments/process', {
 
                 token_id: tokenId,
 
@@ -256,29 +321,41 @@ new Vue({
 
                 plan_id: this.selectedPlan.id
 
-            }).then((response) => {
+            })
 
-                this.processingPayment = false;
+                .then((response) => {
 
-                alert('Pago realizado correctamente');
+                    this.processingPayment = false;
 
-            }).catch((error) => {
+                    console.log(response)
 
-                this.processingPayment = false;
+                    alert('Pago realizado correctamente');
 
-                alert('Error procesando el pago');
+                })
 
-            });
+                .catch((error) => {
+
+                    this.processingPayment = false;
+
+                    console.log(error);
+
+                    alert(
+                        error.response?.data?.message ||
+                        'Error procesando pago'
+                    );
+                });
         },
 
         errorCallback(response) {
 
             this.processingPayment = false;
 
-            let desc = response.data.description || response.message;
+            let desc =
+                response.data?.description ||
+                response.message;
 
             alert(`ERROR [${response.status}] ${desc}`);
-        }
+        },
     },
 
     watch: {

@@ -209,7 +209,13 @@
 
                                     <form
                                         id="payment-form"
+                                        autocomplete="off"
                                         @submit.prevent="processPayment">
+
+                                        <input
+                                            type="hidden"
+                                            id="deviceIdHiddenFieldName"
+                                            name="deviceIdHiddenFieldName">
 
                                         <!-- Nombre -->
                                         <div class="mb-4">
@@ -222,6 +228,7 @@
                                                 class="form-control form-control-lg"
                                                 v-model="payment.name"
                                                 data-openpay-card="holder_name"
+                                                 autocomplete="off"
                                                 required
                                                 placeholder="Como aparece en la tarjeta">
                                         </div>
@@ -242,6 +249,7 @@
                                                 @input="formatCardNumber"
                                                 autocomplete="off"
                                                 required
+                                                 inputmode="numeric"
                                                 placeholder="1234 5678 9012 3456"
                                                 maxlength="19">
 
@@ -268,6 +276,8 @@
                                                     class="form-control form-control-lg"
                                                     v-model="payment.expMonth"
                                                     data-openpay-card="expiration_month"
+                                                    inputmode="numeric"
+                                                    autocomplete="off"
                                                     placeholder="MM"
                                                     maxlength="2">
 
@@ -280,11 +290,13 @@
                                                     Año
                                                 </label>
 
-                                                <input
+                                               <input
                                                     type="text"
                                                     class="form-control form-control-lg"
                                                     v-model="payment.expYear"
                                                     data-openpay-card="expiration_year"
+                                                    inputmode="numeric"
+                                                    autocomplete="off"
                                                     placeholder="AA"
                                                     maxlength="2">
 
@@ -300,12 +312,13 @@
                                                     CVV
                                                 </label>
 
-                                                <input
-                                                    type="text"
+                                               <input
+                                                    type="password"
                                                     class="form-control form-control-lg"
                                                     v-model="payment.cvv"
                                                     data-openpay-card="cvv2"
                                                     autocomplete="off"
+                                                    inputmode="numeric"
                                                     placeholder="123"
                                                     maxlength="4">
 
@@ -327,6 +340,7 @@
                                                 type="submit"
                                                 class="btn btn-success btn-lg fw-bold py-3 flex-grow-1"
                                                 :disabled="processingPayment">
+
                                                 Pagar
                                                 $@{{ selectedPlan.price.toLocaleString() }}
 
