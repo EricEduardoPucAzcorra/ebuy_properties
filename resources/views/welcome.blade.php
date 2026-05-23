@@ -10,7 +10,8 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
+    <!-- <link rel="icon" href="{{ asset('img/favicon.ico') }}"> -->
+    <link rel="icon" href="{{ asset('images/ebuy_1.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

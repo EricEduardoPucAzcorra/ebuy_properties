@@ -12,5 +12,7 @@ return array (
   'plan_features' => 'Plan features',
   'myproperties'=>'My properties',
   'profile'=>'Mi perfil',
-  'help'=>'Help'
+  'help'=>'Help',
+  'myfavorites'=>'My favorites',
+  'myplans'=>'My plans',
 );

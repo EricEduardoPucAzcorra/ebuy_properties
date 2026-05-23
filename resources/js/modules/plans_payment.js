@@ -5,10 +5,12 @@ new Vue({
             plans: [],
             selectedPlan: null,
             loadingView: true,
-            currentStep: 1, // 1: Elegir plan, 2: Detalles, 3: Pago
+            currentStep: 1,
             processingPayment: false,
             deviceSessionId: null,
-            processingPayment: false,
+            processingAction: false,
+            subscriptions: null,
+            loadingSubscription: true,
             payment: {
                 name: '',
                 card: '',
@@ -19,13 +21,26 @@ new Vue({
         }
     },
 
+    computed: {
+        hasActiveSubscription() {
+            if (!this.subscriptions || !Array.isArray(this.subscriptions)) {
+                return false;
+            }
+            return this.subscriptions.some(sub => sub.status === 'Activa');
+        },
+        currentPlan() {
+            if (!this.hasActiveSubscription) return null
+            const activeSubscription = this.subscriptions.find(sub => sub.status === 'Activa')
+            return this.plans.find(p => p.id === activeSubscription.plan_id)
+        }
+    },
+
     mounted() {
         this.fetchPlans();
+        this.fetchsubscriptions();
 
         OpenPay.setId('mndpzbubugodrfun9l5k');
-
         OpenPay.setApiKey('pk_13f476df917b4b9b84d1304615d39bbb');
-
         OpenPay.setSandboxMode(true);
 
         this.deviceSessionId = OpenPay.deviceData.setup(
@@ -35,6 +50,14 @@ new Vue({
     },
 
     methods: {
+        getPlanStatus(planId) {
+            if (!this.subscriptions || !Array.isArray(this.subscriptions)) {
+                return null;
+            }
+            const subscription = this.subscriptions.find(sub => sub.plan_id === planId);
+            return subscription ? subscription.status : null;
+        },
+
         async fetchPlans() {
             try {
                 this.loadingView = true;
@@ -48,19 +71,55 @@ new Vue({
             }
         },
 
-        getPlanIcon(planName) {
-            const name = planName.toLowerCase();
-            if (name.includes('básico') || name.includes('basico')) return 'bi bi-star';
-            if (name.includes('profesional')) return 'bi bi-briefcase';
-            if (name.includes('premium') || name.includes('empresarial')) return 'bi bi-gem';
-            if (name.includes('agencia')) return 'bi bi-building';
-            return 'bi bi-box';
+        async fetchsubscriptions() {
+            try {
+                this.loadingSubscription = true;
+                const response = await axios.get('/owner/current-subscriptions');
+                this.subscriptions = response.data;
+            } catch (error) {
+                console.error('Error cargando suscripción:', error);
+                this.subscriptions = null;
+            } finally {
+                this.loadingSubscription = false;
+            }
         },
 
         selectPlan(plan) {
             this.selectedPlan = plan;
             this.currentStep = 2;
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        async cancelSubscription() {
+            this.processingAction = true;
+            try {
+                const result = await Swal.fire({
+                    title: '¿Cancelar suscripción?',
+                    text: 'Esta acción cancelará tu suscripción actual. ¿Estás seguro?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí',
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6'
+                });
+
+                if (result.isConfirmed) {
+                    await axios.post('/owner/subscriptions/cancel');
+                    await this.fetchsubscriptions();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Suscripción cancelada',
+                        text: 'Tu suscripción ha sido cancelada correctamente',
+                        confirmButtonText: 'Entendido'
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                this.showError('Error al cancelar la suscripción');
+            } finally {
+                this.processingAction = false;
+            }
         },
 
         goToStep1() {
@@ -90,7 +149,8 @@ new Vue({
             this.payment = {
                 name: '',
                 card: '',
-                exp: '',
+                expMonth: '',
+                expYear: '',
                 cvv: ''
             };
             this.processingPayment = false;
@@ -120,52 +180,6 @@ new Vue({
             this.payment.cvv = event.target.value.replace(/\D/g, '').substring(0, 4);
         },
 
-        // async processPayment() {
-        //     if (!this.validatePayment()) {
-        //         return;
-        //     }
-
-        //     this.processingPayment = true;
-
-        //     try {
-        //         await new Promise(resolve => setTimeout(resolve, 2000));
-
-        //         Swal.fire({
-        //             icon: 'success',
-        //             title: '¡Pago exitoso!',
-        //             html: `
-        //                 <div class="text-center">
-        //                     <i class="bi bi-check-circle-fill text-success display-4 mb-3"></i>
-        //                     <h5 class="fw-bold">¡Felicidades!</h5>
-        //                     <p class="fs-5">Has adquirido el plan</p>
-        //                     <p class="fs-3 fw-bold text-success">${this.selectedPlan.name}</p>
-        //                     <p class="text-muted">$${this.selectedPlan.price.toLocaleString()}/mes</p>
-        //                 </div>
-        //             `,
-        //             confirmButtonText: 'Ir a mi cuenta',
-        //             confirmButtonColor: '#198754'
-        //         });
-
-        //         // Reiniciar todo después del pago exitoso
-        //         this.currentStep = 1;
-        //         this.selectedPlan = null;
-        //         this.resetPaymentForm();
-        //         window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        //     } catch (error) {
-        //         console.error('Error en el pago:', error);
-        //         Swal.fire({
-        //             icon: 'error',
-        //             title: 'Error en el pago',
-        //             text: 'No se pudo procesar el pago. Por favor intenta nuevamente.',
-        //             confirmButtonText: 'Entendido',
-        //             confirmButtonColor: '#dc3545'
-        //         });
-        //     } finally {
-        //         this.processingPayment = false;
-        //     }
-        // },
-
         validatePayment() {
             if (!this.payment.name.trim() || this.payment.name.length < 3) {
                 Swal.fire({
@@ -188,11 +202,11 @@ new Vue({
                 return false;
             }
 
-            if (!/^\d{2}\/\d{2}$/.test(this.payment.exp)) {
+            if (!this.payment.expMonth || !this.payment.expYear) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Fecha incorrecta',
-                    text: 'Usa el formato MM/AA (ejemplo: 12/25)',
+                    text: 'Ingresa mes y año de expiración',
                     confirmButtonText: 'Entendido'
                 });
                 return false;
@@ -224,123 +238,72 @@ new Vue({
             }
         },
 
-
-        formatCardNumber() {
-
-            this.payment.card = this.payment.card
-                .replace(/\s/g, '')
-                .replace(/(.{4})/g, '$1 ')
-                .trim();
-        },
-
         processPayment() {
-
             if (this.processingPayment) return;
+
+            if (!this.validatePayment()) {
+                return;
+            }
 
             this.processingPayment = true;
 
-            if (this.payment.card.replace(/\s/g, '').length < 16) {
-
-                this.processingPayment = false;
-
-                alert('Número de tarjeta inválido');
-
-                return;
-            }
-
-            this.payment.card = this.payment.card.replace(/\s/g, '');
-
-            if (!this.payment.expMonth) {
-
-                this.processingPayment = false;
-
-                alert('Mes requerido');
-
-                return;
-            }
-
-            if (!this.payment.expYear) {
-
-                this.processingPayment = false;
-
-                alert('Año requerido');
-
-                return;
-            }
-
-            if (!this.payment.cvv) {
-
-                this.processingPayment = false;
-
-                alert('CVV requerido');
-
-                return;
-            }
-
+            const cleanCard = this.payment.card.replace(/\s/g, '');
+            this.payment.card = cleanCard;
 
             this.$nextTick(() => {
-
                 OpenPay.token.extractFormAndCreate(
-
                     'payment-form',
-
                     (response) => {
-
                         this.successCallback(response);
                     },
-
                     (response) => {
-
                         this.errorCallback(response);
                     }
                 );
-
             });
         },
 
         successCallback(response) {
-
             const tokenId = response.data.id;
 
-            axios.post('/payments/process', {
+            axios.post('/owner/susbcription/process', {
                 token_id: tokenId,
                 device_session_id: this.deviceSessionId,
                 plan_id: this.selectedPlan.openpay_plan_id,
-                name_card: this.payment.name
+                name_card: this.payment.name,
+                // change_plan: this.hasActiveSubscription ? true : false 
             })
-                .then((response) => {
-
+                .then(async (response) => {
                     this.processingPayment = false;
+                    console.log(response);
 
-                    console.log(response)
+                    await Swal.fire({
+                        icon: 'success',
+                        title: '¡Pago exitoso!',
+                        text: this.hasActiveSubscription ? 'Has cambiado de plan exitosamente' : 'Tu suscripción ha sido activada correctamente',
+                        confirmButtonText: 'Entendido'
+                    });
 
-                    alert('Pago realizado correctamente');
-
+                    await this.fetchsubscriptions();
+                    this.currentStep = 1;
+                    this.selectedPlan = null;
+                    this.resetPaymentForm();
                 })
-
                 .catch((error) => {
-
                     this.processingPayment = false;
-
                     console.log(error);
-
-                    alert(
-                        error.response?.data?.message ||
-                        'Error procesando pago'
+                    this.showError(
+                        'Error procesando pago',
+                        error.response?.data?.message || 'Ocurrió un error al procesar tu pago'
                     );
                 });
         },
 
         errorCallback(response) {
-
             this.processingPayment = false;
-
-            let desc =
-                response.data?.description ||
-                response.message;
-
-            alert(`ERROR [${response.status}] ${desc}`);
-        },
+            let desc = response.data?.description || response.message || 'Error desconocido';
+            this.showError(`Error en el pago`, desc);
+        }
     },
 
     watch: {

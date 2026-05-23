@@ -11,7 +11,7 @@ class OpenpayService
     private $user;
     private $plan;
     
-    public function __construct($openpay, $user, $plan)
+    public function __construct($openpay, $user, $plan = null)
     {
         $this->openpay = $openpay;
         $this->user = $user;
@@ -95,31 +95,46 @@ class OpenpayService
     }
     
     /**
-     * Crea una suscripción para el cliente
+     * Cancela todas las suscripciones activas del cliente
      */
-    public function createSubscription($customer, $cardId, $planId)
+    public function cancelAllActiveSubscriptions($customer, $exceptPlanId = null)
     {
-        $subscriptionData = [
-            'plan_id' => $planId,
-            'source_id' => $cardId
-        ];
-        
-        $subscription = $customer->subscriptions->add($subscriptionData);
-        
-        if (!$subscription) {
-            throw new Exception('No se pudo crear la suscripción en Openpay');
-        }
+        try {
+            $findData = array(
+                'offset' => 0,
+                'limit' => 100
+            );
 
-        $subscriptionbd = $this->user->subscriptions()->create([
-            'user_id' => $this->user->id,
-            'plan_id' => $this->plan->id,
-            'starts_at' => now(), 
-            'ends_at' => now()->addMonth(),
-            'status' => 'Activa',
-            'openpay_subscription_id' => $subscription->id
-        ]);
-        
-        return $subscription;
+            $subscriptionsList = $customer->subscriptions->getList($findData);
+            $cancelledSubscriptions = [];
+            
+            foreach ($subscriptionsList as $subscription) {
+                // Cancelar si está activa o en periodo de prueba
+                if (in_array($subscription->status, ['active', 'trial'])) {
+                    // Si se especifica un plan a exceptuar, no cancelar ese
+                    if ($exceptPlanId && $subscription->plan_id === $exceptPlanId) {
+                        continue;
+                    }
+                    
+                    $subscription->delete();
+                    
+                    $this->user->subscriptions()
+                        ->where('openpay_subscription_id', $subscription->id)
+                        ->update([
+                            'status' => 'Cancelada',
+                            'ends_at' => now()
+                        ]);
+                    
+                    $cancelledSubscriptions[] = $subscription->id;
+                }
+            }
+            
+            return $cancelledSubscriptions;
+            
+        } catch (Exception $e) {
+            Log::error('Error al cancelar suscripciones activas: ' . $e->getMessage());
+            throw new Exception('Error al cancelar suscripciones existentes: ' . $e->getMessage());
+        }
     }
     
     /**
@@ -149,27 +164,77 @@ class OpenpayService
     }
 
     /**
+     * Crea una suscripción para el cliente
+     */
+    public function createSubscription($customer, $cardId, $planId)
+    {
+        $subscriptionData = [
+            'plan_id' => $planId,
+            'source_id' => $cardId
+        ];
+        
+        $subscription = $customer->subscriptions->add($subscriptionData);
+        
+        if (!$subscription) {
+            throw new Exception('No se pudo crear la suscripción en Openpay');
+        }
+
+        $subscriptionbd = $this->user->subscriptions()->create([
+            'user_id' => $this->user->id,
+            'plan_id' => $this->plan->id,
+            'starts_at' => now(), 
+            'ends_at' => now()->addMonth(),
+            'status' => 'Activa',
+            'openpay_subscription_id' => $subscription->id
+        ]);
+        
+        return $subscription;
+    }
+
+    /**
      * Método principal para procesar toda la suscripción
      */
     public function processSubscription($tokenId, $deviceSessionId, $planId)
     {
+        // 1. Obtener o crear cliente
         $customer = $this->getOrCreateCustomer();
         
-        // 2. Verificar si ya tiene suscripción activa 
-        if ($this->hasActiveSubscription($customer, $planId)) {
-            throw new Exception('Ya tienes una suscripción activa a este plan');
-        }
+        // 2. Cancelar todas las suscripciones activas existentes 
+        $this->cancelAllActiveSubscriptions($customer, $planId);
     
         // 3. Crear tarjeta
         $card = $this->createCard($customer, $tokenId, $deviceSessionId);
         
-        // 4. Crear suscripción
+        // 4. Crear nueva suscripción
         $subscription = $this->createSubscription($customer, $card->id, $planId);
         
         return [
             'customer' => $customer,
             'card' => $card,
-            'subscription' => $subscription
+            'subscription' => $subscription,
+            'cancelled_subscriptions' => $this->cancelAllActiveSubscriptions($customer, $planId) // Retorna las canceladas
         ];
     }
+
+    public function cancelSubscription($openpay_customer_id, $openpay_subscription_id)
+    {
+        try {
+            $customer = $this->openpay->customers->get($openpay_customer_id);
+            $subscription = $customer->subscriptions->get($openpay_subscription_id);
+            $subscription->delete();
+            
+            $this->user->subscriptions()
+                ->where('openpay_subscription_id', $openpay_subscription_id)
+                ->update([
+                    'status' => 'Cancelada',
+                    'ends_at' => now()
+                ]);
+
+            return true;
+            
+        } catch (Exception $e) {
+            throw new Exception('Error al cancelar la suscripción: ' . $e->getMessage());
+        }
+    }
+    
 }

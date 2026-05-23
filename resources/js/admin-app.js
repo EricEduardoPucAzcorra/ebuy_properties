@@ -110,8 +110,8 @@ class AdminApp {
             '/plans_features': 'plans_features',
             '/plans': 'plans',
             '/mypropiertes': 'mypropiertes',
-            '/security': 'security',
-            '/files': 'files'
+            '/my-favorites': 'myfavorites',
+            '/my-plans': 'plans_payment'
         };
 
         for (const [route, page] of Object.entries(pageMap)) {

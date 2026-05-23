@@ -1,5 +1,5 @@
 <div class="container bg-white py-5">
-    <div class="row align-items-center mb-5">
+    <!-- <div class="row align-items-center mb-5">
         <div class="col-12 text-end">
             <div class="nav nav-pills nav-pills-custom d-inline-flex justify-content-end">
 
@@ -11,7 +11,7 @@
 
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div v-if="loading" class="text-center py-5">
         <div class="spinner-border text-success" style="width: 3rem; height: 3rem;"></div>
@@ -21,11 +21,10 @@
     <div v-if="!loading && properties.length === 0" class="text-center py-5">
         <i class="bi bi-house-x display-4 text-muted mb-3"></i>
 
-        <h5 class="fw-bold">{{ auto_trans('No tienes propiedades registradas')}}</h5>
+        <h5 class="fw-bold">{{ auto_trans('Sin favoritos')}}</h5>
 
         <p class="text-muted mb-4">
-            {{ auto_trans('Aún no has agregado ningún inmueble.
-            Publica tu primera propiedad para comenzar.')}}'
+            {{ auto_trans('Aun no le han dado me gusta a ninguna propiedad')}}
         </p>
     </div>
 
@@ -67,12 +66,12 @@
                         </span>
 
                         <div class="d-flex gap-2 property-mini-actions">
-                            <button
+                            <!-- <button
                                 class="icon-btn"
                                 title="{{auto_trans('Editar propiedad')}}"
                                 @click="editProperty(property)">
                                 <i class="bi bi-pencil"></i>
-                            </button>
+                            </button> -->
 
                             <a
                                 class="icon-btn"
@@ -82,12 +81,12 @@
                                 <i class="bi bi-eye"></i>
                             </a>
 
-                            <button
+                            <!-- <button
                                 class="icon-btn"
                                 title="Cambiar estado"
                                 @click="openStateModal(property)">
                                 <i class="bi bi-sliders"></i>
-                            </button>
+                            </button> -->
 
                         </div>
                     </div>

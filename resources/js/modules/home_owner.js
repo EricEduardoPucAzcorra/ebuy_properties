@@ -1,1 +1,1 @@
-import './plans_payment'; //Codigo logico para pagos del plan
+// import './plans_payment'; 
