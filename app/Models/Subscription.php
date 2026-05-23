@@ -17,7 +17,8 @@ class Subscription extends Model
         'plan_id',
         'starts_at',
         'ends_at',
-        'status', //pending, active, trialing, past_due, canceled
+        'status', //pending, active, trialing, past_due, canceled,
+        'openpay_subscription_id'
     ];
 
     public function user()

@@ -7,6 +7,7 @@ use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\PropertyAttributeController;
 use App\Http\Controllers\PropertyFeatureController;
 use App\Http\Controllers\TypePropertieController;
+use App\Http\Controllers\OpenpaySubscriptionController;
 use App\Http\Controllers\OpenpayController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/states-properties', [PropertiesController::class, 'states_properties']);
     Route::post('/properties/{id}/status', [PropertiesController::class, 'updateStatus']);
 
-    Route::post('/payments/process', [OpenpayController::class, 'process']);
+    Route::post('/payments/process', [OpenpaySubscriptionController::class, 'subscribe']);
+    // Route::post('/payments/process', [OpenpayController::class, 'process']);
+
 
 });

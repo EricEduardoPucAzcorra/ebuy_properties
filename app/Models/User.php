@@ -28,7 +28,8 @@ class User extends Authenticatable
         'is_active',
         'profile',
         'profile_url',
-        'google_id'
+        'google_id',
+        'openpay_customer_id'
     ];
 
     /**
@@ -125,7 +126,7 @@ class User extends Authenticatable
     }
 
 
-   public function subscriptions()
+    public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
     }
@@ -190,4 +191,8 @@ class User extends Authenticatable
         return round($remainingDays * $pricePerDay, 2);
     }
 
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
 }

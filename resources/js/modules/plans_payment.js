@@ -233,17 +233,6 @@ new Vue({
                 .trim();
         },
 
-        // processPayment() {
-
-        //     this.processingPayment = true;
-
-        //     OpenPay.token.extractFormAndCreate(
-        //         'payment-form',
-        //         this.successCallback,
-        //         this.errorCallback
-        //     );
-        // },
-
         processPayment() {
 
             if (this.processingPayment) return;
@@ -314,15 +303,11 @@ new Vue({
             const tokenId = response.data.id;
 
             axios.post('/payments/process', {
-
                 token_id: tokenId,
-
                 device_session_id: this.deviceSessionId,
-
-                plan_id: this.selectedPlan.id
-
+                plan_id: this.selectedPlan.openpay_plan_id,
+                name_card: this.payment.name
             })
-
                 .then((response) => {
 
                     this.processingPayment = false;
