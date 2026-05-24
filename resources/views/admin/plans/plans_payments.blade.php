@@ -1,9 +1,8 @@
 <div id="planOwner">
-
     <div class="text-center mb-5">
-        <h1 class="fw-bold">
+        <!-- <h1 class="fw-bold">
            {{ auto_trans('Publica tus inmuebles con Ebuy Properties')}}
-        </h1>
+        </h1> -->
         <p class="text-muted fs-5">
             {{ auto_trans('Sigue estos 3 simples pasos para activar tu plan')}}
         </p>
