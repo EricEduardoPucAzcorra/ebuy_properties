@@ -7,12 +7,14 @@
 @import 'styles/loader_files.scss';
 @import 'styles/plans.scss';
 @import 'styles/sidebar.scss';
+@import 'styles/help.scss';
 
 body {
     visibility: hidden;
     opacity: 0;
     transition: opacity .25s ease;
 }
+
 body.ready {
     visibility: visible;
     opacity: 1;
@@ -68,7 +70,7 @@ body.ready {
     border-radius: 0.75rem;
     padding: 0.5rem;
     min-width: 220px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     position: absolute;
     top: calc(100% + 0.35rem);
     left: 50%;
