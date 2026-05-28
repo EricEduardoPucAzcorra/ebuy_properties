@@ -96,13 +96,29 @@
     };
 
     // Mantenemos tu función batch original
+    // window.auto_trans_batch = async (texts) => {
+    //     const faltantes = [...new Set(texts.filter(t => t && !window.cacheTraducciones[t]))];
+    //     if (faltantes.length > 0) {
+    //         const response = await axios.post('/auto_trans_batch', { texts: faltantes });
+    //         Object.assign(window.cacheTraducciones, response.data.results);
+    //     }
+    //     return texts;
+    // };
+
     window.auto_trans_batch = async (texts) => {
-        const faltantes = [...new Set(texts.filter(t => t && !window.cacheTraducciones[t]))];
+        const faltantes = [...new Set(
+            texts.filter(t => t && !window.cacheTraducciones[t])
+        )];
+
         if (faltantes.length > 0) {
-            const response = await axios.post('/auto_trans_batch', { texts: faltantes });
+            const response = await axios.post('/auto_trans_batch', {
+                texts: faltantes
+            });
+
             Object.assign(window.cacheTraducciones, response.data.results);
         }
-        return texts;
+
+        return texts.map(text => window.cacheTraducciones[text] || text);
     };
 
 </script>

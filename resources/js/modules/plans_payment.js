@@ -1,3 +1,5 @@
+// import './../directives/auto_trans';
+
 new Vue({
     el: '#planOwner',
     data() {
@@ -299,10 +301,27 @@ new Vue({
                 });
         },
 
-        errorCallback(response) {
+        // async errorCallback(response) {
+        //     this.processingPayment = false;
+        //     let desc = response.data?.description || response.message || 'Error desconocido';
+        //     let desctext = await window.auto_trans_batch(desc);
+        //     this.showError(`Error en el pago`, desctext);
+        // }
+
+        async errorCallback(response) {
             this.processingPayment = false;
+
             let desc = response.data?.description || response.message || 'Error desconocido';
-            this.showError(`Error en el pago`, desc);
+
+            const textosParaTraducir = Array.isArray(desc)
+                ? desc
+                : [desc];
+
+            let desctext = await window.auto_trans_batch(textosParaTraducir);
+
+            // console.log(desctext);
+
+            this.showError(`Error en el pago`, desctext);
         }
     },
 
