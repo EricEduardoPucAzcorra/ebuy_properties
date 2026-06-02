@@ -37,25 +37,49 @@ class SusbcriptionController extends Controller
 
     public function subscribe(Request $request)
     {
+        // Validar que venga token_id O card_id (tarjeta existente)
         $request->validate([
-            'token_id' => 'required|string',
-            'device_session_id' => 'required|string',
             'plan_id' => 'required|string',
+            'token_id' => 'required_without:card_id|string',
+            'device_session_id' => 'required_without:card_id|string',
+            'card_id' => 'required_without:token_id|string',
         ]);
 
         try {
             $openpay = $this->getOpenpayInstance($request);
             $user = auth()->user();
             $plan = Plan::where('openpay_plan_id', $request->plan_id)->first();
-            
+
             $openpayService = new OpenpayService($openpay, $user, $plan);
-            
+
+            // Si viene card_id, usar tarjeta existente
+            if ($request->has('card_id')) {
+                $result = $openpayService->processSubscriptionWithExistingCard(
+                    $request->card_id,
+                    $request->plan_id
+                );
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Suscripción creada correctamente con tarjeta existente',
+                    'data' => [
+                        'customer_id' => $result['customer']->id,
+                        'subscription_id' => $result['subscription']->id,
+                        'plan_id' => $result['subscription']->plan_id,
+                        'status' => $result['subscription']->status ?? 'active',
+                        'charge_date' => $result['subscription']->charge_date ?? null,
+                        'creation_date' => $result['subscription']->creation_date ?? null
+                    ]
+                ]);
+            }
+
+            // Si viene token_id, crear nueva tarjeta
             $result = $openpayService->processSubscription(
                 $request->token_id,
                 $request->device_session_id,
                 $request->plan_id
             );
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Suscripción creada correctamente',
@@ -333,5 +357,27 @@ class SusbcriptionController extends Controller
             ->get();
 
         return response()->json($subscription);
+    }
+
+    /**
+     * Obtener tarjetas del usuario actual
+     */
+    public function getUserCards(Request $request)
+    {
+        try {
+            $cards = $request->user()
+                ->cards()
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json($cards);
+        } catch (Exception $e) {
+            Log::error('Error al obtener tarjetas del usuario: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener las tarjetas'
+            ], 400);
+        }
     }
 }

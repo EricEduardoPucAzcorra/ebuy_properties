@@ -1,4 +1,56 @@
 <div id="planOwner">
+    <div class="benefits-section mt-5 pt-3">
+        <div class="text-center mb-4"  v-if="currentStep === 1" >
+            <h5 class="fw-bold">{{ auto_trans('¿Por qué activar tu plan?') }}</h5>
+        </div>
+
+        <div class="row g-3 mb-4"  v-if="currentStep === 1" >
+            <div class="col-md-3 col-6">
+                <div class="benefit-card text-center p-3 rounded-4 border bg-white h-100">
+                    <div class="benefit-icon bg-success bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px;">
+                        <i class="bi bi-eye-fill text-success fs-4"></i>
+                    </div>
+                    <div class="fw-bold fs-3 text-success">3x</div>
+                    <span class="small text-muted">{{ auto_trans('Más visitas') }}</span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="benefit-card text-center p-3 rounded-4 border bg-white h-100">
+                    <div class="benefit-icon bg-success bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px;">
+                        <i class="bi bi-clock-fill text-success fs-4"></i>
+                    </div>
+                    <div class="fw-bold fs-3 text-success">-50%</div>
+                    <span class="small text-muted">{{ auto_trans('Tiempo de venta') }}</span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="benefit-card text-center p-3 rounded-4 border bg-white h-100">
+                    <div class="benefit-icon bg-success bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px;">
+                        <i class="bi bi-chat-dots-fill text-success fs-4"></i>
+                    </div>
+                    <div class="fw-bold fs-3 text-success">2.5x</div>
+                    <span class="small text-muted">{{ auto_trans('Más contactos') }}</span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="benefit-card text-center p-3 rounded-4 border bg-white h-100">
+                    <div class="benefit-icon bg-success bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px;">
+                        <i class="bi bi-heart-fill text-success fs-4"></i>
+                    </div>
+                    <div class="fw-bold fs-3 text-success">#1</div>
+                    <span class="small text-muted">{{ auto_trans('Propiedad destacada') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <div class="p-3 bg-light">
+                <span class="small fw-semibold">
+                    {{ auto_trans('Publica tus inmuebles con Ebuy Properties')}}
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="text-center mb-5">
         <!-- <h1 class="fw-bold">
            {{ auto_trans('Publica tus inmuebles con Ebuy Properties')}}
@@ -234,12 +286,116 @@
                                                 {{ auto_trans('Información de pago')}}
                                             </h4>
                                             <p class="text-muted mb-0">
-                                                {{ auto_trans('Completa los datos de tu tarjeta')}}
+                                                {{ auto_trans('Selecciona una tarjeta existente o agrega una nueva')}}
                                             </p>
                                         </div>
                                     </div>
 
-                                    <form id="payment-form" autocomplete="off" @submit.prevent="processPayment">
+                                    <!-- Tarjetas existentes -->
+                                    <!-- <div v-if="userCards.length > 0 && !useNewCard" class="mb-3">
+                                        <h6 class="fw-bold mb-2 small">
+                                            <i class="bi bi-credit-card me-1"></i>
+                                            {{ auto_trans('Tarjetas guardadas')}}
+                                        </h6>
+                                        <div class="row g-2">
+                                            <div class="col-md-6" v-for="card in userCards" :key="card.id">
+                                                <div class="card border-2"
+                                                     :class="{ 'border-success bg-light': selectedCard && selectedCard.id === card.id }"
+                                                     @click="selectExistingCard(card)"
+                                                     style="cursor: pointer;">
+                                                    <div class="card-body p-2">
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            <div class="small">
+                                                                <div class="fw-bold mb-0">
+                                                                    @{{ card.brand }} •••• @{{ card.card_number ? card.card_number.slice(-4) : '****' }}
+                                                                </div>
+                                                                <small class="text-muted" style="font-size: 11px;">
+                                                                    @{{ card.card_holder_name }}
+                                                                </small>
+                                                            </div>
+                                                            <div v-if="selectedCard && selectedCard.id === card.id">
+                                                                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                    <div v-if="userCards.length > 0 && !useNewCard" class="mb-3">
+                                        <h6 class="fw-bold mb-2 small d-flex align-items-center">
+                                            <i class="bi bi-credit-card me-2"></i>
+                                            {{ auto_trans('Tarjetas guardadas') }}
+                                        </h6>
+
+                                        <div class="row g-2">
+                                            <div class="col-md-6" v-for="card in userCards" :key="card.id">
+
+                                                <div class="card card-select h-100 border-0 shadow-sm"
+                                                    :class="{
+                                                        'border-success selected': selectedCard && selectedCard.id === card.id
+                                                    }"
+                                                    @click="selectExistingCard(card)">
+
+                                                    <div class="card-body p-3 d-flex justify-content-between align-items-center">
+
+                                                        <!-- INFO -->
+                                                        <div>
+                                                            <div class="fw-semibold small mb-1">
+                                                                @{{ card.brand }} •••• @{{ card.card_number ? card.card_number.slice(-4) : '****' }}
+                                                            </div>
+
+                                                            <div class="text-muted" style="font-size: 12px;">
+                                                                @{{ card.card_holder_name }}
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- ICON -->
+                                                        <div class="ms-2">
+                                                            <i v-if="selectedCard && selectedCard.id === card.id"
+                                                            class="bi bi-check-circle-fill text-success fs-5"></i>
+
+                                                            <i v-else class="bi bi-circle text-muted fs-5"></i>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Opción agregar nueva tarjeta -->
+                                   <div v-if="!useNewCard" class="mb-3">
+                                        <label class="form-check w-100 d-flex align-items-center gap-2 p-2 border rounded"
+                                            for="newCardOption"
+                                            style="cursor:pointer;">
+
+                                            <input class="form-check-input m-0" type="radio"
+                                                name="cardOption"
+                                                id="newCardOption"
+                                                v-model="useNewCard"
+                                                :value="true"
+                                                @change="clearSelectedCard">
+
+                                            <span class="small">
+                                                {{ auto_trans('Agregar nueva tarjeta') }}
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Opción volver a tarjetas guardadas -->
+                                    <div v-if="useNewCard && userCards.length > 0" class="mb-3">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm small"
+                                                @click="useNewCard = false; selectedCard = userCards[0]">
+                                            <i class="bi bi-arrow-left me-1"></i>
+                                            {{ auto_trans('Tarjetas guardadas')}}
+                                        </button>
+                                    </div>
+
+                                    <!-- Formulario nueva tarjeta -->
+                                    <form v-if="useNewCard" id="payment-form" autocomplete="off" @submit.prevent="processPayment">
                                         <input type="hidden" id="deviceIdHiddenFieldName" name="deviceIdHiddenFieldName">
 
                                         <div class="mb-4">
@@ -295,18 +451,19 @@
                                                        maxlength="4">
                                             </div>
                                         </div>
-
-                                        <div class="d-flex gap-3">
-                                            <button type="button" class="btn btn-outline-secondary btn-lg px-4"
-                                                    @click="goToStep2">
-                                                <i class="bi bi-arrow-left me-2"></i>{{ auto_trans('Atrás')}}
-                                            </button>
-                                            <button type="submit" class="btn btn-success btn-lg fw-bold py-3 flex-grow-1"
-                                                    :disabled="processingPayment">
-                                                {{ auto_trans('Pagar')}} $@{{ selectedPlan.price.toLocaleString() }}
-                                            </button>
-                                        </div>
                                     </form>
+
+                                    <div class="d-flex gap-3 mt-4">
+                                        <button type="button" class="btn btn-outline-secondary btn-lg px-4"
+                                                @click="goToStep2">
+                                            <i class="bi bi-arrow-left me-2"></i>{{ auto_trans('Atrás')}}
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-lg fw-bold py-3 flex-grow-1"
+                                                @click="processPayment"
+                                                :disabled="processingPayment || (!selectedCard && !useNewCard)">
+                                            {{ auto_trans('Pagar')}} $@{{ selectedPlan.price.toLocaleString() }}
+                                        </button>
+                                    </div>
 
                                     <div class="alert alert-light border rounded-4 mt-4">
                                         <div class="d-flex align-items-center">
@@ -381,91 +538,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .form-control-lg {
-        border-radius: 14px;
-        padding: 14px 18px;
-        border: 1px solid #dcdcdc;
-        transition: all .3s ease;
-    }
-
-    .form-control-lg:focus {
-        border-color: #198754;
-        box-shadow: 0 0 0 .2rem rgba(25, 135, 84, .15);
-    }
-
-    .card {
-        border-radius: 24px;
-    }
-
-    .btn-success {
-        border-radius: 14px;
-        background-color: #198754;
-        border-color: #198754;
-    }
-
-    .btn-outline-success {
-        border-radius: 14px;
-        border-color: #198754;
-        color: #198754;
-    }
-
-    .btn-outline-success:hover {
-        background-color: #198754;
-        color: white;
-    }
-
-    .btn-outline-danger {
-        border-radius: 14px;
-    }
-
-    .btn-outline-secondary {
-        border-radius: 14px;
-    }
-
-    .alert {
-        border-radius: 16px;
-    }
-
-   .badge-featured {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        color: #ffffff;
-        font-weight: 600;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        z-index: 1;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .current-plan-badge {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        background-color: #198754;
-        color: white;
-        font-weight: 600;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .current-plan-badge i {
-        font-size: 11px;
-    }
-
-    .current-plan-card {
-        border: 2px solid #198754;
-        background-color: #f8f9fa;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-</style>

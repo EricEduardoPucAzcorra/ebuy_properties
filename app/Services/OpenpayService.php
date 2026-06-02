@@ -64,32 +64,78 @@ class OpenpayService
     /**
      * Crea una tarjeta asociada al cliente
      */
+    // public function createCard($customer, $tokenId, $deviceSessionId)
+    // {
+    //     $cardData = [
+    //         'token_id' => $tokenId,
+    //         'device_session_id' => $deviceSessionId
+    //     ];
+        
+    //     $card = $customer->cards->add($cardData);
+        
+    //     if (!$card) {
+    //         throw new Exception('La tarjeta no se pudo crear o fue rechazada');
+    //     }
+        
+    //     $cardbd = $this->user->cards()->create([
+    //         'user_id' => $this->user->id,
+    //         'openpay_card_id' => $card->id,
+    //         'card_number' => $card->card_number,
+    //         'card_holder_name' => $card->holder_name,
+    //         'card_expiry_month' => $card->expiration_month,
+    //         'card_expiry_year' => $card->expiration_year,
+    //         'openpay_customer_id' => $customer->id,
+    //         'type' => $card->type,
+    //         'brand' => $card->brand,
+    //         'bank_name' => $card->bank_name,
+    //         'bank_code' => $card->bank_code
+    //     ]);
+
+    //     return $card;
+    // }
+
     public function createCard($customer, $tokenId, $deviceSessionId)
     {
         $cardData = [
             'token_id' => $tokenId,
             'device_session_id' => $deviceSessionId
         ];
-        
+
         $card = $customer->cards->add($cardData);
-        
+
         if (!$card) {
             throw new Exception('La tarjeta no se pudo crear o fue rechazada');
         }
-        
-        $cardbd = $this->user->cards()->create([
-            'user_id' => $this->user->id,
-            'openpay_card_id' => $card->id,
-            'card_number' => $card->card_number,
-            'card_holder_name' => $card->holder_name,
-            'card_expiry_month' => $card->expiration_month,
-            'card_expiry_year' => $card->expiration_year,
-            'openpay_customer_id' => $customer->id,
-            'type' => $card->type,
-            'brand' => $card->brand,
-            'bank_name' => $card->bank_name,
-            'bank_code' => $card->bank_code
-        ]);
+
+        $existing = $this->user->cards()
+            ->where('card_number', $card->card_number)
+            ->first();
+
+        if ($existing) {
+            $existing->update([
+                'card_holder_name' => $card->holder_name,
+                'card_expiry_month' => $card->expiration_month,
+                'card_expiry_year' => $card->expiration_year,
+                'type' => $card->type,
+                'brand' => $card->brand,
+                'bank_name' => $card->bank_name,
+                'bank_code' => $card->bank_code
+            ]);
+        } else {
+            $this->user->cards()->create([
+                'user_id' => $this->user->id,
+                'openpay_card_id' => $card->id,
+                'card_number' => $card->card_number,
+                'card_holder_name' => $card->holder_name,
+                'card_expiry_month' => $card->expiration_month,
+                'card_expiry_year' => $card->expiration_year,
+                'openpay_customer_id' => $customer->id,
+                'type' => $card->type,
+                'brand' => $card->brand,
+                'bank_name' => $card->bank_name,
+                'bank_code' => $card->bank_code
+            ]);
+        }
 
         return $card;
     }
@@ -182,7 +228,35 @@ class OpenpayService
         $subscriptionbd = $this->user->subscriptions()->create([
             'user_id' => $this->user->id,
             'plan_id' => $this->plan->id,
-            'starts_at' => now(), 
+            'starts_at' => now(),
+            'ends_at' => now()->addMonth(),
+            'status' => 'Activa',
+            'openpay_subscription_id' => $subscription->id
+        ]);
+        
+        return $subscription;
+    }
+
+    /**
+     * Crea una suscripción usando una tarjeta existente
+     */
+    public function createSubscriptionWithExistingCard($customer, $openpayCardId, $planId)
+    {
+        $subscriptionData = [
+            'plan_id' => $planId,
+            'source_id' => $openpayCardId
+        ];
+        
+        $subscription = $customer->subscriptions->add($subscriptionData);
+        
+        if (!$subscription) {
+            throw new Exception('No se pudo crear la suscripción en Openpay');
+        }
+
+        $subscriptionbd = $this->user->subscriptions()->create([
+            'user_id' => $this->user->id,
+            'plan_id' => $this->plan->id,
+            'starts_at' => now(),
             'ends_at' => now()->addMonth(),
             'status' => 'Activa',
             'openpay_subscription_id' => $subscription->id
@@ -198,21 +272,42 @@ class OpenpayService
     {
         // 1. Obtener o crear cliente
         $customer = $this->getOrCreateCustomer();
-        
-        // 2. Cancelar todas las suscripciones activas existentes 
+
+        // 2. Cancelar todas las suscripciones activas existentes
         $this->cancelAllActiveSubscriptions($customer, $planId);
-    
+
         // 3. Crear tarjeta
         $card = $this->createCard($customer, $tokenId, $deviceSessionId);
-        
+
         // 4. Crear nueva suscripción
         $subscription = $this->createSubscription($customer, $card->id, $planId);
-        
+
         return [
             'customer' => $customer,
             'card' => $card,
             'subscription' => $subscription,
             'cancelled_subscriptions' => $this->cancelAllActiveSubscriptions($customer, $planId) // Retorna las canceladas
+        ];
+    }
+
+    /**
+     * Método para procesar suscripción con tarjeta existente
+     */
+    public function processSubscriptionWithExistingCard($openpayCardId, $planId)
+    {
+        // 1. Obtener o crear cliente
+        $customer = $this->getOrCreateCustomer();
+
+        // 2. Cancelar todas las suscripciones activas existentes
+        $this->cancelAllActiveSubscriptions($customer, $planId);
+
+        // 3. Crear suscripción con tarjeta existente
+        $subscription = $this->createSubscriptionWithExistingCard($customer, $openpayCardId, $planId);
+
+        return [
+            'customer' => $customer,
+            'subscription' => $subscription,
+            'cancelled_subscriptions' => $this->cancelAllActiveSubscriptions($customer, $planId)
         ];
     }
 
