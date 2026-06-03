@@ -111,6 +111,64 @@
                 </div>
             </div>
 
+            <!-- Tarjetas del usuario -->
+            @if(auth()->user()->hasRoleName('Owner'))
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header d-flex align-items-center gap-2">
+                        <i class="bi bi-credit-card"></i>
+                        <h5 class="mb-0">{{ __('Mis Tarjetas') }}</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div v-if="loadingCards" class="text-center py-3">
+                            <div class="spinner-border spinner-border-sm text-primary"></div>
+                        </div>
+
+                        <div v-else-if="cards.length === 0" class="text-center py-4 text-muted">
+                            <i class="bi bi-credit-card fs-1 mb-2 d-block"></i>
+                            <p>{{ __('No tienes tarjetas registradas') }}</p>
+                        </div>
+
+                        <div v-else class="row g-3">
+                            <div v-for="card in cards" :key="card.id" class="col-md-6 col-lg-4">
+                                <div class="card h-100 border shadow-sm position-relative">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <span class="badge bg-primary bg-opacity-10 text-primary mb-2 fw-normal">@{{ (card.brand || 'Card').toUpperCase() }}</span>
+                                                <h5 class="mb-0 fw-bold">**** @{{ card.card_number ? card.card_number.slice(-4) : '****' }}</h5>
+                                            </div>
+                                            <i :class="getCardIcon(card.brand)" class="fs-3 text-primary opacity-50"></i>
+                                        </div>
+                                        <p class="text-muted small mb-3">@{{ card.card_holder_name || 'Titular' }}</p>
+                                        <div class="row g-2 small text-muted">
+                                            <div class="col-6">
+                                                <span class="d-block" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ __('Expira') }}</span>
+                                                <span class="fw-semibold text-dark">@{{ card.card_expiry_month }}/@{{ card.card_expiry_year }}</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span class="d-block" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ __('Banco') }}</span>
+                                                <span class="fw-semibold text-dark text-truncate d-block" style="max-width: 100px;">@{{ card.bank_name || 'Bank' }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-white border-top-0 pt-0">
+                                        <button
+                                            class="btn btn-sm btn-outline-danger w-100"
+                                            @click="confirmDeleteCard(card)"
+                                            :disabled="deletingCard">
+                                            <i class="bi bi-trash me-1"></i>
+                                            {{ __('Eliminar') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+            
+            @endif
         </div>
     </div>
 

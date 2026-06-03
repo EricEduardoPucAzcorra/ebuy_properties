@@ -373,10 +373,83 @@ class SusbcriptionController extends Controller
             return response()->json($cards);
         } catch (Exception $e) {
             Log::error('Error al obtener tarjetas del usuario: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener las tarjetas'
+            ], 400);
+        }
+    }
+
+    /**
+     * Eliminar tarjeta
+     */
+   public function deleteUserCard(Request $request)
+    {
+        $request->validate([
+            'card_id' => 'required|integer'
+        ]);
+
+        try {
+            $user = $request->user();
+            $card = $user->cards()->findOrFail($request->card_id);
+
+            // Verificar si el usuario tiene suscripciones activas o con pagos pendientes
+            $activeSubscription = $user->subscriptions()
+                ->whereIn('status', ['Activa', 'past_due', 'pending'])
+                ->where('starts_at', '<=', now())
+                ->where('ends_at', '>=', now())
+                ->first();
+
+            if ($activeSubscription) {
+                $message = 'No puedes eliminar esta tarjeta porque tienes una suscripción ';
+
+                if ($activeSubscription->status === 'past_due') {
+                    $message .= 'con pagos pendientes. ';
+                } elseif ($activeSubscription->status === 'pending') {
+                    $message .= 'pendiente de activación. ';
+                } else {
+                    $message .= 'activa. ';
+                }
+
+                $message .= 'Por favor cancela tu suscripción primero o contacta a soporte.';
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'has_active_subscription' => true,
+                    'subscription_status' => $activeSubscription->status
+                ], 400);
+            }
+
+            if ($card->openpay_customer_id && $card->openpay_card_id) {
+                try {
+                    $openpay = $this->getOpenpayInstance($request);
+
+                    $customer = $openpay->customers->get($card->openpay_customer_id);
+                    $cardOpenpay = $customer->cards->get($card->openpay_card_id);
+                    $cardOpenpay->delete();
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se pudo eliminar la tarjeta en Openpay'
+                    ], 400);
+                }
+            }
+
+            $card->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tarjeta eliminada correctamente'
+            ]);
+
+        } catch (Exception $e) {
+            Log::error('Error al eliminar tarjeta del usuario: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la tarjeta: ' . $e->getMessage()
             ], 400);
         }
     }

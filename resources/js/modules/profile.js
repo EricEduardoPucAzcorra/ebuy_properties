@@ -3,7 +3,11 @@ new Vue({
 
     data: {
         loading: false,
+        loadingCards: false,
+        deletingCard: false,
         imagePreview: null,
+        cards: [],
+        isOwner: false,
 
         form: {
             id: null,
@@ -47,11 +51,16 @@ new Vue({
                     is_active: 1
                 };
 
-              this.imagePreview = user.profile
-                ? `/storage/${user.profile}`
-                : user.profile_url
-                    ? user.profile_url
-                    : '/images/avatar-placeholder.svg';
+                this.isOwner = Array.isArray(user.roles)
+                    && user.roles.some(role => role && role.name === 'Owner');
+
+                this.imagePreview = user.profile
+                    ? `/storage/${user.profile}`
+                    : user.profile_url
+                        ? user.profile_url
+                        : '/images/avatar-placeholder.svg';
+
+                await this.loadCards();
 
             } catch (e) {
                 console.error(e);
@@ -159,6 +168,89 @@ new Vue({
                 }
             } finally {
                 this.loading = false;
+            }
+        },
+
+        async loadCards() {
+            if (!this.isOwner) return;
+
+            this.loadingCards = true;
+
+            try {
+                const response = await axios.get('/owner/user-cards');
+                this.cards = response.data;
+            } catch (error) {
+                console.error('Error al cargar tarjetas:', error);
+            } finally {
+                this.loadingCards = false;
+            }
+        },
+
+        getCardIcon(brand) {
+            const brandLower = (brand || '').toLowerCase();
+            const icons = {
+                visa: 'bi bi-credit-card-2-front',
+                mastercard: 'bi bi-credit-card-2-front',
+                amex: 'bi bi-credit-card-2-front',
+                discover: 'bi bi-credit-card-2-front'
+            };
+            return icons[brandLower] || 'bi bi-credit-card';
+        },
+
+        async confirmDeleteCard(card) {
+            const result = await Swal.fire({
+                title: '¿Eliminar tarjeta?',
+                text: `¿Estás seguro de eliminar la tarjeta terminada en ${card.card_number ? card.card_number.slice(-4) : '****'}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6'
+            });
+
+            if (result.isConfirmed) {
+                await this.deleteCard(card.id);
+            }
+        },
+
+        async deleteCard(cardId) {
+            this.deletingCard = true;
+            try {
+                await axios.post('/owner/user-cards/delete', {
+                    card_id: cardId
+                });
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Tarjeta eliminada',
+                    text: 'La tarjeta ha sido eliminada correctamente',
+                    confirmButtonText: 'Entendido'
+                });
+
+                await this.loadCards();
+            } catch (error) {
+                console.error('Error al eliminar tarjeta:', error);
+
+                const responseData = error.response?.data;
+                const message = responseData?.message || 'Ocurrió un error al eliminar la tarjeta';
+
+                if (responseData?.has_active_subscription) {
+                    await Swal.fire({
+                        icon: 'warning',
+                        title: 'Suscripción activa',
+                        text: message,
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: '#3085d6'
+                    });
+                } else {
+                    this.showError(
+                        'Error al eliminar la tarjeta',
+                        message
+                    );
+                }
+            } finally {
+                this.deletingCard = false;
             }
         }
     }

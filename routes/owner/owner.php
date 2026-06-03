@@ -42,5 +42,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/owner/current-subscriptions', [SusbcriptionController::class, 'getCurrentSubscriptions']);
     Route::get('/owner/user-cards', [SusbcriptionController::class, 'getUserCards']);
     Route::post('/owner/subscriptions/cancel', [SusbcriptionController::class, 'cancel']);
+    Route::post('/owner/user-cards/delete', [SusbcriptionController::class, 'deleteUserCard']);
 
 });
