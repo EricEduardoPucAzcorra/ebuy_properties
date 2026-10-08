@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: [19.4326, -99.1332],
                 zoom: 10
             },
-            appIcon: '/images/logo-marker.png'
+            appIcon: '/images/ebuy_icon.png'
         },
 
         methods: {

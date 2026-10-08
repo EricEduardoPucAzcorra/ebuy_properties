@@ -8,5 +8,6 @@ return array (
   'properties' => 'All properties',
   'properties_sale' => 'Properties for sale',
   'properties_rent'=>'Properties for rent',
-  'properties_new'=>'New properties'
+  'properties_new'=>'New properties',
+  'map'=>'Map properties'
 );

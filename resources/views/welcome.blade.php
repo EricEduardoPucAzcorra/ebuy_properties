@@ -50,6 +50,8 @@
                         <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ auto_trans('Calle 10 #317 x 25B y 25B1, Colonia Benito Juárez Oriente en Mérida, Yucatán.') }}</p>
                         <p class="mb-2"><i class="fa fa-phone-alt me-3"></i><a class="text-white-50" href="tel:+520000000000">+52 999 725 5903</a></p>
                         <p class="mb-2"><i class="fa fa-envelope me-3"></i><a class="text-white-50" href="mailto:contacto@ebuyproperties.com">contacto@ebuyproperties.com</a></p>
+                        <p class="mb-2"><i class="fa fa-file-pdf me-3"></i><a class="text-white-50" href="/privacy" target="_blank">{{ auto_trans('Aviso de Privacidad') }}</a></p>
+                        <p class="mb-2"><i class="fa fa-file-contract me-3"></i><a class="text-white-50" href="/terms" target="_blank">{{ auto_trans('Términos y Condiciones') }}</a></p>
                         <div class="d-flex pt-2">
                             <a class="btn btn-outline-light btn-social" href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                             <a class="btn btn-outline-light btn-social" href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -64,6 +66,7 @@
                         <a class="btn btn-link text-white-50" href="{{ route('properties.sale') }}">{{ auto_trans('En venta') }}</a>
                         <a class="btn btn-link text-white-50" href="{{ route('properties.rent') }}">{{ auto_trans('En renta') }}</a>
                         <a class="btn btn-link text-white-50" href="{{ route('about') }}">{{ auto_trans('Acerca de') }}</a>
+                        <!-- <a class="btn btn-link text-white-50" href="#" onclick="openTermsModal(); return false;">{{ auto_trans('Términos y Condiciones') }}</a> -->
                     </div>
                     {{-- <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Photo Gallery</h5>
@@ -96,6 +99,10 @@
                             <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">{{auto_trans('Iniciar')}}</button>
                         </div> -->
                     </div>
+                    <div class="col-lg-3 col-md-6">
+                        <h5 class="text-white mb-4">{{auto_trans('Pagos Seguros')}}</h5>
+                        <img src="{{ asset('openpay/openpay.png') }}" alt="OpenPay" style="height: 50px; object-fit: contain;">
+                    </div>
                 </div>
             </div>
             <div class="container">
@@ -113,7 +120,8 @@
                                 <a href="{{ route('welcome.site') }}">{{auto_trans('Inicio')}}</a>
                                 <a href="{{ route('properties') }}">{{ auto_trans('Propiedades') }}</a>
                                 <a href="{{ route('about') }}">{{ auto_trans('Acerca de') }}</a>
-                                <a href="mailto:contacto@ebuyproperties.com">{{ auto_trans('Contacto') }}</a>
+                                <a href="/privacy">{{ auto_trans('Aviso de Privacidad') }}</a>
+                                <a href="/terms">{{ auto_trans('Términos y Condiciones') }}</a>
                             </div>
                         </div>
                     </div>

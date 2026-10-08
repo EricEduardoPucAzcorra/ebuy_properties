@@ -10,6 +10,10 @@ Vue.component('map-listings', {
                 center: [19.4326, -99.1332],
                 zoom: 12
             })
+        },
+        appIcon: {
+            type: String,
+            default: '/images/ebuy_icon.png'
         }
     },
 
@@ -135,11 +139,22 @@ Vue.component('map-listings', {
             })
             this.markers = []
 
+            // Crear icono personalizado
+            const customIcon = L.icon({
+                iconUrl: this.appIcon,
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40],
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                shadowSize: [41, 41],
+                shadowAnchor: [12, 41]
+            })
+
             // Agregar nuevos marcadores
             this.locations.forEach(item => {
                 const popupContent = this.createPopupContent(item)
 
-                const marker = L.marker([item.lat, item.lng])
+                const marker = L.marker([item.lat, item.lng], { icon: customIcon })
                     .addTo(this.map)
                     .bindPopup(popupContent, {
                         maxWidth: 300,

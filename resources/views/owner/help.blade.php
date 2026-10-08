@@ -113,7 +113,16 @@
             <span><i class="bi bi-geo-alt-fill"></i> Calle 10 #317 x 25B y 25B1, Colonia Benito Juárez Oriente, Mérida, Yucatán.</span>
             <span><i class="bi bi-telephone-fill"></i> +52 999 725 5903</span>
             <span><i class="bi bi-envelope-fill"></i> contacto@ebuyproperties.com</span>
-            <span><i class="bi bi-file-earmark-text"></i><a href="{{ asset('ebuy/Aviso de privacidad Ebuy.pdf') }}" target="_blank">{{auto_trans('Aviso de Privacidad')}}</a></span>
+        </div>
+
+        <div class="legal-links mt-3">
+            <a href="/privacy" target="_blank" class="legal-link">
+                <i class="bi bi-file-earmark-text me-1"></i> {{auto_trans('Aviso de Privacidad')}}
+            </a>
+            <span class="mx-2 text-muted">|</span>
+            <a href="/terms" target="_blank" class="legal-link">
+                <i class="bi bi-file-earmark-text me-1"></i> {{auto_trans('Términos y Condiciones')}}
+            </a>
         </div>
 
         <div class="quick-link-text">
@@ -122,4 +131,24 @@
     </div>
 
 </div>
+
+<style>
+    .legal-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .legal-link {
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.2s ease;
+    }
+
+    .legal-link:hover {
+        color: var(--brand-green);
+    }
+</style>
 @endsection

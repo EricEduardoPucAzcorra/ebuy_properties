@@ -26,9 +26,13 @@ class MenuSiteSeeder extends Seeder
         MenuItem::create(['menu_id' => $explore->id, 'title' => 'Propiedades en venta', 'icon' => 'bi bi-cash-coin', 'route' => 'properties.sale', 'order' => 1, 'module_id'=>$site->id]);
         MenuItem::create(['menu_id' => $explore->id, 'title' => 'Propiedades en renta', 'icon' => 'bi bi-calendar-date', 'route' => 'properties.rent', 'order' => 1, 'module_id'=>$site->id]);
         MenuItem::create(['menu_id' => $explore->id, 'title' => 'Propiedades nuevos', 'icon' => 'bi bi-house-check', 'route' => 'properties.new', 'order' => 1, 'module_id'=>$site->id]);
+        MenuItem::create(['menu_id' => $explore->id, 'title' => 'Mapa de propiedades', 'icon' => 'bi bi-globe-americas', 'route' => 'site.mapa', 'order' => 1, 'module_id'=>$site->id]);
 
         $aboutus = Menu::firstOrCreate(['title' => 'Nosotros', 'icon' => '', 'route' => '', 'order' => 0, 'is_active' => true, 'module_id'=>$site->id, 'clasification'=>"site"]);
         MenuItem::create(['menu_id' => $aboutus->id, 'title' => 'Sobre nosotros', 'icon' => 'bi bi-info-circle', 'route' => 'about', 'order' => 1, 'module_id'=>$site->id]);
+        MenuItem::create(['menu_id' => $aboutus->id, 'title' => 'Aviso de Privacidad', 'icon' => 'bi bi-file-earmark-pdf', 'route' => 'privacy', 'order' => 2, 'module_id'=>$site->id]);
+        MenuItem::create(['menu_id' => $aboutus->id, 'title' => 'Términos y Condiciones', 'icon' => 'bi bi-file-earmark-text', 'route' => 'terms', 'order' => 3, 'module_id'=>$site->id]);
+
 
         //Menu para el owner
 

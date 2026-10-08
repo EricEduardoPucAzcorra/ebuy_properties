@@ -53,21 +53,18 @@ new Vue({
             },
             videos: [],
             tours360: [],
-            contacts: [],
+            contact: {
+                name: '',
+                phone: '',
+                whatsapp: '',
+                email: ''
+            }
         },
         newAttribute: {
             key: '',
             value: ''
         },
         errors: {},
-        newContact: {
-            name: '',
-            phone: '',
-            whatsapp: '',
-            email: '',
-            date_atention: '',
-            photo: null
-        },
         newVideoUrl: '',
         editingVideoIndex: null,
         editingVideoUrl: '',
@@ -220,38 +217,6 @@ new Vue({
             this.newAttribute.value = '';
         },
 
-        addContact() {
-            if (!this.newContact.name || !this.newContact.phone) return;
-
-            this.propertyForm.contacts.push({
-                name: this.newContact.name,
-                phone: this.newContact.phone,
-                whatsapp: this.newContact.whatsapp,
-                email: this.newContact.email,
-                date_atention: this.newContact.date_atention,
-                photo: this.newContact.photo
-            });
-
-            this.newContact = {
-                name: '',
-                phone: '',
-                whatsapp: '',
-                email: '',
-                date_atention: '',
-                photo: null
-            };
-        },
-
-        removeContact(index) {
-            this.propertyForm.contacts.splice(index, 1);
-        },
-
-        onContactPhotoChange(e, index) {
-            const file = e.target.files[0];
-            if (file) {
-                this.propertyForm.contacts[index].photo = file;
-            }
-        },
 
         async submitForm() {
             if (this.isSubmitting) return;
@@ -335,18 +300,10 @@ new Vue({
                 }
             });
 
-            this.propertyForm.contacts.forEach((contact, i) => {
-                formData.append(`contacts[${i}][name]`, contact.name);
-                formData.append(`contacts[${i}][phone]`, contact.phone);
-                formData.append(`contacts[${i}][whatsapp]`, contact.whatsapp ?? '');
-                formData.append(`contacts[${i}][email]`, contact.email ?? '');
-                // formData.append(`contacts[${i}][date_atention]`, contact.date_atention ?? '');
-
-                if (contact.photo instanceof File) {
-                    formData.append(`contacts[${i}][photo]`, contact.photo);
-                }
-
-            });
+            formData.append('contact[name]', this.propertyForm.contact.name ?? '');
+            formData.append('contact[phone]', this.propertyForm.contact.phone ?? '');
+            formData.append('contact[whatsapp]', this.propertyForm.contact.whatsapp ?? '');
+            formData.append('contact[email]', this.propertyForm.contact.email ?? '');
 
             // Agregar videos al FormData
             this.propertyForm.videos.forEach((video, i) => {
@@ -531,14 +488,18 @@ new Vue({
                     return '';
                 }).filter(url => url && url.trim() !== '').map(url => this.cleanVideoUrl(url)),
 
-                contacts: (property.contacts || []).map(c => ({
-                    id: c.id ?? null,
-                    name: c.name ?? '',
-                    phone: c.phone ?? '',
-                    whatsapp: c.whatsapp ?? '',
-                    email: c.email ?? '',
-                    photo: null,
-                }))
+                contact: (property.contacts && property.contacts.length > 0) ? {
+                    id: property.contacts[0].id ?? null,
+                    name: property.contacts[0].name ?? '',
+                    phone: property.contacts[0].phone ?? '',
+                    whatsapp: property.contacts[0].whatsapp ?? '',
+                    email: property.contacts[0].email ?? ''
+                } : {
+                    name: '',
+                    phone: '',
+                    whatsapp: '',
+                    email: ''
+                }
 
             };
 
@@ -626,15 +587,6 @@ new Vue({
                 value: ''
             };
 
-            this.newContact = {
-                name: '',
-                phone: '',
-                whatsapp: '',
-                email: '',
-                date_atention: '',
-                photo: null
-            };
-
             this.newVideoUrl = '';
             this.editingVideoIndex = null;
             this.editingVideoUrl = '';
@@ -679,7 +631,12 @@ new Vue({
                 },
                 videos: [],
                 tours360: [],
-                contacts: []
+                contact: {
+                    name: '',
+                    phone: '',
+                    whatsapp: '',
+                    email: ''
+                }
             };
         },
 

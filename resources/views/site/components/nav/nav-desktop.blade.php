@@ -40,7 +40,7 @@
                                                     </div>
                                                     <div class="text-box">
                                                         <span class="title">{{ auto_trans( $item->title) }}</span>
-                                                        <small class="desc">Explorar opciones</small> </div>
+                                                        <small class="desc"></small> </div>
                                                 </a>
                                             @endforeach
                                         </div>

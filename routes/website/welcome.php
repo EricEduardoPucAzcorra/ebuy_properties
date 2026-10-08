@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome.site');
 Route::get('/about', [WelcomeController::class, 'about'])->name('about');
 Route::get('/location-search', [WelcomeController::class, 'searchLocation'])->name('location.search');
-
+Route::get('/privacy', function () {
+    return view('site.privacy');
+})->name('privacy');
+Route::get('/terms', function () {
+    return view('site.terms');
+})->name('terms');
 
 

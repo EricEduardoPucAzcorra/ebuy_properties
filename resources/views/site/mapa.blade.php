@@ -91,7 +91,7 @@
             <div class="col-12">
                 <div class="text-center mb-3">
                     <h2 class="fw-bold mb-2">
-                        <i class="fas fa-globe-americas text-primary me-2"></i>
+                        <!-- <i class="fas fa-globe-americas text-primary me-2"></i> -->
                         {{auto_trans('Descubre Propiedades en el Mapa')}}
                     </h2>
                     <p class="text-muted">{{auto_trans('Navega por el mapa interactivo y encuentra propiedades en tu área de interés. Haz clic en los marcadores para ver detalles.')}}</p>
@@ -135,7 +135,8 @@
     <div class="container">
         <div class="section-header">
             <h2 class="section-title">
-                <i class="fas fa-star text-warning me-2"></i>{{auto_trans('Propiedades Recomendadas')}}
+                <!-- <i class="fas fa-star text-warning me-2"></i> -->
+                {{auto_trans('Propiedades Recomendadas')}}
             </h2>
             <p class="section-subtitle">{{auto_trans('Descubre las propiedades más recomendadas que coinciden con tus preferencias')}}</p>
         </div>

@@ -175,7 +175,7 @@
 
                 @php $contact = collect($propertie->contacts)->first(); @endphp
 
-                @if($contact)
+                <!-- @if($contact)
                 <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
                     <img src="{{asset('images/ebuy_1.png')}}" class="rounded-circle me-3 border shadow-sm" width="60" height="60" style="object-fit: cover;">
                     <div>
@@ -183,7 +183,7 @@
                         <small class="text-muted small">Agente Verificado</small>
                     </div>
                 </div>
-                @endif
+                @endif -->
 
                 <form action="#" method="POST" id="contactForm">
                     @csrf
@@ -197,12 +197,6 @@
                         <button type="submit" class="btn btn-success btn-lg rounded-3 fw-bold py-2 border-0 shadow-sm" style="background-color: #00b388; font-size: 1rem;">
                             <i class="fas fa-paper-plane me-2"></i> Enviar Mensaje
                         </button>
-                        @if(isset($contact['whatsapp']))
-                        <a id="whatsappBtn" href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact['whatsapp']) }}?text={{ urlencode('Hola, me interesa: ' . $propertie->title) }}"
-                           target="_blank" class="btn btn-success btn-lg rounded-3 fw-bold py-2 d-flex align-items-center justify-content-center whatsapp-btn" style="font-size: 1rem;">
-                            <i class="fab fa-whatsapp me-2 fs-4"></i> WhatsApp
-                        </a>
-                        @endif
                     </div>
                 </form>
 

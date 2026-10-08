@@ -221,13 +221,10 @@ class PropertiesController extends Controller
             'videos.*' => 'nullable|url',
             'tours360' => 'nullable|array',
             'tours360.*' => 'nullable|url',
-            'contacts' => 'nullable|array',
-            'contacts.*.name' => 'required|string|max:255',
-            'contacts.*.phone' => 'required|string|max:50',
-            'contacts.*.whatsapp' => 'nullable|string|max:50',
-            'contacts.*.email' => 'nullable|email|max:255',
-            'contacts.*.date_atention' => 'nullable|date',
-            'contacts.*.photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'contact.name' => 'nullable|string|max:255',
+            'contact.phone' => 'nullable|string|max:50',
+            'contact.whatsapp' => 'nullable|string|max:50',
+            'contact.email' => 'nullable|email|max:255'
         ]);
 
         DB::beginTransaction();
@@ -333,28 +330,14 @@ class PropertiesController extends Controller
                 }
             }
 
-            if ($request->filled('contacts')) {
-                foreach ($request->contacts as $index => $contact) {
-
-                    $photoPath = null;
-
-                    if ($request->hasFile("contacts.$index.photo")) {
-                        $photo = $request->file("contacts.$index.photo");
-
-                        $filename = Str::random(20) . '.' . $photo->getClientOriginalExtension();
-                        $photoPath = $photo->storeAs('property_contacts', $filename, 'public');
-                    }
-
-                    PropertyContact::create([
-                        'property_id'    => $property->id,
-                        'name'           => $contact['name'],
-                        'phone'          => $contact['phone'],
-                        'whatsapp'       => $contact['whatsapp'] ?? null,
-                        'email'          => $contact['email'] ?? null,
-                        'date_atention'  =>  null,
-                        'photo'          => null,
-                    ]);
-                }
+            if ($request->filled('contact.name') || $request->filled('contact.phone')) {
+                PropertyContact::create([
+                    'property_id'    => $property->id,
+                    'name'           => $request->input('contact.name'),
+                    'phone'          => $request->input('contact.phone'),
+                    'whatsapp'       => $request->input('contact.whatsapp'),
+                    'email'          => $request->input('contact.email'),
+                ]);
             }
 
 
@@ -398,7 +381,10 @@ class PropertiesController extends Controller
             'videos.*' => 'nullable|url',
             'tours360' => 'nullable|array',
             'tours360.*' => 'nullable|url',
-            'contacts' => 'nullable|array',
+            'contact.name' => 'nullable|string|max:255',
+            'contact.phone' => 'nullable|string|max:50',
+            'contact.whatsapp' => 'nullable|string|max:50',
+            'contact.email' => 'nullable|email|max:255',
         ]);
 
         DB::beginTransaction();
@@ -540,54 +526,23 @@ class PropertiesController extends Controller
                     ->delete();
             }
 
-            $incomingContacts = collect($request->input('contacts', []));
-
-            $incomingIds = $incomingContacts
-                ->pluck('id')
-                ->filter()
-                ->values()
-                ->toArray();
-
-            $property->contacts()
-                ->whereNotIn('id', $incomingIds)
-                ->get()
-                ->each(function ($contact) {
-                    if ($contact->photo) {
-                        Storage::disk('public')->delete($contact->photo);
-                    }
-                    $contact->delete();
-                });
-
-            foreach ($incomingContacts as $index => $contactData) {
-
-                $contact = $property->contacts()
-                    ->where('id', $contactData['id'] ?? null)
-                    ->first();
-
-                if ($request->hasFile("contacts.$index.photo")) {
-
-                    if ($contact && $contact->photo) {
-                        Storage::disk('public')->delete($contact->photo);
-                    }
-
-                    $photoPath = $request
-                        ->file("contacts.$index.photo")
-                        ->store('property_contacts', 'public');
-
-                } else {
-                    $photoPath = $contact->photo ?? null;
+            // Eliminar todos los contactos existentes
+            $property->contacts()->get()->each(function ($contact) {
+                if ($contact->photo) {
+                    Storage::disk('public')->delete($contact->photo);
                 }
+                $contact->delete();
+            });
 
-                $property->contacts()->updateOrCreate(
-                    ['id' => $contactData['id'] ?? null],
-                    [
-                        'name' => $contactData['name'],
-                        'phone' => $contactData['phone'],
-                        'whatsapp' => $contactData['whatsapp'] ?? null,
-                        'email' => $contactData['email'] ?? null,
-                        'photo' => null,
-                    ]
-                );
+            // Crear el nuevo contacto si se proporciona
+            if ($request->filled('contact.name') || $request->filled('contact.phone')) {
+                PropertyContact::create([
+                    'property_id'    => $property->id,
+                    'name'           => $request->input('contact.name'),
+                    'phone'          => $request->input('contact.phone'),
+                    'whatsapp'       => $request->input('contact.whatsapp'),
+                    'email'          => $request->input('contact.email'),
+                ]);
             }
 
             DB::commit();

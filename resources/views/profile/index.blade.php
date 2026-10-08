@@ -50,7 +50,7 @@
                                         <input type="email" class="form-control" v-model="form.email" required>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <!-- <div class="col-md-12">
                                         <label class="form-label">{{ __('general.users.role') }}</label>
                                         <div>
                                             <span class="badge bg-primary me-1"
@@ -59,7 +59,7 @@
                                                 @{{ role.name }}
                                             </span>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="col-md-6 mt-3">
                                         <label class="form-label">{{ __('general.users.password') }}</label>

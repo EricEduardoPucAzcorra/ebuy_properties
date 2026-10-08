@@ -11,10 +11,11 @@
             </div>
 
             <a href="#"
-                class="btn btn-primary rounded-pill px-4"
+                class="btn btn-sm btn-outline-success px-3"
+                style="min-width: 120px;"
                 @click.prevent="showForm = true; resetForm();"
                 v-if="!showForm">
-                    <i class="bi bi-house-add me-2"></i> {{ auto_trans('Agregar inmueble') }}
+                    <i class="bi bi-house-add me-1"></i> {{ auto_trans('Agregar inmueble') }}
             </a>
 
         </div>

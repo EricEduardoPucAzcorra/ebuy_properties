@@ -177,14 +177,16 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-light"
+                <button class="btn btn-sm btn-outline-secondary px-3"
+                        style="min-width: 120px;"
                         data-bs-dismiss="modal">
                     {{ auto_trans('Cancel') }}
                 </button>
 
-                <button class="btn btn-primary"
+                <button class="btn btn-sm btn-outline-success px-3"
+                        style="min-width: 120px;"
                         @click="saveStatus">
-                    {{ auto_trans('Guardar') }}
+                    <i class="bi bi-check-circle me-1"></i> {{ auto_trans('Guardar') }}
                 </button>
             </div>
 

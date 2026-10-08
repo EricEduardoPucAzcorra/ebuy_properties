@@ -8,5 +8,6 @@ return [
    'properties'  => 'Todas las propiedades',
    'properties_sale' => 'Propiedades en venta',
    'properties_rent'=>'Propiedades en renta',
-   'properties_new'=>'Propiedades nuevas'
+   'properties_new'=>'Propiedades nuevas',
+   'map'=>'Mapa de propiedades'
 ];
